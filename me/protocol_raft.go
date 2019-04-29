@@ -22,10 +22,10 @@ import (
 	"reflect"
 	"time"
 
+	"github.com/ailabstw/etcd/raft"
+	pb "github.com/ailabstw/etcd/raft/raftpb"
 	"github.com/ailabstw/go-pttai-core/common"
 	"github.com/ailabstw/go-pttai-core/log"
-	"github.com/ailabstw/go-pttai-core/raft"
-	pb "github.com/ailabstw/go-pttai-core/raft/raftpb"
 )
 
 func (pm *ProtocolManager) StartRaft(peers []raft.Peer, isNew bool) error {

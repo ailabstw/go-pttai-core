@@ -3,8 +3,11 @@ module github.com/ailabstw/go-pttai-core
 go 1.12
 
 require (
+	github.com/ailabstw/etcd v0.0.0-20190429013441-a60d2af48ecb
 	github.com/ailabstw/pttai-signal-server v0.0.0-20190422061607-9efe43d3dc2f
 	github.com/btcsuite/btcd v0.0.0-20190213025234-306aecffea32
+	github.com/coreos/bbolt v1.3.2 // indirect
+	github.com/coreos/etcd v3.3.12+incompatible // indirect
 	github.com/davecgh/go-spew v1.1.1
 	github.com/deckarep/golang-set v1.7.1 // indirect
 	github.com/ethereum/go-ethereum v1.8.27
@@ -36,6 +39,8 @@ require (
 	github.com/spaolacci/murmur3 v1.1.0
 	github.com/stretchr/testify v1.3.0
 	github.com/syndtr/goleveldb v1.0.0
+	github.com/ugorji/go v1.1.4 // indirect
+	go.etcd.io/etcd v3.3.12+incompatible // indirect
 	golang.org/x/crypto v0.0.0-20190411191339-88737f569e3a
 	golang.org/x/net v0.0.0-20190311183353-d8887717615a
 	gopkg.in/fatih/set.v0 v0.2.1

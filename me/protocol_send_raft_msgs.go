@@ -20,9 +20,9 @@ import (
 	"context"
 	"encoding/json"
 
+	pb "github.com/ailabstw/etcd/raft/raftpb"
 	"github.com/ailabstw/go-pttai-core/common/types"
 	"github.com/ailabstw/go-pttai-core/log"
-	pb "github.com/ailabstw/go-pttai-core/raft/raftpb"
 	pkgservice "github.com/ailabstw/go-pttai-core/service"
 )
 

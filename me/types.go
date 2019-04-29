@@ -17,7 +17,7 @@
 package me
 
 import (
-	pb "github.com/ailabstw/go-pttai-core/raft/raftpb"
+	pb "github.com/ailabstw/etcd/raft/raftpb"
 	pkgservice "github.com/ailabstw/go-pttai-core/service"
 )
 
