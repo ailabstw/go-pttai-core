@@ -17,8 +17,8 @@
 package me
 
 import (
-	"github.com/ailabstw/go-pttai-core/raft"
-	pb "github.com/ailabstw/go-pttai-core/raft/raftpb"
+	"github.com/ailabstw/etcd/raft"
+	pb "github.com/ailabstw/etcd/raft/raftpb"
 )
 
 func (pm *ProtocolManager) PublishRaftSnapshot(snap pb.Snapshot) error {

@@ -20,10 +20,10 @@ import (
 	"context"
 	"reflect"
 
+	pb "github.com/ailabstw/etcd/raft/raftpb"
 	"github.com/ailabstw/go-pttai-core/common/types"
 	"github.com/ailabstw/go-pttai-core/log"
 	"github.com/ailabstw/go-pttai-core/p2p/discover"
-	pb "github.com/ailabstw/go-pttai-core/raft/raftpb"
 	pkgservice "github.com/ailabstw/go-pttai-core/service"
 )
 

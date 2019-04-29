@@ -19,12 +19,12 @@ package me
 import (
 	"sync"
 
+	"github.com/ailabstw/etcd/raft"
+	pb "github.com/ailabstw/etcd/raft/raftpb"
 	"github.com/ailabstw/go-pttai-core/account"
 	"github.com/ailabstw/go-pttai-core/common/types"
 	"github.com/ailabstw/go-pttai-core/log"
 	"github.com/ailabstw/go-pttai-core/pttdb"
-	"github.com/ailabstw/go-pttai-core/raft"
-	pb "github.com/ailabstw/go-pttai-core/raft/raftpb"
 	pkgservice "github.com/ailabstw/go-pttai-core/service"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/event"
