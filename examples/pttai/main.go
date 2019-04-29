@@ -53,15 +53,21 @@ type UtilsConfig struct {
 }
 
 func main() {
-	gptt(&cli.Context{})
+	err := gptt(&cli.Context{})
+	if err != nil {
+		panic(err)
+	}
 }
 
 func gptt(ctx *cli.Context) error {
 	log.Info("PTT.ai: Hello world!")
 
+	meCfg := me.Config{}
+	meCfg.SetMyKey("", "", "", false)
+
 	cfg := Config{
 		Node:    &node.Config{P2P: p2p.Config{}},
-		Me:      &me.Config{},
+		Me:      &meCfg,
 		Account: &account.Config{},
 		Friend:  &friend.Config{},
 		Ptt:     &service.Config{},
