@@ -17,7 +17,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"os/signal"
 	"os/user"
@@ -68,8 +67,6 @@ func gptt(ctx *cli.Context) error {
 		Ptt:     &service.Config{},
 		Utils:   &UtilsConfig{},
 	}
-	fmt.Printf("config: %v\n", cfg)
-
 	cfg.Utils.ExternHTTPAddr = "http://localhost:9776"
 	cfg.Node.HTTPHost = ""
 	cfg.Node.HTTPPort = 9450
@@ -81,7 +78,7 @@ func gptt(ctx *cli.Context) error {
 	}
 
 	// register ptt
-	if err := registerPtt(n, &Config{}); err != nil {
+	if err := registerPtt(n, &cfg); err != nil {
 		return err
 	}
 
