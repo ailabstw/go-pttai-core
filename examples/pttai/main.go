@@ -177,9 +177,12 @@ func setSignal(n *node.Node) {
 	defer signal.Stop(sigc)
 
 	<-sigc
+	go func() {
+		n.Stop(false, false)
+	}()
 
 	log.Debug("setSignal: received break-signal")
-	for i := 10; i > 0; i-- {
+	for i := 3; i > 0; i-- {
 		<-sigc
 		if i > 1 {
 			log.Warn("Already shutting down, interrupt more to panic.", "times", i-1)
