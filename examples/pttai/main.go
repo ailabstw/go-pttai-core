@@ -34,6 +34,7 @@ import (
 	"github.com/ailabstw/go-pttai-core/node"
 	"github.com/ailabstw/go-pttai-core/p2p/discover"
 	"github.com/ailabstw/go-pttai-core/service"
+	colorable "github.com/mattn/go-colorable"
 	cli "gopkg.in/urfave/cli.v1"
 )
 
@@ -59,7 +60,20 @@ func main() {
 	}
 }
 
+func initLog() {
+	output := colorable.NewColorableStderr()
+
+	ostream := log.StreamHandler(output, log.TerminalFormat(true))
+	glogger := log.NewGlogHandler(ostream)
+
+	glogger.Verbosity(log.Lvl(4))
+	log.Root().SetHandler(glogger)
+}
+
 func gptt(ctx *cli.Context) error {
+
+	initLog()
+
 	log.Info("PTT.ai: Hello world!")
 
 	cfg := Config{
