@@ -238,7 +238,6 @@ loop:
 	return nil
 }
 
-// SetContentConfig applies node-related command line flags to the config.
 func SetUtilsConfig(ctx *cli.Context, cfg *UtilsConfig) {
 	switch {
 	case ctx.GlobalIsSet(HTTPDirFlag.Name):

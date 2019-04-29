@@ -42,8 +42,8 @@ require (
 	github.com/spaolacci/murmur3 v1.1.0
 	github.com/stretchr/testify v1.3.0
 	github.com/syndtr/goleveldb v1.0.0
-	github.com/whyrusleeping/go-logging v0.0.0-20170515211332-0457bb6b88fc
 	github.com/ugorji/go v1.1.4 // indirect
+	github.com/whyrusleeping/go-logging v0.0.0-20170515211332-0457bb6b88fc
 	go.etcd.io/etcd v3.3.12+incompatible // indirect
 	golang.org/x/crypto v0.0.0-20190411191339-88737f569e3a
 	golang.org/x/net v0.0.0-20190311183353-d8887717615a
