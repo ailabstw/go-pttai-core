@@ -17,6 +17,7 @@ require (
 	github.com/golang/snappy v0.0.0-20180518054509-2e65f85255db
 	github.com/gorilla/mux v1.7.1
 	github.com/huin/goupnp v1.0.0
+	github.com/influxdata/influxdb v1.7.6 // indirect
 	github.com/ipfs/go-cid v0.0.1
 	github.com/jackpal/go-nat-pmp v1.0.1
 	github.com/klauspost/cpuid v1.2.1 // indirect
@@ -28,8 +29,10 @@ require (
 	github.com/libp2p/go-libp2p-net v0.0.2
 	github.com/libp2p/go-libp2p-peer v0.1.0
 	github.com/libp2p/go-libp2p-peerstore v0.0.3
+	github.com/mattn/go-colorable v0.1.1
 	github.com/multiformats/go-multiaddr v0.0.2
 	github.com/multiformats/go-multihash v0.0.1
+	github.com/naoina/toml v0.1.1 // indirect
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
 	github.com/oklog/oklog v0.3.2
 	github.com/pion/datachannel v1.3.0
@@ -40,8 +43,10 @@ require (
 	github.com/stretchr/testify v1.3.0
 	github.com/syndtr/goleveldb v1.0.0
 	github.com/ugorji/go v1.1.4 // indirect
+	github.com/whyrusleeping/go-logging v0.0.0-20170515211332-0457bb6b88fc
 	go.etcd.io/etcd v3.3.12+incompatible // indirect
 	golang.org/x/crypto v0.0.0-20190411191339-88737f569e3a
 	golang.org/x/net v0.0.0-20190311183353-d8887717615a
 	gopkg.in/fatih/set.v0 v0.2.1
+	gopkg.in/urfave/cli.v1 v1.20.0
 )
