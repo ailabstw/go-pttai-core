@@ -85,8 +85,8 @@ func gptt(ctx *cli.Context) error {
 		Utils:   &UtilsConfig{},
 	}
 	cfg.Utils.ExternHTTPAddr = "http://localhost:9776"
-	cfg.Node.HTTPHost = ""
-	cfg.Node.HTTPPort = 9450
+	cfg.Node.HTTPHost = "127.0.0.1"
+	cfg.Node.HTTPPort = 14779
 
 	cfg.Ptt.DataDir = filepath.Join(node.DefaultDataDir(), "service")
 
