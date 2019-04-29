@@ -26,6 +26,7 @@ require (
 	github.com/libp2p/go-libp2p-net v0.0.2
 	github.com/libp2p/go-libp2p-peer v0.1.0
 	github.com/libp2p/go-libp2p-peerstore v0.0.3
+	github.com/mattn/go-colorable v0.1.1
 	github.com/multiformats/go-multiaddr v0.0.2
 	github.com/multiformats/go-multihash v0.0.1
 	github.com/naoina/toml v0.1.1 // indirect
