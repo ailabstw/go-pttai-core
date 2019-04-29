@@ -21,6 +21,7 @@ import (
 	"os/signal"
 	"os/user"
 	"path"
+	"path/filepath"
 	"reflect"
 	"strconv"
 	"strings"
@@ -31,7 +32,6 @@ import (
 	"github.com/ailabstw/go-pttai-core/log"
 	"github.com/ailabstw/go-pttai-core/me"
 	"github.com/ailabstw/go-pttai-core/node"
-	"github.com/ailabstw/go-pttai-core/p2p"
 	"github.com/ailabstw/go-pttai-core/p2p/discover"
 	"github.com/ailabstw/go-pttai-core/service"
 	cli "gopkg.in/urfave/cli.v1"
@@ -62,20 +62,21 @@ func main() {
 func gptt(ctx *cli.Context) error {
 	log.Info("PTT.ai: Hello world!")
 
-	meCfg := me.Config{}
-	meCfg.SetMyKey("", "", "", false)
-
 	cfg := Config{
-		Node:    &node.Config{P2P: p2p.Config{}},
-		Me:      &meCfg,
-		Account: &account.Config{},
-		Friend:  &friend.Config{},
-		Ptt:     &service.Config{},
+		Node:    &node.DefaultConfig,
+		Me:      &me.DefaultConfig,
+		Account: &account.DefaultConfig,
+		Friend:  &friend.DefaultConfig,
+		Ptt:     &service.DefaultConfig,
 		Utils:   &UtilsConfig{},
 	}
 	cfg.Utils.ExternHTTPAddr = "http://localhost:9776"
 	cfg.Node.HTTPHost = ""
 	cfg.Node.HTTPPort = 9450
+
+	cfg.Ptt.DataDir = filepath.Join(node.DefaultDataDir(), "service")
+
+	SetMeConfig(cfg.Me, cfg.Node)
 
 	// new node
 	n, err := node.New(cfg.Node)
@@ -314,6 +315,29 @@ func SetNodeConfig(ctx *cli.Context, cfg *node.Config) {
 	if ctx.GlobalIsSet(KeyStoreDirFlag.Name) {
 		cfg.KeyStoreDir = ctx.GlobalString(KeyStoreDirFlag.Name)
 	}
+}
+
+// SetMyConfig applies node-related command line flags to the config.
+func SetMeConfig(cfg *me.Config, cfgNode *node.Config) {
+	// data-dir
+	log.Debug("SetMeConfig: to set DataDir", "cfgNode.DataDIR", cfgNode.DataDir)
+	cfg.DataDir = filepath.Join(cfgNode.DataDir, "me")
+
+	// key/id/postfix
+	setMyKey(cfg)
+}
+
+// SetMyKey creates a node key from set command line flags, either loading it
+// from a file or as a specified hex value. If neither flags were provided, this
+// method returns nil and an emphemeral key is to be generated.
+func setMyKey(cfg *me.Config) error {
+
+	err := cfg.SetMyKey("", "", "", false)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func setHTTP(ctx *cli.Context, cfg *node.Config) {
