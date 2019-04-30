@@ -4,3 +4,5 @@ test.out
 .DS_Store*
 log.tmp.txt
 .vscode
+tmp
+e2e/bin/bin

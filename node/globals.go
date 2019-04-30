@@ -23,7 +23,6 @@ import (
 	"runtime"
 
 	"github.com/ailabstw/go-pttai-core/p2p"
-	"github.com/ailabstw/go-pttai-core/p2p/nat"
 )
 
 const (
@@ -58,13 +57,8 @@ var (
 		HTTPVirtualHosts: []string{"localhost"},
 		HTTPModules:      []string{"debug", "net", "admin", "ptt", "account", "content", "me", "friend"},
 		WSPort:           DefaultWSPort,
-		P2P: p2p.Config{
-			ListenAddr:    ":29487",
-			MaxPeers:      350,
-			NAT:           nat.Any(),
-			P2PListenAddr: "/ip4/0.0.0.0/tcp/9487",
-		},
-		NetworkID: DefaultNetworkID,
+		P2P:              p2p.Config{},
+		NetworkID:        DefaultNetworkID,
 	}
 )
 

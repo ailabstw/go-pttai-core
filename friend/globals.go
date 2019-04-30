@@ -29,8 +29,8 @@ var (
 	DefaultConfig = Config{
 		DataDir: filepath.Join(node.DefaultDataDir(), "friend"),
 
-		MaxSyncRandomSeconds: 20,
-		MinSyncRandomSeconds: 10,
+		MaxSyncRandomSeconds: 7,
+		MinSyncRandomSeconds: 5,
 	}
 )
 
