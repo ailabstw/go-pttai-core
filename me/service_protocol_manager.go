@@ -28,13 +28,13 @@ type ServiceProtocolManager struct {
 	MyID   *types.PttID
 	MyInfo *MyInfo
 
-	myPtt pkgservice.MyPtt
+	myRouter pkgservice.MyRouter
 }
 
-func NewServiceProtocolManager(myID *types.PttID, ptt pkgservice.MyPtt, service pkgservice.Service) (*ServiceProtocolManager, error) {
+func NewServiceProtocolManager(myID *types.PttID, router pkgservice.MyRouter, service pkgservice.Service) (*ServiceProtocolManager, error) {
 
-	spm := &ServiceProtocolManager{myPtt: ptt, MyID: myID}
-	b, err := pkgservice.NewBaseServiceProtocolManager(ptt, service)
+	spm := &ServiceProtocolManager{myRouter: router, MyID: myID}
+	b, err := pkgservice.NewBaseServiceProtocolManager(router, service)
 	if err != nil {
 		return nil, err
 	}
@@ -48,7 +48,7 @@ func NewServiceProtocolManager(myID *types.PttID, ptt pkgservice.MyPtt, service 
 	}
 
 	for _, eachMyInfo := range myInfos {
-		err = eachMyInfo.Init(ptt, service, spm)
+		err = eachMyInfo.Init(router, service, spm)
 		if err != nil {
 			log.Error("Unable to Init", "myInfo", eachMyInfo.GetID(), "e", err)
 			return nil, err

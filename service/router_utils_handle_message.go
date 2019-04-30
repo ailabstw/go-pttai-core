@@ -27,7 +27,7 @@ import (
 /*
 HandleMessageWrapper
 */
-func (p *BasePtt) HandleMessageWrapper(peer *PttPeer) error {
+func (r *BaseRouter) HandleMessageWrapper(peer *PttPeer) error {
 	log.Debug("HandleMessageWrapper: to ReadMsg", "peer", peer)
 	msg, err := peer.RW().ReadMsg()
 	log.Debug("HandleMessageWrapper: after ReadMsg", "e", err, "code", msg.Code, "size", msg.Size)
@@ -42,14 +42,14 @@ func (p *BasePtt) HandleMessageWrapper(peer *PttPeer) error {
 		return ErrMsgTooLarge
 	}
 
-	data := &PttData{}
+	data := &RouterData{}
 	err = msg.Decode(data)
 	if err != nil {
 		log.Error("HandleMessageWrapper: unable to decode data", "peer", peer, "e", err)
 		return err
 	}
 
-	err = p.HandleMessage(CodeType(msg.Code), data, peer)
+	err = r.HandleMessage(CodeType(msg.Code), data, peer)
 	if err != nil {
 		log.Error("HandleMessageWrapper: unable to handle-msg", "code", msg.Code, "e", err, "peer", peer)
 		return err
@@ -61,17 +61,17 @@ func (p *BasePtt) HandleMessageWrapper(peer *PttPeer) error {
 /*
 HandleMessage handles message
 */
-func (p *BasePtt) HandleMessage(code CodeType, data *PttData, peer *PttPeer) error {
+func (r *BaseRouter) HandleMessage(code CodeType, data *RouterData, peer *PttPeer) error {
 	var err error
 
 	log.Debug("HandleMessage: start", "code", code, "peer", peer, "peerType", peer.PeerType)
 
-	if !reflect.DeepEqual(data.Node, discover.EmptyNodeID) && !reflect.DeepEqual(data.Node, p.myNodeID[:]) {
+	if !reflect.DeepEqual(data.Node, discover.EmptyNodeID) && !reflect.DeepEqual(data.Node, r.myNodeID[:]) {
 		log.Error("HandleMessage: the msg is not for me or not for broadcast", "code", code, "data.Node", data.Node, "peer", peer)
 		return ErrInvalidData
 	}
 
-	evCode, evHash, encData, err := p.UnmarshalData(data)
+	evCode, evHash, encData, err := r.UnmarshalData(data)
 	if err != nil {
 		log.Error("HandleMessage: unable to unmarshal", "data", data, "e", err)
 		return err
@@ -84,42 +84,42 @@ func (p *BasePtt) HandleMessage(code CodeType, data *PttData, peer *PttPeer) err
 
 	switch code {
 	case CodeTypeJoin:
-		err = p.HandleCodeJoin(evHash, encData, peer)
+		err = r.HandleCodeJoin(evHash, encData, peer)
 	case CodeTypeJoinAck:
-		err = p.HandleCodeJoinAck(evHash, encData, peer)
+		err = r.HandleCodeJoinAck(evHash, encData, peer)
 
 	case CodeTypeOp:
-		err = p.HandleCodeOp(evHash, encData, peer)
+		err = r.HandleCodeOp(evHash, encData, peer)
 	case CodeTypeOpFail:
-		err = p.HandleCodeOpFail(evHash, encData, peer)
+		err = r.HandleCodeOpFail(evHash, encData, peer)
 
 	case CodeTypeRequestOpKey:
-		err = p.HandleCodeRequestOpKey(evHash, encData, peer)
+		err = r.HandleCodeRequestOpKey(evHash, encData, peer)
 	case CodeTypeRequestOpKeyFail:
-		err = p.HandleCodeRequestOpKeyFail(evHash, encData, peer)
+		err = r.HandleCodeRequestOpKeyFail(evHash, encData, peer)
 	case CodeTypeRequestOpKeyAck:
-		err = p.HandleCodeRequestOpKeyAck(evHash, encData, peer)
+		err = r.HandleCodeRequestOpKeyAck(evHash, encData, peer)
 
 	case CodeTypeEntityDeleted:
-		err = p.HandleCodeEntityDeleted(evHash, encData, peer)
+		err = r.HandleCodeEntityDeleted(evHash, encData, peer)
 
 	case CodeTypeOpCheckMember:
-		err = p.HandleCodeOpCheckMember(evHash, encData, peer)
+		err = r.HandleCodeOpCheckMember(evHash, encData, peer)
 	case CodeTypeOpCheckMemberAck:
-		err = p.HandleCodeOpCheckMemberAck(evHash, encData, peer)
+		err = r.HandleCodeOpCheckMemberAck(evHash, encData, peer)
 
 	case CodeTypeIdentifyPeer:
-		err = p.HandleCodeIdentifyPeer(evHash, encData, peer)
+		err = r.HandleCodeIdentifyPeer(evHash, encData, peer)
 	case CodeTypeIdentifyPeerFail:
-		err = p.HandleCodeIdentifyPeerFail(evHash, encData, peer)
+		err = r.HandleCodeIdentifyPeerFail(evHash, encData, peer)
 	case CodeTypeIdentifyPeerWithMyID:
-		err = p.HandleCodeIdentifyPeerWithMyID(evHash, encData, peer)
+		err = r.HandleCodeIdentifyPeerWithMyID(evHash, encData, peer)
 	case CodeTypeIdentifyPeerWithMyIDChallenge:
-		err = p.HandleCodeIdentifyPeerWithMyIDChallenge(evHash, encData, peer)
+		err = r.HandleCodeIdentifyPeerWithMyIDChallenge(evHash, encData, peer)
 	case CodeTypeIdentifyPeerWithMyIDChallengeAck:
-		err = p.HandleCodeIdentifyPeerWithMyIDChallengeAck(evHash, encData, peer)
+		err = r.HandleCodeIdentifyPeerWithMyIDChallengeAck(evHash, encData, peer)
 	case CodeTypeIdentifyPeerWithMyIDAck:
-		err = p.HandleCodeIdentifyPeerWithMyIDAck(evHash, encData, peer)
+		err = r.HandleCodeIdentifyPeerWithMyIDAck(evHash, encData, peer)
 	default:
 		err = ErrInvalidMsgCode
 	}
@@ -132,8 +132,8 @@ func (p *BasePtt) HandleMessage(code CodeType, data *PttData, peer *PttPeer) err
 	return nil
 }
 
-func (p *BasePtt) HandleCodeJoin(hash *common.Address, encData []byte, peer *PttPeer) error {
-	entity, err := p.getEntityFromHash(hash, &p.lockJoins, p.joins)
+func (r *BaseRouter) HandleCodeJoin(hash *common.Address, encData []byte, peer *PttPeer) error {
+	entity, err := r.getEntityFromHash(hash, &r.lockJoins, r.joins)
 	if err != nil {
 		log.Error("HandleCodeJoin: getEntityFromHash", "e", err)
 		return err
@@ -146,7 +146,7 @@ func (p *BasePtt) HandleCodeJoin(hash *common.Address, encData []byte, peer *Ptt
 		return err
 	}
 
-	op, dataBytes, err := p.DecryptData(encData, keyInfo)
+	op, dataBytes, err := r.DecryptData(encData, keyInfo)
 	if err != nil {
 		log.Error("HandleCodeJoin: unable to DecryptData", "e", err)
 		return err
@@ -156,9 +156,9 @@ func (p *BasePtt) HandleCodeJoin(hash *common.Address, encData []byte, peer *Ptt
 
 	switch op {
 	case JoinMsg:
-		err = p.HandleJoin(dataBytes, hash, entity, pm, keyInfo, peer)
+		err = r.HandleJoin(dataBytes, hash, entity, pm, keyInfo, peer)
 	case JoinEntityMsg:
-		err = p.HandleJoinEntity(dataBytes, hash, entity, pm, keyInfo, peer)
+		err = r.HandleJoinEntity(dataBytes, hash, entity, pm, keyInfo, peer)
 	default:
 		err = ErrInvalidMsgCode
 	}
@@ -166,9 +166,9 @@ func (p *BasePtt) HandleCodeJoin(hash *common.Address, encData []byte, peer *Ptt
 	return err
 }
 
-func (p *BasePtt) HandleCodeJoinAck(hash *common.Address, encData []byte, peer *PttPeer) error {
+func (r *BaseRouter) HandleCodeJoinAck(hash *common.Address, encData []byte, peer *PttPeer) error {
 
-	joinRequest, err := p.myEntity.GetJoinRequest(hash)
+	joinRequest, err := r.myEntity.GetJoinRequest(hash)
 	log.Debug("HandleCodeJoinAck: after GetJoinRequest", "e", err)
 	if err != nil {
 		return err
@@ -176,7 +176,7 @@ func (p *BasePtt) HandleCodeJoinAck(hash *common.Address, encData []byte, peer *
 
 	keyInfo := joinKeyToKeyInfo(joinRequest.Key)
 
-	op, dataBytes, err := p.DecryptData(encData, keyInfo)
+	op, dataBytes, err := r.DecryptData(encData, keyInfo)
 	if err != nil {
 		return err
 	}
@@ -185,9 +185,9 @@ func (p *BasePtt) HandleCodeJoinAck(hash *common.Address, encData []byte, peer *
 
 	switch op {
 	case JoinAckChallengeMsg:
-		err = p.HandleJoinAckChallenge(dataBytes, hash, joinRequest, peer)
+		err = r.HandleJoinAckChallenge(dataBytes, hash, joinRequest, peer)
 	case ApproveJoinMsg:
-		err = p.HandleApproveJoin(dataBytes, hash, joinRequest, peer)
+		err = r.HandleApproveJoin(dataBytes, hash, joinRequest, peer)
 	default:
 		err = ErrInvalidMsgCode
 	}
@@ -195,13 +195,13 @@ func (p *BasePtt) HandleCodeJoinAck(hash *common.Address, encData []byte, peer *
 	return err
 }
 
-func (p *BasePtt) HandleCodeOp(hash *common.Address, encData []byte, peer *PttPeer) error {
+func (r *BaseRouter) HandleCodeOp(hash *common.Address, encData []byte, peer *PttPeer) error {
 
-	entity, err := p.getEntityFromHash(hash, &p.lockOps, p.ops)
+	entity, err := r.getEntityFromHash(hash, &r.lockOps, r.ops)
 	log.Debug("HandleCodeOp: after getEntityFromHash", "e", err, "hash", hash)
 	if err != nil {
 		log.Error("HandleCodeOp: invalid entity", "hash", hash, "e", err)
-		return p.OpFail(hash, peer)
+		return r.OpFail(hash, peer)
 	}
 
 	pm := entity.PM()
@@ -211,76 +211,76 @@ func (p *BasePtt) HandleCodeOp(hash *common.Address, encData []byte, peer *PttPe
 	return err
 }
 
-func (p *BasePtt) HandleCodeOpFail(hash *common.Address, encData []byte, peer *PttPeer) error {
+func (r *BaseRouter) HandleCodeOpFail(hash *common.Address, encData []byte, peer *PttPeer) error {
 
-	return p.HandleOpFail(encData, peer)
+	return r.HandleOpFail(encData, peer)
 }
 
-func (p *BasePtt) HandleCodeRequestOpKey(hash *common.Address, encData []byte, peer *PttPeer) error {
+func (r *BaseRouter) HandleCodeRequestOpKey(hash *common.Address, encData []byte, peer *PttPeer) error {
 
-	return p.HandleRequestOpKey(encData, peer)
+	return r.HandleRequestOpKey(encData, peer)
 }
 
-func (p *BasePtt) HandleCodeRequestOpKeyFail(hash *common.Address, encData []byte, peer *PttPeer) error {
+func (r *BaseRouter) HandleCodeRequestOpKeyFail(hash *common.Address, encData []byte, peer *PttPeer) error {
 
-	return p.HandleRequestOpKeyFail(encData, peer)
+	return r.HandleRequestOpKeyFail(encData, peer)
 }
 
-func (p *BasePtt) HandleCodeRequestOpKeyAck(hash *common.Address, encData []byte, peer *PttPeer) error {
-	return p.HandleRequestOpKeyAck(encData, peer)
+func (r *BaseRouter) HandleCodeRequestOpKeyAck(hash *common.Address, encData []byte, peer *PttPeer) error {
+	return r.HandleRequestOpKeyAck(encData, peer)
 }
 
-func (p *BasePtt) HandleCodeEntityDeleted(hash *common.Address, encData []byte, peer *PttPeer) error {
-	return p.HandleEntityTerminal(encData, peer)
+func (r *BaseRouter) HandleCodeEntityDeleted(hash *common.Address, encData []byte, peer *PttPeer) error {
+	return r.HandleEntityTerminal(encData, peer)
 }
 
-func (p *BasePtt) HandleCodeOpCheckMember(hash *common.Address, encData []byte, peer *PttPeer) error {
-	return p.HandleOpCheckMember(encData, peer)
+func (r *BaseRouter) HandleCodeOpCheckMember(hash *common.Address, encData []byte, peer *PttPeer) error {
+	return r.HandleOpCheckMember(encData, peer)
 }
 
-func (p *BasePtt) HandleCodeOpCheckMemberAck(hash *common.Address, encData []byte, peer *PttPeer) error {
-	return p.HandleOpCheckMemberAck(encData, peer)
+func (r *BaseRouter) HandleCodeOpCheckMemberAck(hash *common.Address, encData []byte, peer *PttPeer) error {
+	return r.HandleOpCheckMemberAck(encData, peer)
 }
 
-func (p *BasePtt) HandleCodeIdentifyPeer(hash *common.Address, encData []byte, peer *PttPeer) error {
+func (r *BaseRouter) HandleCodeIdentifyPeer(hash *common.Address, encData []byte, peer *PttPeer) error {
 
-	entity, err := p.getEntityFromHash(hash, &p.lockOps, p.ops)
+	entity, err := r.getEntityFromHash(hash, &r.lockOps, r.ops)
 	if err != nil {
 		log.Error("HandleCodeIdentifyPeer: invalid entity", "hash", hash, "e", err)
-		return p.IdentifyPeerFail(hash, peer)
+		return r.IdentifyPeerFail(hash, peer)
 	}
 
 	pm := entity.PM()
 
 	err = PMHandleMessageWrapper(pm, hash, encData, peer)
 	if err != nil {
-		p.IdentifyPeerFail(hash, peer)
+		r.IdentifyPeerFail(hash, peer)
 	}
 
 	return err
 }
 
-func (p *BasePtt) HandleCodeIdentifyPeerFail(hash *common.Address, encData []byte, peer *PttPeer) error {
+func (r *BaseRouter) HandleCodeIdentifyPeerFail(hash *common.Address, encData []byte, peer *PttPeer) error {
 
-	return p.HandleIdentifyPeerFail(encData, peer)
+	return r.HandleIdentifyPeerFail(encData, peer)
 }
 
-func (p *BasePtt) HandleCodeIdentifyPeerWithMyID(hash *common.Address, encData []byte, peer *PttPeer) error {
+func (r *BaseRouter) HandleCodeIdentifyPeerWithMyID(hash *common.Address, encData []byte, peer *PttPeer) error {
 
-	return p.HandleIdentifyPeerWithMyID(encData, peer)
+	return r.HandleIdentifyPeerWithMyID(encData, peer)
 }
 
-func (p *BasePtt) HandleCodeIdentifyPeerWithMyIDChallenge(hash *common.Address, encData []byte, peer *PttPeer) error {
+func (r *BaseRouter) HandleCodeIdentifyPeerWithMyIDChallenge(hash *common.Address, encData []byte, peer *PttPeer) error {
 
-	return p.HandleIdentifyPeerWithMyIDChallenge(encData, peer)
+	return r.HandleIdentifyPeerWithMyIDChallenge(encData, peer)
 }
 
-func (p *BasePtt) HandleCodeIdentifyPeerWithMyIDChallengeAck(hash *common.Address, encData []byte, peer *PttPeer) error {
+func (r *BaseRouter) HandleCodeIdentifyPeerWithMyIDChallengeAck(hash *common.Address, encData []byte, peer *PttPeer) error {
 
-	return p.HandleIdentifyPeerWithMyIDChallengeAck(encData, peer)
+	return r.HandleIdentifyPeerWithMyIDChallengeAck(encData, peer)
 }
 
-func (p *BasePtt) HandleCodeIdentifyPeerWithMyIDAck(hash *common.Address, encData []byte, peer *PttPeer) error {
+func (r *BaseRouter) HandleCodeIdentifyPeerWithMyIDAck(hash *common.Address, encData []byte, peer *PttPeer) error {
 
-	return p.HandleIdentifyPeerWithMyIDAck(encData, peer)
+	return r.HandleIdentifyPeerWithMyIDAck(encData, peer)
 }

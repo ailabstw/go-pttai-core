@@ -54,10 +54,10 @@ type ProtocolManager struct {
 	dbNameCardIdxPrefix []byte
 }
 
-func newBaseProtocolManager(pm *ProtocolManager, ptt pkgservice.Ptt, entity pkgservice.Entity, svc pkgservice.Service) *pkgservice.BaseProtocolManager {
+func newBaseProtocolManager(pm *ProtocolManager, router pkgservice.Router, entity pkgservice.Entity, svc pkgservice.Service) *pkgservice.BaseProtocolManager {
 
 	b, err := pkgservice.NewBaseProtocolManager(
-		ptt,
+		router,
 
 		RenewOpKeySeconds,
 		ExpireOpKeySeconds,
@@ -104,7 +104,7 @@ func newBaseProtocolManager(pm *ProtocolManager, ptt pkgservice.Ptt, entity pkgs
 	return b
 }
 
-func NewProtocolManager(profile *Profile, ptt pkgservice.Ptt, svc pkgservice.Service) (*ProtocolManager, error) {
+func NewProtocolManager(profile *Profile, router pkgservice.Router, svc pkgservice.Service) (*ProtocolManager, error) {
 	dbUserLock, err := types.NewLockMap(pkgservice.SleepTimeLock)
 	if err != nil {
 		return nil, err
@@ -123,7 +123,7 @@ func NewProtocolManager(profile *Profile, ptt pkgservice.Ptt, svc pkgservice.Ser
 		dbUserLock:      dbUserLock,
 		userOplogMerkle: userOplogMerkle,
 	}
-	pm.BaseProtocolManager = newBaseProtocolManager(pm, ptt, profile, svc)
+	pm.BaseProtocolManager = newBaseProtocolManager(pm, router, profile, svc)
 
 	// user-node
 	pm.dbUserNodePrefix = append(DBUserNodePrefix, entityID[:]...)

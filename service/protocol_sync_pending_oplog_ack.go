@@ -67,7 +67,7 @@ func (pm *BaseProtocolManager) HandleSyncPendingOplogAck(
 
 	handlePendingOplogs func(oplogs []*BaseOplog, peer *PttPeer) error,
 ) error {
-	ptt := pm.Ptt()
+	ptt := pm.Router()
 	myInfo := ptt.GetMyEntity()
 	if myInfo.GetStatus() != types.StatusAlive {
 		return nil

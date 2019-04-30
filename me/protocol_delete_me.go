@@ -50,7 +50,7 @@ func (pm *ProtocolManager) postdeleteDeleteMe(theOpData pkgservice.OpData, isFor
 	myService := pm.Entity().Service()
 
 	raftLead := pm.GetRaftLead(true)
-	myRaftID := pm.myPtt.MyRaftID()
+	myRaftID := pm.myRouter.MyRaftID()
 
 	log.Debug("postdeleteMe: start", "myProfileID", myInfo.ProfileID, "myProfile", myInfo.Profile, "isForce", isForce, "raftLead", raftLead, "myRaftID", myRaftID)
 
@@ -64,7 +64,7 @@ func (pm *ProtocolManager) postdeleteDeleteMe(theOpData pkgservice.OpData, isFor
 		myProfile.PM().(*account.ProtocolManager).Delete()
 	}
 
-	entities := pm.myPtt.GetEntities()
+	entities := pm.myRouter.GetEntities()
 	for _, entity := range entities {
 		if entity == myInfo {
 			continue

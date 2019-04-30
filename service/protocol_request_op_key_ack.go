@@ -29,7 +29,7 @@ type RequestOpKeyAck struct {
 	Logs     []*BaseOplog `json:"l"`
 }
 
-func (p *BasePtt) RequestOpKeyAck(entityID *types.PttID, peer *PttPeer) error {
+func (p *BaseRouter) RequestOpKeyAck(entityID *types.PttID, peer *PttPeer) error {
 	entity, ok := p.entities[*entityID]
 	if !ok {
 		return types.ErrInvalidID
@@ -58,7 +58,7 @@ func (p *BasePtt) RequestOpKeyAck(entityID *types.PttID, peer *PttPeer) error {
 	return p.SendDataToPeer(CodeTypeRequestOpKeyAck, data, peer)
 }
 
-func (p *BasePtt) HandleRequestOpKeyAck(dataBytes []byte, peer *PttPeer) error {
+func (p *BaseRouter) HandleRequestOpKeyAck(dataBytes []byte, peer *PttPeer) error {
 
 	if peer.UserID == nil {
 		return types.ErrInvalidID

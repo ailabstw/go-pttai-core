@@ -61,9 +61,9 @@ type Node struct {
 	serverConfig p2p.Config
 	server       *p2p.Server
 
-	serviceFuncs []pkgservice.ServiceConstructor        // Service constructors (in dependency order)
-	services     map[reflect.Type]pkgservice.PttService // Currently running services
-	rpcAPIs      []rpc.API                              // List of APIs currently provided by the node
+	routerFuncs []pkgservice.ServiceConstructor        // Service constructors (in dependency order)
+	routers     map[reflect.Type]pkgservice.NodeRouter // Currently running services
+	rpcAPIs     []rpc.API                              // List of APIs currently provided by the node
 
 	inprocHandler *rpc.Server // In-process RPC request handler to process the API requests
 
@@ -123,7 +123,7 @@ func New(cfg *Config) (*Node, error) {
 
 	return &Node{
 		Config:       cfg,
-		serviceFuncs: []pkgservice.ServiceConstructor{},
+		routerFuncs:  []pkgservice.ServiceConstructor{},
 		ipcEndpoint:  cfg.IPCEndpoint(),
 		httpEndpoint: cfg.HTTPEndpoint(),
 		wsEndpoint:   cfg.WSEndpoint(),
@@ -141,7 +141,7 @@ func (n *Node) Register(constructor pkgservice.ServiceConstructor) error {
 	if n.server != nil {
 		return ErrNodeRunning
 	}
-	n.serviceFuncs = append(n.serviceFuncs, constructor)
+	n.routerFuncs = append(n.routerFuncs, constructor)
 	return nil
 }
 
@@ -177,34 +177,34 @@ func (n *Node) Start() error {
 	n.log.Info("Starting peer-to-peer node", "instance", n.serverConfig.Name)
 
 	// Otherwise copy and specialize the P2P configuration
-	services := make(map[reflect.Type]pkgservice.PttService)
-	n.log.Info("Starting", "serviceFuncs", n.serviceFuncs, "services", services)
-	for _, constructor := range n.serviceFuncs {
+	routers := make(map[reflect.Type]pkgservice.NodeRouter)
+	n.log.Info("Starting", "routerFuncs", n.routerFuncs, "routers", routers)
+	for _, constructor := range n.routerFuncs {
 		// Create a new context for the particular service
-		ctx := &pkgservice.ServiceContext{
-			Services: services,
+		ctx := &pkgservice.RouterContext{
+			Routers:  routers,
 			EventMux: n.eventmux,
 		}
 		// Construct and save the service
-		n.log.Info("in serviceFunc-loop: to constructor", "services", services)
-		service, err := constructor(ctx)
+		n.log.Info("in routerFunc-loop: to constructor", "routers", routers)
+		router, err := constructor(ctx)
 		// n.log.Info("in serviceFunc-loop", "services", services, "service", service, "e", err)
 		if err != nil {
-			log.Error("in serviceFunc-loop: unable to constructor", "e", err)
+			log.Error("in routerFunc-loop: unable to constructor", "e", err)
 			return err
 		}
-		kind := reflect.TypeOf(service)
-		if _, exists := services[kind]; exists {
-			log.Error("in serviceFunc-loop: dup-resource", "kind", kind)
-			return &DuplicateServiceError{Kind: kind}
+		kind := reflect.TypeOf(router)
+		if _, exists := routers[kind]; exists {
+			log.Error("in routerFunc-loop: dup-resource", "kind", kind)
+			return &DuplicateRouterError{Kind: kind}
 		}
-		services[kind] = service
+		routers[kind] = router
 	}
-	n.log.Info("after serviceFunc-loop", "services", services)
+	n.log.Info("after routerFunc-loop", "routers", routers)
 
 	// Gather the protocols and start the freshly assembled P2P server
-	for _, service := range services {
-		running.Protocols = append(running.Protocols, service.Protocols()...)
+	for _, router := range routers {
+		running.Protocols = append(running.Protocols, router.Protocols()...)
 	}
 
 	n.log.Info("to running.Start", "running.Protocols", running.Protocols)
@@ -216,15 +216,15 @@ func (n *Node) Start() error {
 
 	// Start each of the services
 	started := []reflect.Type{}
-	for kind, service := range services {
+	for kind, router := range routers {
 		// Start the next service, stopping all previous upon failure
 		// n.log.Info("to service.Start", "kind", kind, "service", service)
 
-		if err := service.Start(running); err != nil {
-			n.log.Error("something went wrong with service-starting", "e", err, "service", service)
+		if err := router.Start(running); err != nil {
+			n.log.Error("something went wrong with service-starting", "e", err, "service", router)
 
 			for _, kind := range started {
-				services[kind].Stop()
+				routers[kind].Stop()
 			}
 			running.Stop()
 
@@ -235,9 +235,9 @@ func (n *Node) Start() error {
 	}
 
 	// Lastly start the configured RPC interfaces
-	if err := n.startRPC(services); err != nil {
+	if err := n.startRPC(routers); err != nil {
 		n.log.Error("something went wrong with startRPC", "e", err)
-		for _, service := range services {
+		for _, service := range routers {
 			service.Stop()
 		}
 		running.Stop()
@@ -245,7 +245,7 @@ func (n *Node) Start() error {
 	}
 
 	// Finish initializing the startup
-	n.services = services
+	n.routers = routers
 	n.server = running
 	n.StopChan = make(chan error)
 
@@ -267,7 +267,7 @@ func (n *Node) Stop(isRevoke bool, isRestart bool) error {
 	n.stopIPC()
 	n.rpcAPIs = nil
 	failure := &StopError{
-		Services: make(map[reflect.Type]error),
+		Routers: make(map[reflect.Type]error),
 	}
 
 	// close mutex
@@ -275,10 +275,10 @@ func (n *Node) Stop(isRevoke bool, isRestart bool) error {
 	n.eventmux.Stop()
 	log.Info("after stop eventmux")
 
-	for kind, service := range n.services {
-		log.Info("to stop service", "kind", kind)
-		if err := service.Stop(); err != nil {
-			failure.Services[kind] = err
+	for kind, router := range n.routers {
+		log.Info("to stop router", "kind", kind)
+		if err := router.Stop(); err != nil {
+			failure.Routers[kind] = err
 		}
 		log.Info("after stop service", "kind", kind)
 	}
@@ -288,7 +288,7 @@ func (n *Node) Stop(isRevoke bool, isRestart bool) error {
 	log.Info("after stop server")
 
 	// set nil
-	n.services = nil
+	n.routers = nil
 	n.server = nil
 
 	// Release instance directory lock.
@@ -308,7 +308,7 @@ func (n *Node) Stop(isRevoke bool, isRestart bool) error {
 		close(n.StopChan)
 	}
 
-	if len(failure.Services) > 0 {
+	if len(failure.Routers) > 0 {
 		return failure
 	}
 
@@ -327,8 +327,8 @@ func (n *Node) Restart(isRevoke bool, isRestart bool) error {
 	return nil
 }
 
-func (n *Node) Services() map[reflect.Type]pkgservice.PttService {
-	return n.services
+func (n *Node) Services() map[reflect.Type]pkgservice.NodeRouter {
+	return n.routers
 
 }
 
@@ -385,7 +385,7 @@ func (n *Node) openDataDir() error {
 // startRPC is a helper method to start all the various RPC endpoint during node
 // startup. It's not meant to be called at any time afterwards as it makes certain
 // assumptions about the state of the node.
-func (n *Node) startRPC(services map[reflect.Type]pkgservice.PttService) error {
+func (n *Node) startRPC(services map[reflect.Type]pkgservice.NodeRouter) error {
 	// Gather all the possible APIs to surface
 	apis := n.apis()
 	for _, service := range services {

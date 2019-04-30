@@ -63,7 +63,7 @@ func TestBaseEntity_AddOwnerID(t *testing.T) {
 		EntityType  EntityType
 		pm          ProtocolManager
 		name        string
-		ptt         Ptt
+		ptt         Router
 		service     Service
 		db          *pttdb.LDBBatch
 		dbLock      *types.LockMap

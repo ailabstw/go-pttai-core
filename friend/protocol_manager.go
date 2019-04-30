@@ -34,7 +34,7 @@ type ProtocolManager struct {
 	dbMessageIdxPrefix []byte
 }
 
-func NewProtocolManager(f *Friend, ptt pkgservice.Ptt, svc pkgservice.Service) (*ProtocolManager, error) {
+func NewProtocolManager(f *Friend, router pkgservice.Router, svc pkgservice.Service) (*ProtocolManager, error) {
 	dbFriendLock, err := types.NewLockMap(pkgservice.SleepTimeLock)
 	if err != nil {
 		return nil, err
@@ -53,7 +53,7 @@ func NewProtocolManager(f *Friend, ptt pkgservice.Ptt, svc pkgservice.Service) (
 		friendOplogMerkle: friendOplogMerkle,
 	}
 	b, err := pkgservice.NewBaseProtocolManager(
-		ptt,
+		router,
 
 		RenewOpKeySeconds,
 		ExpireOpKeySeconds,

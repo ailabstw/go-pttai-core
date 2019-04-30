@@ -28,7 +28,7 @@ import (
 )
 
 func (spm *ServiceProtocolManager) CreateMe(myID *types.PttID, myKey *ecdsa.PrivateKey) error {
-	ptt := spm.myPtt
+	ptt := spm.myRouter
 
 	// new my info
 	myInfo, err := NewMyInfo(myID, myKey, ptt, spm.Service(), spm, spm.GetDBLock())
@@ -58,7 +58,7 @@ func (spm *ServiceProtocolManager) CreateMe(myID *types.PttID, myKey *ecdsa.Priv
 func (pm *ProtocolManager) CreateFullMe(oplog *MasterOplog) error {
 	log.Debug("CreateFullMe: start")
 	myInfo := pm.Entity().(*MyInfo)
-	ptt := pm.myPtt
+	ptt := pm.myRouter
 
 	err := myInfo.Lock()
 	if err != nil {

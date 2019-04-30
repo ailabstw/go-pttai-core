@@ -101,7 +101,7 @@ func (pm *BaseProtocolManager) ToRenewOpKeyTS() (types.Timestamp, error) {
  * CreateObject
  ***/
 func (pm *BaseProtocolManager) CreateOpKey() error {
-	ptt := pm.Ptt()
+	ptt := pm.Router()
 	myID := ptt.GetMyEntity().GetID()
 
 	// 1. validate
@@ -136,7 +136,7 @@ func (pm *BaseProtocolManager) CreateOpKey() error {
 }
 
 func (pm *BaseProtocolManager) ForceCreateOpKey() error {
-	ptt := pm.Ptt()
+	ptt := pm.Router()
 	myID := ptt.GetMyEntity().GetID()
 
 	// 1. validate
@@ -171,7 +171,7 @@ func (pm *BaseProtocolManager) ForceCreateOpKey() error {
 
 func (pm *BaseProtocolManager) NewOpKey(data CreateData) (Object, OpData, error) {
 	entity := pm.Entity()
-	myEntity := pm.Ptt().GetMyEntity()
+	myEntity := pm.Router().GetMyEntity()
 
 	keyInfo, err := myEntity.NewOpKeyInfo(entity.GetID(), pm.SetOpKeyObjDB)
 	if err != nil {

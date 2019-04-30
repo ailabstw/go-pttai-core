@@ -32,29 +32,29 @@ type Backend struct {
 	accountBackend *account.Backend
 	friendBackend  *friend.Backend
 
-	myPtt pkgservice.MyPtt
+	myRouter pkgservice.MyRouter
 }
 
-func NewBackend(ctx *pkgservice.ServiceContext, cfg *Config, ptt pkgservice.MyPtt, accountBackend *account.Backend, friendBacked *friend.Backend) (*Backend, error) {
+func NewBackend(ctx *pkgservice.RouterContext, cfg *Config, router pkgservice.MyRouter, accountBackend *account.Backend, friendBacked *friend.Backend) (*Backend, error) {
 	err := InitMe(cfg.DataDir)
 	if err != nil {
 		return nil, err
 	}
 
 	backend := &Backend{
-		Config: cfg,
-		myPtt:  ptt,
+		Config:   cfg,
+		myRouter: router,
 
 		accountBackend: accountBackend,
 		friendBackend:  friendBacked,
 	}
 
-	spm, err := NewServiceProtocolManager(cfg.ID, ptt, backend)
+	spm, err := NewServiceProtocolManager(cfg.ID, router, backend)
 	if err != nil {
 		return nil, err
 	}
 
-	svc, err := pkgservice.NewBaseService(ptt, spm)
+	svc, err := pkgservice.NewBaseService(router, spm)
 	if err != nil {
 		return nil, err
 	}

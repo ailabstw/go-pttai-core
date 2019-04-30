@@ -28,7 +28,7 @@ type OpCheckMemberAck struct {
 	Log      *BaseOplog   `json:"l"`
 }
 
-func (p *BasePtt) OpCheckMemberAck(
+func (p *BaseRouter) OpCheckMemberAck(
 	entityID *types.PttID,
 	memberLog *BaseOplog,
 	peer *PttPeer,
@@ -43,7 +43,7 @@ func (p *BasePtt) OpCheckMemberAck(
 
 }
 
-func (p *BasePtt) HandleOpCheckMemberAck(dataBytes []byte, peer *PttPeer) error {
+func (p *BaseRouter) HandleOpCheckMemberAck(dataBytes []byte, peer *PttPeer) error {
 
 	data := &OpCheckMemberAck{}
 	err := json.Unmarshal(dataBytes, data)

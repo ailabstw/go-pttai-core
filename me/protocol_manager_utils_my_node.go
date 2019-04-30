@@ -64,7 +64,7 @@ func (pm *ProtocolManager) LoadMyNodes() error {
 	myNodes := make(map[uint64]*MyNode)
 	myNodeByNodeSignIDs := make(map[types.PttID]*MyNode)
 	myID := myInfo.ID
-	ptt := pm.myPtt
+	router := pm.myRouter
 
 	log.Info("LoadMyNodes: start", "myID", myInfo.ID)
 	isMyNodeID := false
@@ -82,7 +82,7 @@ func (pm *ProtocolManager) LoadMyNodes() error {
 	defer iter.Release()
 
 	toRemoveIDs := make([][]byte, 0)
-	myNodeID := ptt.MyNodeID()
+	myNodeID := router.MyNodeID()
 	for iter.Next() {
 		k := iter.Key()
 		v := iter.Value()

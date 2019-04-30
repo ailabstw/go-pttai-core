@@ -58,7 +58,7 @@ func (pm *ProtocolManager) postdeleteFriend(theOpData pkgservice.OpData, isForce
 	f := pm.Entity().(*Friend)
 	friendID := f.FriendID
 
-	myEntity := pm.Ptt().GetMyEntity()
+	myEntity := pm.Router().GetMyEntity()
 	myProfilePM := myEntity.GetProfile().PM()
 	myProfilePM.DeleteMember(friendID)
 

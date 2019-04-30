@@ -16,8 +16,48 @@
 
 package service
 
-import "sync"
+import (
+	"crypto/ecdsa"
 
-func (p *BasePtt) SyncWG() *sync.WaitGroup {
-	return &p.syncWG
+	"github.com/ailabstw/go-pttai-core/common/types"
+	"github.com/ailabstw/go-pttai-core/p2p/discover"
+)
+
+/**********
+ * Me
+ **********/
+
+func (r *BaseRouter) MyNodeID() *discover.NodeID {
+	return r.myNodeID
+}
+
+func (r *BaseRouter) MyRaftID() uint64 {
+	return r.myRaftID
+}
+
+func (r *BaseRouter) MyNodeType() NodeType {
+	return r.myNodeType
+}
+
+func (r *BaseRouter) MyNodeKey() *ecdsa.PrivateKey {
+	return r.myNodeKey
+}
+
+func (r *BaseRouter) SetMyEntity(myEntity RouterMyEntity) error {
+	r.myEntity = myEntity
+	r.myService = myEntity.Service()
+
+	return nil
+}
+
+func (r *BaseRouter) GetMyEntity() MyEntity {
+	return r.myEntity
+}
+
+func (r *BaseRouter) GetMyEntityFromMe(myID *types.PttID) Entity {
+	return nil
+}
+
+func (r *BaseRouter) GetMyService() Service {
+	return r.myService
 }

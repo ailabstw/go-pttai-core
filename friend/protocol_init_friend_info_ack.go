@@ -79,7 +79,7 @@ func (pm *ProtocolManager) InitFriendInfoAckCore(peer *pkgservice.PttPeer) (*Ini
 	}
 
 	// profile-data
-	profilePM := pm.Ptt().GetMyEntity().GetProfile().(*account.Profile).PM()
+	profilePM := pm.Router().GetMyEntity().GetProfile().(*account.Profile).PM()
 	_, theProfileData, err := profilePM.ApproveJoin(joinEntity, nil, peer)
 	if err != nil {
 		return nil, err
@@ -169,7 +169,7 @@ func (pm *ProtocolManager) HandleInitFriendInfoAckCore(
 
 	// ptt-oplog
 
-	myID := pm.Ptt().GetMyEntity().GetID()
+	myID := pm.Router().GetMyEntity().GetID()
 
 	pttOplog, err := pkgservice.NewPttOplog(f.GetID(), ts, f.FriendID, pkgservice.PttOpTypeCreateFriend, pkgservice.PttOpTypeCreateFriend, myID)
 	if err != nil {

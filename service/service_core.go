@@ -279,7 +279,7 @@ func (svc *BaseService) GetPendingOpKeyOplogInternalList(entityIDBytes []byte, l
 
 func (svc *BaseService) ShowValidateKey() (*types.PttID, error) {
 
-	myInfo := svc.Ptt().GetMyEntity()
+	myInfo := svc.Router().GetMyEntity()
 
 	validateKey := myInfo.GetValidateKey()
 
@@ -288,7 +288,7 @@ func (svc *BaseService) ShowValidateKey() (*types.PttID, error) {
 
 func (svc *BaseService) ValidateValidateKey(keyBytes []byte) (bool, error) {
 
-	myInfo := svc.Ptt().GetMyEntity()
+	myInfo := svc.Router().GetMyEntity()
 
 	validateKey := myInfo.GetValidateKey()
 	theBytes, err := validateKey.MarshalText()

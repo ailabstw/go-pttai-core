@@ -43,7 +43,7 @@ func NewMeOplog(objID *types.PttID, ts types.Timestamp, doerID *types.PttID, op 
 
 func (pm *ProtocolManager) NewMeOplog(objID *types.PttID, op pkgservice.OpType, opData pkgservice.OpData) (pkgservice.Oplog, error) {
 
-	myID := pm.Ptt().GetMyEntity().GetID()
+	myID := pm.Router().GetMyEntity().GetID()
 	entityID := pm.Entity().GetID()
 
 	ts, err := types.GetTimestamp()

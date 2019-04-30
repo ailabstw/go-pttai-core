@@ -58,7 +58,7 @@ func (pm *ProtocolManager) NewUserOplogWithTS(objID *types.PttID, ts types.Times
 
 	log.Debug("NewUserOplogWithTS: start", "objID", objID)
 
-	myID := pm.Ptt().GetMyEntity().GetID()
+	myID := pm.Router().GetMyEntity().GetID()
 	entityID := pm.Entity().GetID()
 
 	oplog, err := NewUserOplog(objID, ts, myID, op, opData, entityID, pm.dbUserLock)
@@ -71,7 +71,7 @@ func (pm *ProtocolManager) NewUserOplogWithTS(objID *types.PttID, ts types.Times
 
 func (spm *ServiceProtocolManager) NewUserOplogWithTS(entityID *types.PttID, ts types.Timestamp, op pkgservice.OpType, opData pkgservice.OpData) (pkgservice.Oplog, error) {
 
-	myID := spm.Ptt().GetMyEntity().GetID()
+	myID := spm.Router().GetMyEntity().GetID()
 
 	return NewUserOplog(entityID, ts, myID, op, opData, entityID, spm.GetDBLogLock())
 }

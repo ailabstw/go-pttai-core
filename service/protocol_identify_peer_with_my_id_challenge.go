@@ -26,7 +26,7 @@ import (
 /*
 IdentifyPeerWithMyIDChallenge requests challenge to make sure the user-id (acker)
 */
-func (p *BasePtt) IdentifyPeerWithMyIDChallenge(userID *types.PttID, peer *PttPeer) error {
+func (p *BaseRouter) IdentifyPeerWithMyIDChallenge(userID *types.PttID, peer *PttPeer) error {
 
 	log.Debug("IdentifyPeerWithMyIDChallenge: to IdentifyPeer", "userID", userID, "peer", peer)
 
@@ -43,7 +43,7 @@ func (p *BasePtt) IdentifyPeerWithMyIDChallenge(userID *types.PttID, peer *PttPe
 /*
 HandleIdentifyPeerWithMyIDChallenge handles IdentifyPeerWithMyIDChallenge (requester)
 */
-func (p *BasePtt) HandleIdentifyPeerWithMyIDChallenge(dataBytes []byte, peer *PttPeer) error {
+func (p *BaseRouter) HandleIdentifyPeerWithMyIDChallenge(dataBytes []byte, peer *PttPeer) error {
 	data := &IdentifyPeer{}
 	err := json.Unmarshal(dataBytes, data)
 	if err != nil {

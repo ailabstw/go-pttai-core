@@ -34,13 +34,13 @@ type BackendMyInfo struct {
 	NodeID *discover.NodeID
 }
 
-func MarshalBackendMyInfo(m *MyInfo, ptt pkgservice.MyPtt) *BackendMyInfo {
+func MarshalBackendMyInfo(m *MyInfo, router pkgservice.MyRouter) *BackendMyInfo {
 	if m == nil {
 		return nil
 	}
 
-	myRaftID := ptt.MyRaftID()
-	myNodeID := ptt.MyNodeID()
+	myRaftID := router.MyRaftID()
+	myNodeID := router.MyNodeID()
 
 	return &BackendMyInfo{
 		V:        m.V,

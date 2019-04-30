@@ -176,7 +176,7 @@ func (pm *ProtocolManager) handleInternalSyncFriendAckNew(
 
 	f.Status = types.StatusInit
 
-	ptt := pm.Ptt()
+	ptt := pm.Router()
 	err := f.Init(ptt, svc, spm)
 	err = f.Save(true)
 	if err != nil {

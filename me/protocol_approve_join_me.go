@@ -110,10 +110,10 @@ func (pm *ProtocolManager) HandleApproveJoinMe(dataBytes []byte, joinRequest *pk
 		return err
 	}
 
-	ptt := pm.myPtt
+	ptt := pm.myRouter
 	service := pm.Entity().Service().(*Backend)
 	spm := service.SPM().(*ServiceProtocolManager)
-	myNodeID := pm.myPtt.MyNodeID()
+	myNodeID := pm.myRouter.MyNodeID()
 
 	// 1. new me
 	newMyInfo := approveJoinMe.MyInfo

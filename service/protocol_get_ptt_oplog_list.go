@@ -24,10 +24,10 @@ import (
 /*
  gets the PttOplogs specifically from myEntity.
 */
-func (p *BasePtt) GetPttOplogList(logID *types.PttID, limit int, listOrder pttdb.ListOrder, status types.Status) ([]*PttOplog, error) {
+func (r *BaseRouter) GetPttOplogList(logID *types.PttID, limit int, listOrder pttdb.ListOrder, status types.Status) ([]*PttOplog, error) {
 
 	oplog := &BaseOplog{}
-	myID := p.myEntity.GetID()
+	myID := r.myEntity.GetID()
 	SetPttDB(myID, oplog)
 
 	oplogs, err := GetOplogList(oplog, logID, limit, listOrder, status, false)

@@ -31,7 +31,7 @@ type RequestOpKey struct {
 	OpKeyLogs []*BaseOplog `json:"O"`
 }
 
-func (p *BasePtt) RequestOpKey(hash *common.Address, peer *PttPeer) error {
+func (p *BaseRouter) RequestOpKey(hash *common.Address, peer *PttPeer) error {
 
 	if peer.UserID == nil {
 		return types.ErrInvalidID
@@ -46,7 +46,7 @@ func (p *BasePtt) RequestOpKey(hash *common.Address, peer *PttPeer) error {
 	return p.RequestOpKeyByEntity(entity, peer)
 }
 
-func (p *BasePtt) RequestOpKeyByEntity(entity Entity, peer *PttPeer) error {
+func (p *BaseRouter) RequestOpKeyByEntity(entity Entity, peer *PttPeer) error {
 	opKeys := entity.PM().OpKeyList()
 
 	opKeyOplogs, err := entity.PM().GetOpKeyOplogList(nil, 0, pttdb.ListOrderNext, types.StatusAlive)
@@ -67,7 +67,7 @@ func (p *BasePtt) RequestOpKeyByEntity(entity Entity, peer *PttPeer) error {
 
 }
 
-func (p *BasePtt) HandleRequestOpKey(dataBytes []byte, peer *PttPeer) error {
+func (p *BaseRouter) HandleRequestOpKey(dataBytes []byte, peer *PttPeer) error {
 
 	if peer.UserID == nil {
 		return types.ErrInvalidID

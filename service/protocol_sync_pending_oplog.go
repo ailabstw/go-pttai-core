@@ -66,7 +66,7 @@ func (pm *BaseProtocolManager) HandleSyncPendingOplog(
 	handleFailedOplog func(oplog *BaseOplog) error,
 	syncAckMsg OpType,
 ) error {
-	ptt := pm.Ptt()
+	ptt := pm.Router()
 	myInfo := ptt.GetMyEntity()
 	if myInfo.GetStatus() != types.StatusAlive {
 		return nil

@@ -27,14 +27,14 @@ type OpFail struct {
 	Hash *common.Address `json:"H"`
 }
 
-func (p *BasePtt) OpFail(hash *common.Address, peer *PttPeer) error {
+func (r *BaseRouter) OpFail(hash *common.Address, peer *PttPeer) error {
 	data := &OpFail{
 		Hash: hash,
 	}
-	return p.SendDataToPeer(CodeTypeOpFail, data, peer)
+	return r.SendDataToPeer(CodeTypeOpFail, data, peer)
 }
 
-func (p *BasePtt) HandleOpFail(dataBytes []byte, peer *PttPeer) error {
+func (r *BaseRouter) HandleOpFail(dataBytes []byte, peer *PttPeer) error {
 	data := &OpFail{}
 	err := json.Unmarshal(dataBytes, data)
 	if err != nil {
@@ -43,5 +43,5 @@ func (p *BasePtt) HandleOpFail(dataBytes []byte, peer *PttPeer) error {
 
 	log.Debug("HandleOpFail: to RequestOpKey", "hash", data.Hash)
 
-	return p.RequestOpKey(data.Hash, peer)
+	return r.RequestOpKey(data.Hash, peer)
 }

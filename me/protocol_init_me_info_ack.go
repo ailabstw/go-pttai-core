@@ -38,7 +38,7 @@ func (pm *ProtocolManager) InitMeInfoAck(data *InitMeInfo, peer *pkgservice.PttP
 
 	myInfo := pm.Entity().(*MyInfo)
 
-	myRaftID := pm.myPtt.MyRaftID()
+	myRaftID := pm.myRouter.MyRaftID()
 	if myInfo.Status == types.StatusInit {
 		err = myInfo.Lock()
 		if err != nil {
@@ -119,7 +119,7 @@ func (pm *ProtocolManager) handleInitMeInfoCore(status types.Status, peer *pkgse
 	}
 
 	// set peer
-	ptt := pm.myPtt
+	ptt := pm.myRouter
 	ptt.SetupPeer(peer, pkgservice.PeerTypeMe, false)
 
 	return nil

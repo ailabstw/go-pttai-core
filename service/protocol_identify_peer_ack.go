@@ -42,7 +42,7 @@ IdentifyPeerAck acks IdentifyPeer. We need to pass to ptt to hide the sign-key o
 */
 func (pm *BaseProtocolManager) IdentifyPeerAck(data *IdentifyPeer, peer *PttPeer) error {
 
-	ptt := pm.Ptt()
+	ptt := pm.Router()
 
 	ackData, err := ptt.IdentifyPeerAck(data.Challenge, peer)
 	if err != nil {
@@ -75,7 +75,7 @@ func (pm *BaseProtocolManager) HandleIdentifyPeerAck(dataBytes []byte, peer *Ptt
 
 	log.Debug("HandleIdentifyPeerAck: to ptt.HandleIdentifyPeerAck")
 
-	ptt := pm.Ptt()
+	ptt := pm.Router()
 
 	return ptt.HandleIdentifyPeerAck(pm.Entity().GetID(), data, peer)
 }
@@ -87,7 +87,7 @@ func (pm *BaseProtocolManager) HandleIdentifyPeerAck(dataBytes []byte, peer *Ptt
 /*
 IdentifyPeerAck
 */
-func (p *BasePtt) IdentifyPeerAck(challenge *types.Salt, peer *PttPeer) (*IdentifyPeerAck, error) {
+func (p *BaseRouter) IdentifyPeerAck(challenge *types.Salt, peer *PttPeer) (*IdentifyPeerAck, error) {
 	if p.myEntity == nil {
 		return nil, ErrInvalidEntity
 	}
@@ -119,7 +119,7 @@ func (p *BasePtt) IdentifyPeerAck(challenge *types.Salt, peer *PttPeer) (*Identi
 /*
 HandleIdentifyPeerAck
 */
-func (p *BasePtt) HandleIdentifyPeerAck(entityID *types.PttID, data *IdentifyPeerAck, peer *PttPeer) error {
+func (p *BaseRouter) HandleIdentifyPeerAck(entityID *types.PttID, data *IdentifyPeerAck, peer *PttPeer) error {
 
 	if peer.IDChallenge == nil || data.AckChallenge == nil || !reflect.DeepEqual(peer.IDChallenge[:], data.AckChallenge[:types.SizeSalt]) {
 		log.Warn("HandleIdentifyPeerAck: unable to match challenge", "peer", peer.IDChallenge, "data", data.AckChallenge, "peer", peer)

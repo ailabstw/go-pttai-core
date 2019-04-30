@@ -39,7 +39,7 @@ type PttPeer struct {
 
 	term chan struct{} // Termination channel to stop the broadcaster
 
-	ptt *BasePtt
+	ptt *BaseRouter
 
 	UserID *types.PttID
 
@@ -53,7 +53,7 @@ type PttPeer struct {
 	IsToClose bool
 }
 
-func NewPttPeer(version uint, p *p2p.Peer, rw p2p.MsgReadWriter, ptt *BasePtt) (*PttPeer, error) {
+func NewPttPeer(version uint, p *p2p.Peer, rw p2p.MsgReadWriter, ptt *BaseRouter) (*PttPeer, error) {
 	return &PttPeer{
 		Peer:    p,
 		rw:      rw,
@@ -86,7 +86,7 @@ func (p *PttPeer) Handshake(networkID uint32) error {
 	errc := make(chan error, 2)
 
 	go func() {
-		errc <- p2p.Send(p.rw, uint64(CodeTypeStatus), &PttStatus{
+		errc <- p2p.Send(p.rw, uint64(CodeTypeStatus), &RouterStatus{
 			Version:   uint32(p.version),
 			NetworkID: networkID,
 		})
@@ -129,7 +129,7 @@ func (p *PttPeer) ReadStatus(networkID uint32) error {
 		return ErrMsgTooLarge
 	}
 
-	status := &PttStatus{}
+	status := &RouterStatus{}
 	err = msg.Decode(&status)
 	if err != nil {
 		return err
@@ -158,7 +158,7 @@ func (p *PttPeer) RW() p2p.MsgReadWriter {
 	return p.rw
 }
 
-func (p *PttPeer) SendData(data *PttData) error {
+func (p *PttPeer) SendData(data *RouterData) error {
 	//log.Debug("SendData", "p", p, "data", data)
 	return p2p.Send(p.rw, uint64(data.Code), data)
 }

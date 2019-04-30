@@ -43,7 +43,7 @@ type Config struct {
 	Me      *me.Config
 	Account *account.Config
 	Friend  *friend.Config
-	Ptt     *service.Config
+	Router  *service.Config
 	Utils   *UtilsConfig
 }
 
@@ -81,14 +81,14 @@ func gptt(ctx *cli.Context) error {
 		Me:      &me.DefaultConfig,
 		Account: &account.DefaultConfig,
 		Friend:  &friend.DefaultConfig,
-		Ptt:     &service.DefaultConfig,
+		Router:  &service.DefaultConfig,
 		Utils:   &UtilsConfig{},
 	}
 	cfg.Utils.ExternHTTPAddr = "http://localhost:9776"
 	cfg.Node.HTTPHost = "127.0.0.1"
 	cfg.Node.HTTPPort = 14779
 
-	cfg.Ptt.DataDir = filepath.Join(node.DefaultDataDir(), "service")
+	cfg.Router.DataDir = filepath.Join(node.DefaultDataDir(), "service")
 
 	SetMeConfig(cfg.Me, cfg.Node)
 
@@ -98,8 +98,8 @@ func gptt(ctx *cli.Context) error {
 		return err
 	}
 
-	// register ptt
-	if err := registerPtt(n, &cfg); err != nil {
+	// register router
+	if err := registerRouter(n, &cfg); err != nil {
 		return err
 	}
 
@@ -121,53 +121,53 @@ func gptt(ctx *cli.Context) error {
 	return nil
 }
 
-func registerPtt(n *node.Node, cfg *Config) error {
-	return n.Register(func(ctx *service.ServiceContext) (service.PttService, error) {
+func registerRouter(n *node.Node, cfg *Config) error {
+	return n.Register(func(ctx *service.RouterContext) (service.NodeRouter, error) {
 		myNodeKey := cfg.Node.NodeKey()
 		myNodeID := discover.PubkeyID(&myNodeKey.PublicKey)
 
-		ptt, err := service.NewPtt(ctx, cfg.Ptt, &myNodeID, myNodeKey)
+		router, err := service.NewRouter(ctx, cfg.Router, &myNodeID, myNodeKey)
 		if err != nil {
 			return nil, err
 		}
 
-		accountBackend, err := account.NewBackend(ctx, cfg.Account, ptt)
+		accountBackend, err := account.NewBackend(ctx, cfg.Account, router)
 		if err != nil {
 			return nil, err
 		}
-		err = ptt.RegisterService(accountBackend)
+		err = router.RegisterService(accountBackend)
 		if err != nil {
 			return nil, err
 		}
 
 		// friend
-		friendBackend, err := friend.NewBackend(ctx, cfg.Friend, cfg.Me.ID, ptt, accountBackend)
+		friendBackend, err := friend.NewBackend(ctx, cfg.Friend, cfg.Me.ID, router, accountBackend)
 		if err != nil {
 			return nil, err
 		}
-		err = ptt.RegisterService(friendBackend)
+		err = router.RegisterService(friendBackend)
 		if err != nil {
 			return nil, err
 		}
 
 		// me
-		meBackend, err := me.NewBackend(ctx, cfg.Me, ptt, accountBackend, friendBackend)
+		meBackend, err := me.NewBackend(ctx, cfg.Me, router, accountBackend, friendBackend)
 		if err != nil {
 			return nil, err
 		}
 
-		err = ptt.RegisterService(meBackend)
+		err = router.RegisterService(meBackend)
 		if err != nil {
 			return nil, err
 		}
 
-		err = ptt.Prestart()
+		err = router.Prestart()
 		if err != nil {
 			log.Error("unable to do Prestart", "e", err)
 			return nil, err
 		}
 
-		return ptt, nil
+		return router, nil
 	})
 }
 
@@ -194,12 +194,12 @@ func setSignal(n *node.Node) {
 func WaitNode(n *node.Node) error {
 	log.Info("start Waiting...")
 
-	ptt := n.Services()[reflect.TypeOf(&service.BasePtt{})].(*service.BasePtt)
+	router := n.Services()[reflect.TypeOf(&service.BaseRouter{})].(*service.BaseRouter)
 
 loop:
 	for {
 		select {
-		case _, ok := <-ptt.NotifyNodeRestart().GetChan():
+		case _, ok := <-router.NotifyNodeRestart().GetChan():
 			log.Debug("WaitNode: NotifyNodeRestart: start")
 			if !ok {
 				break loop
@@ -208,9 +208,9 @@ loop:
 			if err != nil {
 				return err
 			}
-			ptt = n.Services()[reflect.TypeOf(&service.BasePtt{})].(*service.BasePtt)
+			router = n.Services()[reflect.TypeOf(&service.BaseRouter{})].(*service.BaseRouter)
 			log.Debug("WaitNode: NotifyNodeRestart: done")
-		case _, ok := <-ptt.NotifyNodeStop().GetChan():
+		case _, ok := <-router.NotifyNodeStop().GetChan():
 			log.Debug("WaitNode: NotifyNodeStop: start")
 			if !ok {
 				break loop
@@ -218,7 +218,7 @@ loop:
 			n.Stop(false, false)
 			log.Debug("WaitNode: NotifyNodeStop: done")
 			break loop
-		case err, ok := <-ptt.ErrChan().GetChan():
+		case err, ok := <-router.ErrChan().GetChan():
 			if !ok {
 				break loop
 			}

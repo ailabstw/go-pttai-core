@@ -118,7 +118,7 @@ func pmSyncPeer(pm ProtocolManager) (*PttPeer, error) {
 }
 
 func (pm *BaseProtocolManager) ForceSyncCycle() time.Duration {
-	if pm.Ptt().GetMyEntity().GetStatus() < types.StatusAlive {
+	if pm.Router().GetMyEntity().GetStatus() < types.StatusAlive {
 		return time.Duration(5) * time.Second
 	}
 

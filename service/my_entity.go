@@ -22,6 +22,9 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 )
 
+/*
+me (my_info) for all the entities.
+*/
 type MyEntity interface {
 	GetID() *types.PttID
 	GetStatus() types.Status
@@ -51,7 +54,10 @@ type MyEntity interface {
 	GetValidateKey() *types.PttID
 }
 
-type PttMyEntity interface {
+/*
+MyEntity for ptt.
+*/
+type RouterMyEntity interface {
 	MyEntity
 
 	MyPM() MyProtocolManager

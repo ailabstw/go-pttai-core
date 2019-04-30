@@ -32,7 +32,7 @@ type IdentifyPeerWithMyID struct {
 /*
 IdentifyPeerWithMyID ask for identifying peer with providing my-id (requester)
 */
-func (p *BasePtt) IdentifyPeerWithMyID(peer *PttPeer) error {
+func (p *BaseRouter) IdentifyPeerWithMyID(peer *PttPeer) error {
 	if p.myEntity == nil {
 		return ErrInvalidEntity
 	}
@@ -56,7 +56,7 @@ func (p *BasePtt) IdentifyPeerWithMyID(peer *PttPeer) error {
 	return p.SendDataToPeer(CodeTypeIdentifyPeerWithMyID, data, peer)
 }
 
-func (p *BasePtt) HandleIdentifyPeerWithMyID(dataBytes []byte, peer *PttPeer) error {
+func (p *BaseRouter) HandleIdentifyPeerWithMyID(dataBytes []byte, peer *PttPeer) error {
 	data := &IdentifyPeerWithMyID{}
 	err := json.Unmarshal(dataBytes, data)
 	if err != nil {

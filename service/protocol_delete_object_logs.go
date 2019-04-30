@@ -163,7 +163,7 @@ func (pm *BaseProtocolManager) handleDeleteObjectLogCore(
 
 	// 3. deal with create-log (delete obj completely and return skip log if not me, else do not set sync)
 	origStatus := origObj.GetStatus()
-	myID := pm.Ptt().GetMyEntity().GetID()
+	myID := pm.Router().GetMyEntity().GetID()
 	if origStatus < types.StatusAlive {
 		if !reflect.DeepEqual(myID, oplog.CreatorID) {
 			origObj.Delete(true)

@@ -65,7 +65,7 @@ func (pm *ProtocolManager) ApproveJoinFriend(joinEntity *pkgservice.JoinEntity, 
 	// register pending peer
 	if peer.UserID == nil {
 		peer.UserID = joinEntity.ID
-		friendPM.Ptt().FinishIdentifyPeer(peer, false, false)
+		friendPM.Router().FinishIdentifyPeer(peer, false, false)
 	}
 	friendPM.RegisterPendingPeer(peer, false)
 
@@ -92,7 +92,7 @@ func (pm *ProtocolManager) HandleApproveJoinFriend(dataBytes []byte, joinRequest
 		return pkgservice.ErrInvalidData
 	}
 
-	ptt := pm.Ptt()
+	ptt := pm.Router()
 	myID := ptt.GetMyEntity().GetID()
 
 	friendService := pm.Entity().Service().(*Backend).friendBackend
@@ -176,7 +176,7 @@ func (pm *ProtocolManager) HandleApproveJoinFriend(dataBytes []byte, joinRequest
 	// register-peer
 	if peer.UserID == nil {
 		peer.UserID = f.FriendID
-		newPM.Ptt().FinishIdentifyPeer(peer, false, false)
+		newPM.Router().FinishIdentifyPeer(peer, false, false)
 	}
 	newPM.RegisterPendingPeer(peer, false)
 

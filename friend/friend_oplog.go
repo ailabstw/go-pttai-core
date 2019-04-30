@@ -58,7 +58,7 @@ func (pm *ProtocolManager) NewFriendOplogWithTS(objID *types.PttID, ts types.Tim
 
 	log.Debug("NewFriendOplogWithTS: start", "objID", objID)
 
-	myID := pm.Ptt().GetMyEntity().GetID()
+	myID := pm.Router().GetMyEntity().GetID()
 	entityID := pm.Entity().GetID()
 
 	oplog, err := NewFriendOplog(objID, ts, myID, op, opData, entityID, pm.dbFriendLock)
@@ -71,7 +71,7 @@ func (pm *ProtocolManager) NewFriendOplogWithTS(objID *types.PttID, ts types.Tim
 
 func (spm *ServiceProtocolManager) NewFriendOplogWithTS(entityID *types.PttID, ts types.Timestamp, op pkgservice.OpType, opData pkgservice.OpData) (pkgservice.Oplog, error) {
 
-	myID := spm.Ptt().GetMyEntity().GetID()
+	myID := spm.Router().GetMyEntity().GetID()
 	log.Debug("spm.NewFriendOplogWithTS: start", "ts", ts)
 
 	return NewFriendOplog(entityID, ts, myID, op, opData, entityID, spm.GetDBLogLock())

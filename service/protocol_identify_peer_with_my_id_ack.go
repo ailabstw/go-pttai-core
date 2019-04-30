@@ -25,7 +25,7 @@ import (
 /*
 IdentifyPeerWithMyIDAck
 */
-func (p *BasePtt) IdentifyPeerWithMyIDAck(challenge *types.Salt, peer *PttPeer) error {
+func (p *BaseRouter) IdentifyPeerWithMyIDAck(challenge *types.Salt, peer *PttPeer) error {
 	ackData, err := p.IdentifyPeerAck(challenge, peer)
 	if err != nil {
 		return err
@@ -37,7 +37,7 @@ func (p *BasePtt) IdentifyPeerWithMyIDAck(challenge *types.Salt, peer *PttPeer) 
 /*
 HandleIdentifyPeerWithMyIDAck
 */
-func (p *BasePtt) HandleIdentifyPeerWithMyIDAck(dataBytes []byte, peer *PttPeer) error {
+func (p *BaseRouter) HandleIdentifyPeerWithMyIDAck(dataBytes []byte, peer *PttPeer) error {
 	if p.myEntity == nil {
 		return ErrInvalidEntity
 	}

@@ -75,7 +75,7 @@ func (pm *BaseProtocolManager) postmigrateMember(fromID *types.PttID, toID *type
 	}
 
 	// 2. check myID and fromID
-	myID := pm.Ptt().GetMyEntity().GetID()
+	myID := pm.Router().GetMyEntity().GetID()
 	if !reflect.DeepEqual(myID, fromID) {
 		return nil
 	}

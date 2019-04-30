@@ -50,7 +50,7 @@ func (pm *ProtocolManager) DeleteProfile() error {
 
 func (pm *ProtocolManager) postdeleteProfile(theOpData pkgservice.OpData, isForce bool) error {
 
-	myID := pm.Ptt().GetMyEntity().GetID()
+	myID := pm.Router().GetMyEntity().GetID()
 
 	if !isForce && pm.IsMaster(myID, false) {
 		return nil

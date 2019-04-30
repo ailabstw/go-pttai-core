@@ -21,7 +21,7 @@ import (
 )
 
 func (pm *BaseProtocolManager) MigrateMaster(id *types.PttID) error {
-	ptt := pm.Ptt()
+	ptt := pm.Router()
 	myID := ptt.GetMyEntity().GetID()
 
 	// 1. validate

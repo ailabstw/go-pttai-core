@@ -22,11 +22,11 @@ import (
 	"time"
 
 	"github.com/ailabstw/go-pttai-core/common/types"
-	"github.com/ethereum/go-ethereum/event"
 	"github.com/ailabstw/go-pttai-core/log"
 	"github.com/ailabstw/go-pttai-core/p2p/discover"
 	"github.com/ailabstw/go-pttai-core/pttdb"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/event"
 )
 
 type ProtocolManager interface {
@@ -305,8 +305,8 @@ type ProtocolManager interface {
 
 	HandleEntityTerminal(status types.Status, entityLog *BaseOplog, peer *PttPeer) error
 
-	// ptt
-	Ptt() Ptt
+	// router
+	Router() Router
 
 	// db
 	DB() *pttdb.LDBBatch
@@ -430,7 +430,7 @@ type BaseProtocolManager struct {
 	postdelete func(opData OpData, isForce bool) error
 
 	// ptt
-	ptt Ptt
+	ptt Router
 
 	// db
 	db     *pttdb.LDBBatch
@@ -449,8 +449,7 @@ type BaseProtocolManager struct {
 }
 
 func NewBaseProtocolManager(
-	ptt Ptt,
-	renewOpKeySeconds int64,
+	ptt Router, renewOpKeySeconds int64,
 	expireOpKeySeconds int64,
 	maxSyncRandomSeconds int,
 	minSyncRandomSeconds int,
@@ -755,8 +754,8 @@ func (pm *BaseProtocolManager) Prestart() error {
 	// load myMemberLog
 	entity := pm.Entity()
 	service := entity.Service()
-	myService := pm.Ptt().GetMyService()
-	myEntity := pm.Ptt().GetMyEntity().(Entity)
+	myService := pm.Router().GetMyService()
+	myEntity := pm.Router().GetMyEntity().(Entity)
 
 	if service != myService {
 		log.Debug("Prestart: to loadMyMemberLog", "entity", pm.Entity().IDString())
@@ -807,7 +806,7 @@ func (pm *BaseProtocolManager) Start() error {
 		PMOplogMerkleTreeLoop(pm, pm.memberMerkle)
 	}()
 
-	myID := pm.Ptt().GetMyEntity().GetID()
+	myID := pm.Router().GetMyEntity().GetID()
 	// check owner
 	entity := pm.Entity()
 
@@ -871,7 +870,7 @@ func (pm *BaseProtocolManager) Entity() Entity {
 	return pm.entity
 }
 
-func (pm *BaseProtocolManager) Ptt() Ptt {
+func (pm *BaseProtocolManager) Router() Router {
 	return pm.ptt
 }
 

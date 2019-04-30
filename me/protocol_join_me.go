@@ -155,8 +155,8 @@ func (pm *ProtocolManager) processJoinMeEvent(request *pkgservice.JoinRequest, i
 
 	log.Debug("processJoinMeEvent: TryJoin")
 
-	ptt := pm.myPtt
-	err := ptt.TryJoin(challenge, hash, key, request)
+	router := pm.myRouter
+	err := router.TryJoin(challenge, hash, key, request)
 	if err != nil {
 		return err
 	}

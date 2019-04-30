@@ -43,7 +43,7 @@ type Entity interface {
 
 	Save(isLocked bool) error
 
-	Init(ptt Ptt, service Service, spm ServiceProtocolManager) error
+	Init(ptt Router, service Service, spm ServiceProtocolManager) error
 
 	/**********
 	 * implemented in BaseEntity
@@ -86,7 +86,7 @@ type Entity interface {
 	SetEntityType(t EntityType)
 
 	PM() ProtocolManager
-	Ptt() Ptt
+	Router() Router
 	Service() Service
 
 	Name() string
@@ -131,7 +131,7 @@ type BaseEntity struct {
 
 	pm      ProtocolManager
 	name    string
-	ptt     Ptt
+	ptt     Router
 	service Service
 
 	db     *pttdb.LDBBatch
@@ -163,7 +163,7 @@ func NewBaseEntity(id *types.PttID, createTS types.Timestamp, creatorID *types.P
 	return e
 }
 
-func (e *BaseEntity) Init(pm ProtocolManager, ptt Ptt, service Service) {
+func (e *BaseEntity) Init(pm ProtocolManager, ptt Router, service Service) {
 	e.pm = pm
 	e.ptt = ptt
 	e.service = service
@@ -338,7 +338,7 @@ func (e *BaseEntity) PM() ProtocolManager {
 	return e.pm
 }
 
-func (e *BaseEntity) Ptt() Ptt {
+func (e *BaseEntity) Router() Router {
 	return e.ptt
 }
 

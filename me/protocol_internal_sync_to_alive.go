@@ -43,7 +43,7 @@ func (pm *ProtocolManager) InternalSyncToAlive(oplog *MasterOplog, weight uint32
 		return err
 	}
 
-	myRaftID := pm.myPtt.MyRaftID()
+	myRaftID := pm.myRouter.MyRaftID()
 	myNode := pm.MyNodes[myRaftID]
 	myNode.Status = types.StatusAlive
 	myNode.UpdateTS = oplog.UpdateTS
@@ -54,8 +54,8 @@ func (pm *ProtocolManager) InternalSyncToAlive(oplog *MasterOplog, weight uint32
 		return err
 	}
 
-	myNodeType := pm.myPtt.MyNodeType()
-	myNodeID := pm.myPtt.MyNodeID()
+	myNodeType := pm.myRouter.MyNodeType()
+	myNodeID := pm.myRouter.MyNodeID()
 	expectedWeight := pm.nodeTypeToWeight(myNodeType)
 	if weight != expectedWeight {
 		pm.ProposeRaftAddNode(myNodeID, expectedWeight)

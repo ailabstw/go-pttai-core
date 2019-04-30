@@ -66,7 +66,7 @@ func (pm *BaseProtocolManager) postdeleteMember(
 
 	var err error
 
-	myID := pm.Ptt().GetMyEntity().GetID()
+	myID := pm.Router().GetMyEntity().GetID()
 	entity := pm.Entity()
 
 	log.Debug("postdeleteMember: start", "id", id, "entity", pm.Entity().IDString(), "myID", myID)

@@ -39,7 +39,7 @@ func (pm *ProtocolManager) LoadPeers() error {
 		return err
 	}
 
-	ptt := pm.Ptt()
+	ptt := pm.Router()
 	ptt.AddDial(userNodeID, opKey.Hash, pkgservice.PeerTypeImportant, true)
 
 	return nil

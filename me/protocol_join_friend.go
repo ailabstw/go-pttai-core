@@ -138,7 +138,7 @@ func (pm *ProtocolManager) processJoinFriendEvent(request *pkgservice.JoinReques
 
 	hash, key, challenge := request.Hash, request.Key, request.Challenge
 
-	ptt := pm.Ptt()
+	ptt := pm.Router()
 	err := ptt.TryJoin(challenge, hash, key, request)
 	if err != nil {
 		return err

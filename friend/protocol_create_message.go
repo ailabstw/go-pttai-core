@@ -31,7 +31,7 @@ type CreateMessage struct {
 
 func (pm *ProtocolManager) CreateMessage(msg [][]byte, mediaIDs []*types.PttID) (*Message, error) {
 
-	myID := pm.Ptt().GetMyEntity().GetID()
+	myID := pm.Router().GetMyEntity().GetID()
 
 	if !pm.IsMaster(myID, false) {
 		return nil, types.ErrInvalidID
@@ -72,7 +72,7 @@ func (pm *ProtocolManager) CreateMessage(msg [][]byte, mediaIDs []*types.PttID) 
 
 func (pm *ProtocolManager) NewMessage(theData pkgservice.CreateData) (pkgservice.Object, pkgservice.OpData, error) {
 
-	myID := pm.Ptt().GetMyEntity().GetID()
+	myID := pm.Router().GetMyEntity().GetID()
 	entityID := pm.Entity().GetID()
 
 	ts, err := types.GetTimestamp()
@@ -140,7 +140,7 @@ func (pm *ProtocolManager) postcreateMessage(theObj pkgservice.Object, oplog *pk
 	entity := pm.Entity().(*Friend)
 	entity.SaveMessageCreateTS(oplog.UpdateTS)
 
-	myID := pm.Ptt().GetMyEntity().GetID()
+	myID := pm.Router().GetMyEntity().GetID()
 	creatorID := theObj.GetCreatorID()
 
 	if reflect.DeepEqual(myID, creatorID) {

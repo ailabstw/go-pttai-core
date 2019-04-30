@@ -23,7 +23,7 @@ import (
 
 func (pm *ProtocolManager) CreateNameCard(nameCard []byte) error {
 
-	myID := pm.Ptt().GetMyEntity().GetID()
+	myID := pm.Router().GetMyEntity().GetID()
 
 	if !pm.IsMaster(myID, false) {
 		return types.ErrInvalidID
@@ -53,7 +53,7 @@ func (pm *ProtocolManager) CreateNameCard(nameCard []byte) error {
 
 func (pm *ProtocolManager) NewNameCard(theData pkgservice.CreateData) (pkgservice.Object, pkgservice.OpData, error) {
 
-	myID := pm.Ptt().GetMyEntity().GetID()
+	myID := pm.Router().GetMyEntity().GetID()
 	entityID := pm.Entity().GetID()
 
 	ts, err := types.GetTimestamp()

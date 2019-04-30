@@ -41,7 +41,7 @@ func (pm *BaseProtocolManager) DeleteObject(
 	postdelete func(id *types.PttID, oplog *BaseOplog, opData OpData, origObj Object, blockInfo *BlockInfo) error,
 ) error {
 
-	myEntity := pm.Ptt().GetMyEntity()
+	myEntity := pm.Router().GetMyEntity()
 	myID := myEntity.GetID()
 	entity := pm.Entity()
 

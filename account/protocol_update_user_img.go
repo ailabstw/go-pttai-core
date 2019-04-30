@@ -38,7 +38,7 @@ func (pm *ProtocolManager) UpdateUserImg(imgStr string) (*UserImg, error) {
 		return nil, err
 	}
 
-	myID := pm.Ptt().GetMyEntity().GetID()
+	myID := pm.Router().GetMyEntity().GetID()
 
 	if !pm.IsMaster(myID, false) {
 		return nil, types.ErrInvalidID

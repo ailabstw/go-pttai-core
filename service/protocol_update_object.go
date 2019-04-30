@@ -54,7 +54,7 @@ func (pm *BaseProtocolManager) UpdateObject(
 
 ) error {
 
-	myEntity := pm.Ptt().GetMyEntity()
+	myEntity := pm.Router().GetMyEntity()
 	myID := myEntity.GetID()
 	entity := pm.Entity()
 

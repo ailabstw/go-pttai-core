@@ -92,7 +92,7 @@ func (pm *BaseProtocolManager) syncOplogInvalidIsToSyncPeer(
 	mySyncTS types.Timestamp,
 ) bool {
 
-	ptt := pm.Ptt()
+	ptt := pm.Router()
 	myID := ptt.GetMyEntity().GetID()
 	myNodeID := ptt.MyNodeID()
 

@@ -41,7 +41,7 @@ func (pm *BaseProtocolManager) DeletePerson(
 	postdelete func(id *types.PttID, oplog *BaseOplog, origPerson Object, opData OpData) error,
 ) error {
 
-	myEntity := pm.Ptt().GetMyEntity()
+	myEntity := pm.Router().GetMyEntity()
 	myID := myEntity.GetID()
 	entity := pm.Entity()
 

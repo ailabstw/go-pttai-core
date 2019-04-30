@@ -62,7 +62,7 @@ func (pm *ProtocolManager) postdeleteMigrateMe(theOpData pkgservice.OpData, isFo
 	var entityPM pkgservice.ProtocolManager
 
 	// add member
-	entities := pm.myPtt.GetEntities()
+	entities := pm.myRouter.GetEntities()
 
 	for _, entity := range entities {
 		if entity == myInfo {

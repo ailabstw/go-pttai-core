@@ -37,7 +37,7 @@ func (pm *ProtocolManager) InitFriendInfo(peer *pkgservice.PttPeer) error {
 	friendID := f.FriendID
 
 	// profile
-	profilePM := pm.Ptt().GetMyEntity().GetProfile().(*account.Profile).PM()
+	profilePM := pm.Router().GetMyEntity().GetProfile().(*account.Profile).PM()
 	joinEntity := &pkgservice.JoinEntity{ID: friendID}
 	_, theProfileData, err := profilePM.ApproveJoin(joinEntity, nil, peer)
 	log.Debug("InitFriendInfo: after profile ApproveJoin", "e", err, "profile", profilePM.Entity().GetID())
@@ -126,7 +126,7 @@ func (pm *ProtocolManager) HandleInitFriendInfo(dataBytes []byte, peer *pkgservi
 func (pm *ProtocolManager) postcreateFriend(entity pkgservice.Entity) error {
 
 	// me-oplog
-	err := pm.Ptt().GetMyEntity().CreateEntityOplog(entity)
+	err := pm.Router().GetMyEntity().CreateEntityOplog(entity)
 
 	if err != nil {
 		return err
@@ -138,7 +138,7 @@ func (pm *ProtocolManager) postcreateFriend(entity pkgservice.Entity) error {
 		return err
 	}
 
-	myID := pm.Ptt().GetMyEntity().GetID()
+	myID := pm.Router().GetMyEntity().GetID()
 
 	f := entity.(*Friend)
 

@@ -105,12 +105,12 @@ func (pm *ProtocolManager) HandleRevokeMyNode(oplog *MasterOplog, isLockedEntity
 	// entities
 
 	myService := myInfo.Service()
-	pttMyID := pm.Ptt().GetMyEntity().GetID()
+	pttMyID := pm.Router().GetMyEntity().GetID()
 	if reflect.DeepEqual(myID, pttMyID) {
 
 		log.Debug("HandleRevokeMyNode: revoke pttMyID")
 
-		entities := pm.myPtt.GetEntities()
+		entities := pm.myRouter.GetEntities()
 		for _, entity := range entities {
 			if entity == myInfo {
 				continue
@@ -132,7 +132,7 @@ func (pm *ProtocolManager) HandleRevokeMyNode(oplog *MasterOplog, isLockedEntity
 		pm.Entity().Service().(*Backend).Config.SetMyKey("", "", "", true)
 
 		// stop
-		pm.myPtt.NotifyNodeStop().PassChan(struct{}{})
+		pm.myRouter.NotifyNodeStop().PassChan(struct{}{})
 	}
 
 	return nil

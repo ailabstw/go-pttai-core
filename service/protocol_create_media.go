@@ -20,7 +20,7 @@ import "github.com/ailabstw/go-pttai-core/common/types"
 
 func (pm *BaseProtocolManager) NewMedia(theData CreateData) (Object, OpData, error) {
 
-	myID := pm.Ptt().GetMyEntity().GetID()
+	myID := pm.Router().GetMyEntity().GetID()
 	entityID := pm.Entity().GetID()
 
 	ts, err := types.GetTimestamp()

@@ -42,7 +42,7 @@ func (spm *BaseServiceProtocolManager) CreateEntity(
 	data CreateData,
 	createOp OpType,
 
-	newEntity func(data CreateData, ptt Ptt, service Service) (Entity, OpData, error),
+	newEntity func(data CreateData, router Router, service Service) (Entity, OpData, error),
 	newOplogWithTS func(objID *types.PttID, ts types.Timestamp, op OpType, opData OpData) (Oplog, error),
 
 	increate func(entity Entity, oplog *BaseOplog, opData OpData) error,
@@ -51,9 +51,9 @@ func (spm *BaseServiceProtocolManager) CreateEntity(
 ) (Entity, error) {
 
 	// 1. new entity
-	myID := spm.Ptt().GetMyEntity().GetID()
+	myID := spm.Router().GetMyEntity().GetID()
 
-	entity, opData, err := newEntity(data, spm.Ptt(), spm.Service())
+	entity, opData, err := newEntity(data, spm.Router(), spm.Service())
 	if err != nil {
 		return nil, err
 	}

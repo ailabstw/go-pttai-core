@@ -158,7 +158,7 @@ func (pm *BaseProtocolManager) RegisterMaster(master *Master, isLocked bool, isS
 		defer pm.lockMaster.Unlock()
 	}
 
-	log.Debug("RegisterMaster", "masterID", master.ID, "myID", pm.Ptt().GetMyEntity().GetID(), "status", master.Status, "entity", pm.Entity().GetID())
+	log.Debug("RegisterMaster", "masterID", master.ID, "myID", pm.Router().GetMyEntity().GetID(), "status", master.Status, "entity", pm.Entity().GetID())
 
 	if master.Status != types.StatusAlive {
 		return nil
@@ -170,7 +170,7 @@ func (pm *BaseProtocolManager) RegisterMaster(master *Master, isLocked bool, isS
 		return nil
 	}
 
-	return pm.Ptt().RegisterEntityPeerWithOtherUserID(pm.Entity(), master.ID, PeerTypeImportant, false)
+	return pm.Router().RegisterEntityPeerWithOtherUserID(pm.Entity(), master.ID, PeerTypeImportant, false)
 }
 
 func (pm *BaseProtocolManager) UnregisterMaster(master *Master, isLocked bool) error {
@@ -181,7 +181,7 @@ func (pm *BaseProtocolManager) UnregisterMaster(master *Master, isLocked bool) e
 
 	delete(pm.masters, *master.ID)
 
-	myID := pm.Ptt().GetMyEntity().GetID()
+	myID := pm.Router().GetMyEntity().GetID()
 
 	log.Debug("UnregisterMaster", "masterID", master.ID, "myID", myID)
 
@@ -258,7 +258,7 @@ func (pm *BaseProtocolManager) ConnectMaster() error {
 	masters := pm.GetMasters()
 	var master *Master
 
-	myEntity := pm.Ptt().GetMyEntity()
+	myEntity := pm.Router().GetMyEntity()
 	myID := myEntity.GetID()
 	for _, eachMaster := range masters {
 		if !reflect.DeepEqual(eachMaster.ID, myID) {
@@ -284,7 +284,7 @@ func (pm *BaseProtocolManager) ConnectMaster() error {
 		return err
 	}
 
-	pm.Ptt().AddDial(nodeID, opKey.Hash, PeerTypeImportant, true)
+	pm.Router().AddDial(nodeID, opKey.Hash, PeerTypeImportant, true)
 
 	return nil
 }

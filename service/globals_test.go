@@ -25,10 +25,10 @@ import (
 	"time"
 
 	"github.com/ailabstw/go-pttai-core/common/types"
-	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ailabstw/go-pttai-core/log"
 	"github.com/ailabstw/go-pttai-core/p2p/discover"
 	"github.com/ailabstw/go-pttai-core/pttdb"
+	"github.com/ethereum/go-ethereum/crypto"
 )
 
 const ()
@@ -46,7 +46,7 @@ type TType struct {
 var (
 	tDefaultTimestamp = types.Timestamp{Ts: 123456789, NanoTs: 2}
 
-	tDefaultPtt = &BasePtt{
+	tDefaultPtt = &BaseRouter{
 		myNodeID: tDefaultNodeID,
 	}
 
@@ -81,7 +81,7 @@ var (
 		175, 41, 199, 197, 220, 16, 143, 52,
 	}
 
-	tDefaultPttData = &PttData{
+	tDefaultPttData = &RouterData{
 		Node:       nil,
 		Code:       CodeTypeOp,
 		Hash:       []byte{113, 86, 43, 113, 153, 152, 115, 219, 91, 40, 109, 249, 87, 175, 25, 158, 201, 70, 23, 247},

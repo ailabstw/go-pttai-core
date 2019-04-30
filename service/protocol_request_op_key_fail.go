@@ -26,14 +26,14 @@ type OpKeyFail struct {
 	EntityID *types.PttID `json:"ID"`
 }
 
-func (p *BasePtt) RequestOpKeyFail(entityID *types.PttID, peer *PttPeer) error {
+func (p *BaseRouter) RequestOpKeyFail(entityID *types.PttID, peer *PttPeer) error {
 	data := &OpKeyFail{
 		EntityID: entityID,
 	}
 	return p.SendDataToPeer(CodeTypeRequestOpKeyFail, data, peer)
 }
 
-func (p *BasePtt) HandleRequestOpKeyFail(dataBytes []byte, peer *PttPeer) error {
+func (p *BaseRouter) HandleRequestOpKeyFail(dataBytes []byte, peer *PttPeer) error {
 	if peer.UserID == nil {
 		return types.ErrInvalidID
 	}

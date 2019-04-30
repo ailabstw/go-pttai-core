@@ -22,7 +22,7 @@ import (
 )
 
 func (pm *BaseProtocolManager) AddMaster(id *types.PttID, isForce bool) (*Master, *MasterOplog, error) {
-	ptt := pm.Ptt()
+	ptt := pm.Router()
 	myID := ptt.GetMyEntity().GetID()
 	origMaster := NewEmptyMaster()
 	pm.SetMasterObjDB(origMaster)
@@ -69,7 +69,7 @@ func (pm *BaseProtocolManager) AddMaster(id *types.PttID, isForce bool) (*Master
 
 func (pm *BaseProtocolManager) NewMaster(id *types.PttID) (Object, OpData, error) {
 	entity := pm.Entity()
-	myEntity := pm.Ptt().GetMyEntity()
+	myEntity := pm.Router().GetMyEntity()
 	myID := myEntity.GetID()
 
 	ts, err := types.GetTimestamp()

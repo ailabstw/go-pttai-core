@@ -59,7 +59,7 @@ func (pm *BaseProtocolManager) defaultIsValidOplog(signInfos []*SignInfo) (*type
  **********/
 
 func (pm *BaseProtocolManager) SignOplog(oplog *BaseOplog) error {
-	myEntity := pm.Ptt().GetMyEntity()
+	myEntity := pm.Router().GetMyEntity()
 
 	err := myEntity.Sign(oplog)
 	if err != nil {
@@ -80,7 +80,7 @@ func (pm *BaseProtocolManager) ForceSignOplog(oplog *BaseOplog) error {
 
 func (pm *BaseProtocolManager) defaultForceSignOplog(oplog *BaseOplog) error {
 
-	myEntity := pm.Ptt().GetMyEntity()
+	myEntity := pm.Router().GetMyEntity()
 
 	err := myEntity.Sign(oplog)
 	if err != nil {
@@ -157,7 +157,7 @@ func (pm *BaseProtocolManager) BroadcastOplog(oplog *BaseOplog, msg OpType, pend
 	oplog.Extra = nil
 
 	myService := pm.Entity().Service()
-	MyService := pm.Ptt().GetMyService()
+	MyService := pm.Router().GetMyService()
 
 	// msg type
 	var toSendPeers []*PttPeer
@@ -223,7 +223,7 @@ func (pm *BaseProtocolManager) BroadcastOplogs(oplogs []*BaseOplog, msg OpType, 
 	peers.RUnlock()
 
 	myService := pm.Entity().Service()
-	MyService := pm.Ptt().GetMyService()
+	MyService := pm.Router().GetMyService()
 	if myService == MyService {
 		masterPeerList = mePeerList
 	}
@@ -276,7 +276,7 @@ func (pm *BaseProtocolManager) defaultInternalSign(oplog *BaseOplog) (bool, erro
 
 	log.Debug("defaultInternalSign: start", "oplog", oplog)
 
-	ptt := pm.Ptt()
+	ptt := pm.Router()
 	myEntity := ptt.GetMyEntity()
 	myID := myEntity.GetID()
 
@@ -447,7 +447,7 @@ func (pm *BaseProtocolManager) defaultValidateIntegrateSign(oplog *BaseOplog, is
 		defer oplog.Unlock()
 	}
 
-	ptt := pm.Ptt()
+	ptt := pm.Router()
 	myEntity := ptt.GetMyEntity()
 
 	_, weight, isValid := myEntity.IsValidInternalOplog(oplog.InternalSigns)
