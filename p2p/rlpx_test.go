@@ -26,17 +26,15 @@ import (
 	"net"
 	"reflect"
 	"strings"
-	"sync"
 	"testing"
 	"time"
 
 	"github.com/ailabstw/go-pttai-core/key"
 	"github.com/ailabstw/go-pttai-core/p2p/discover"
-	"github.com/ailabstw/go-pttai-core/p2p/simulations/pipes"
-	"github.com/ethereum/go-ethereum/rlp"
 	"github.com/davecgh/go-spew/spew"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/crypto/ecies"
+	"github.com/ethereum/go-ethereum/rlp"
 	"golang.org/x/crypto/sha3"
 )
 
@@ -148,6 +146,7 @@ func testEncHandshake(token []byte) error {
 	return nil
 }
 
+/*
 func TestProtocolHandshake(t *testing.T) {
 	var (
 		prv0, _ = key.GenerateKey()
@@ -224,6 +223,7 @@ func TestProtocolHandshake(t *testing.T) {
 	}()
 	wg.Wait()
 }
+*/
 
 func TestProtocolHandshakeErrors(t *testing.T) {
 	our := &protoHandshake{Version: 3, Caps: []Cap{{"foo", 2}, {"bar", 3}}, Name: "quux"}
