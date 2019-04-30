@@ -23,7 +23,7 @@ import (
 type RequestRaftLead struct{}
 
 func (pm *ProtocolManager) EnsureRaftLead() error {
-	myRaftID := pm.myPtt.MyRaftID()
+	myRaftID := pm.myRouter.MyRaftID()
 
 	err := ErrUnableToBeLead
 	var raftLead uint64

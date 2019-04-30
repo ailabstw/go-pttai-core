@@ -35,7 +35,7 @@ func NewEmptyProfile() *Profile {
 	return &Profile{BaseEntity: &pkgservice.BaseEntity{SyncInfo: &pkgservice.BaseSyncInfo{}}}
 }
 
-func NewProfile(myID *types.PttID, ts types.Timestamp, ptt pkgservice.Ptt, service pkgservice.Service, spm pkgservice.ServiceProtocolManager, dbLock *types.LockMap) (*Profile, error) {
+func NewProfile(myID *types.PttID, ts types.Timestamp, router pkgservice.Router, service pkgservice.Service, spm pkgservice.ServiceProtocolManager, dbLock *types.LockMap) (*Profile, error) {
 
 	id, err := pkgservice.NewPttIDWithMyID(myID)
 	if err != nil {
@@ -54,7 +54,7 @@ func NewProfile(myID *types.PttID, ts types.Timestamp, ptt pkgservice.Ptt, servi
 
 	log.Debug("NewProfile", "id", id)
 
-	err = p.Init(ptt, service, spm)
+	err = p.Init(router, service, spm)
 	if err != nil {
 		return nil, err
 	}
@@ -70,11 +70,11 @@ func (p *Profile) SetUpdateTS(ts types.Timestamp) {
 	p.UpdateTS = ts
 }
 
-func (p *Profile) Init(ptt pkgservice.Ptt, service pkgservice.Service, spm pkgservice.ServiceProtocolManager) error {
+func (p *Profile) Init(router pkgservice.Router, service pkgservice.Service, spm pkgservice.ServiceProtocolManager) error {
 
 	p.SetDB(dbAccount, spm.GetDBLock())
 
-	err := p.InitPM(ptt, service)
+	err := p.InitPM(router, service)
 	if err != nil {
 		return err
 	}
@@ -82,14 +82,14 @@ func (p *Profile) Init(ptt pkgservice.Ptt, service pkgservice.Service, spm pkgse
 	return nil
 }
 
-func (p *Profile) InitPM(ptt pkgservice.Ptt, service pkgservice.Service) error {
-	pm, err := NewProtocolManager(p, ptt, service)
+func (p *Profile) InitPM(router pkgservice.Router, service pkgservice.Service) error {
+	pm, err := NewProtocolManager(p, router, service)
 	if err != nil {
 		log.Error("InitPM: unable to NewProtocolManager", "e", err)
 		return err
 	}
 
-	p.BaseEntity.Init(pm, ptt, service)
+	p.BaseEntity.Init(pm, router, service)
 
 	return nil
 }

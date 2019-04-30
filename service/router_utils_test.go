@@ -19,55 +19,18 @@ package service
 import (
 	"bytes"
 	"crypto/aes"
-	"crypto/ecdsa"
 	"reflect"
-	"sync"
 	"testing"
 
-	"github.com/ailabstw/go-pttai-core/common/types"
-	"github.com/ailabstw/go-pttai-core/p2p"
-	"github.com/ailabstw/go-pttai-core/p2p/discover"
-	"github.com/ailabstw/go-pttai-core/rpc"
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/event"
 )
 
-func TestPtt_EncryptData(t *testing.T) {
+func TestRouter_EncryptData(t *testing.T) {
 	// setup test
 	setupTest(t)
 	defer teardownTest(t)
 
 	// define test-structure
-	type fields struct {
-		config         *Config
-		myID           *types.PttID
-		myIDHash       uint64
-		myKey          *ecdsa.PrivateKey
-		myNodeID       *discover.NodeID
-		eventMux       *event.TypeMux
-		peerLock       sync.RWMutex
-		myPeers        map[discover.NodeID]*PttPeer
-		importantPeers map[discover.NodeID]*PttPeer
-		memberPeers    map[discover.NodeID]*PttPeer
-		randomPeers    map[discover.NodeID]*PttPeer
-		newPeerCh      chan *PttPeer
-		noMorePeers    chan struct{}
-		peerHash       map[uint64]bool
-		peerWG         sync.WaitGroup
-		services       map[string]Service
-		entityLock     sync.RWMutex
-		hashLock       sync.RWMutex
-		entities       map[types.PttID]Entity
-		joins          map[common.Address]*types.PttID
-		ops            map[common.Address]*types.PttID
-		myEntity       Entity
-		quitSync       chan struct{}
-		syncWG         sync.WaitGroup
-		server         *p2p.Server
-		protocols      []p2p.Protocol
-		apis           []rpc.API
-		networkID      uint32
-	}
 	type args struct {
 		op   OpType
 		data []byte
@@ -77,7 +40,7 @@ func TestPtt_EncryptData(t *testing.T) {
 	// prepare test-cases
 	tests := []struct {
 		name    string
-		p       *BasePtt
+		r       *BaseRouter
 		args    args
 		want    []byte
 		wantErr bool
@@ -92,8 +55,8 @@ func TestPtt_EncryptData(t *testing.T) {
 	// run test
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := tt.p
-			got, err := p.EncryptData(tt.args.op, tt.args.data, tt.args.key)
+			r := tt.r
+			got, err := r.EncryptData(tt.args.op, tt.args.data, tt.args.key)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Ptt.EncryptData() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -107,42 +70,12 @@ func TestPtt_EncryptData(t *testing.T) {
 	// teardown test
 }
 
-func TestPtt_DecryptData(t *testing.T) {
+func TestRouter_DecryptData(t *testing.T) {
 	// setup test
 	setupTest(t)
 	defer teardownTest(t)
 
 	// define test-structure
-	type fields struct {
-		config         *Config
-		myID           *types.PttID
-		myIDHash       uint64
-		myKey          *ecdsa.PrivateKey
-		myNodeID       *discover.NodeID
-		eventMux       *event.TypeMux
-		peerLock       sync.RWMutex
-		myPeers        map[discover.NodeID]*PttPeer
-		importantPeers map[discover.NodeID]*PttPeer
-		memberPeers    map[discover.NodeID]*PttPeer
-		randomPeers    map[discover.NodeID]*PttPeer
-		newPeerCh      chan *PttPeer
-		noMorePeers    chan struct{}
-		peerHash       map[uint64]bool
-		peerWG         sync.WaitGroup
-		services       map[string]Service
-		entityLock     sync.RWMutex
-		hashLock       sync.RWMutex
-		entities       map[types.PttID]Entity
-		joins          map[common.Address]*types.PttID
-		ops            map[common.Address]*types.PttID
-		myEntity       Entity
-		quitSync       chan struct{}
-		syncWG         sync.WaitGroup
-		server         *p2p.Server
-		protocols      []p2p.Protocol
-		apis           []rpc.API
-		networkID      uint32
-	}
 	type args struct {
 		encMsg []byte
 		key    *KeyInfo
@@ -151,7 +84,7 @@ func TestPtt_DecryptData(t *testing.T) {
 	// prepare test-cases
 	tests := []struct {
 		name    string
-		p       *BasePtt
+		r       *BaseRouter
 		args    args
 		want    OpType
 		want1   []byte
@@ -171,8 +104,8 @@ func TestPtt_DecryptData(t *testing.T) {
 	// run test
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := tt.p
-			got, got1, err := p.DecryptData(tt.args.encMsg, tt.args.key)
+			r := tt.r
+			got, got1, err := r.DecryptData(tt.args.encMsg, tt.args.key)
 
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Ptt.DecryptData() error = %v, wantErr %v", err, tt.wantErr)
@@ -189,42 +122,12 @@ func TestPtt_DecryptData(t *testing.T) {
 	// teardown test
 }
 
-func TestPtt_MarshalData(t *testing.T) {
+func TestRouter_MarshalData(t *testing.T) {
 	// setup test
 	setupTest(t)
 	defer teardownTest(t)
 
 	// define test-structure
-	type fields struct {
-		config         *Config
-		myID           *types.PttID
-		myIDHash       uint64
-		myKey          *ecdsa.PrivateKey
-		myNodeID       *discover.NodeID
-		eventMux       *event.TypeMux
-		peerLock       sync.RWMutex
-		myPeers        map[discover.NodeID]*PttPeer
-		importantPeers map[discover.NodeID]*PttPeer
-		memberPeers    map[discover.NodeID]*PttPeer
-		randomPeers    map[discover.NodeID]*PttPeer
-		newPeerCh      chan *PttPeer
-		noMorePeers    chan struct{}
-		peerHash       map[uint64]bool
-		peerWG         sync.WaitGroup
-		services       map[string]Service
-		entityLock     sync.RWMutex
-		hashLock       sync.RWMutex
-		entities       map[types.PttID]Entity
-		joins          map[common.Address]*types.PttID
-		ops            map[common.Address]*types.PttID
-		myEntity       Entity
-		quitSync       chan struct{}
-		syncWG         sync.WaitGroup
-		server         *p2p.Server
-		protocols      []p2p.Protocol
-		apis           []rpc.API
-		networkID      uint32
-	}
 	type args struct {
 		code    CodeType
 		hash    *common.Address
@@ -234,14 +137,14 @@ func TestPtt_MarshalData(t *testing.T) {
 	// prepare test-cases
 	tests := []struct {
 		name    string
-		p       *BasePtt
+		r       *BaseRouter
 		args    args
-		want    *PttData
+		want    *RouterData
 		wantErr bool
 	}{
 		// TODO: Add test cases.
 		{
-			p:    tDefaultPtt,
+			r:    tDefaultPtt,
 			args: args{code: CodeTypeOp, hash: &tDefaultHash, encData: tDefaultEncData},
 			want: tDefaultPttData,
 		},
@@ -250,8 +153,8 @@ func TestPtt_MarshalData(t *testing.T) {
 	// run test
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := tt.p
-			got, err := p.MarshalData(tt.args.code, tt.args.hash, tt.args.encData)
+			r := tt.r
+			got, err := r.MarshalData(tt.args.code, tt.args.hash, tt.args.encData)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Ptt.MarshalData() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -265,50 +168,20 @@ func TestPtt_MarshalData(t *testing.T) {
 	// teardown test
 }
 
-func TestPtt_UnmarshalData(t *testing.T) {
+func TestRouter_UnmarshalData(t *testing.T) {
 	// setup test
 	setupTest(t)
 	defer teardownTest(t)
 
 	// define test-structure
-	type fields struct {
-		config         *Config
-		myID           *types.PttID
-		myIDHash       uint64
-		myKey          *ecdsa.PrivateKey
-		myNodeID       *discover.NodeID
-		eventMux       *event.TypeMux
-		peerLock       sync.RWMutex
-		myPeers        map[discover.NodeID]*PttPeer
-		importantPeers map[discover.NodeID]*PttPeer
-		memberPeers    map[discover.NodeID]*PttPeer
-		randomPeers    map[discover.NodeID]*PttPeer
-		newPeerCh      chan *PttPeer
-		noMorePeers    chan struct{}
-		peerHash       map[uint64]bool
-		peerWG         sync.WaitGroup
-		services       map[string]Service
-		entityLock     sync.RWMutex
-		hashLock       sync.RWMutex
-		entities       map[types.PttID]Entity
-		joins          map[common.Address]*types.PttID
-		ops            map[common.Address]*types.PttID
-		myEntity       Entity
-		quitSync       chan struct{}
-		syncWG         sync.WaitGroup
-		server         *p2p.Server
-		protocols      []p2p.Protocol
-		apis           []rpc.API
-		networkID      uint32
-	}
 	type args struct {
-		pttData *PttData
+		routerData *RouterData
 	}
 
 	// prepare test-cases
 	tests := []struct {
 		name    string
-		p       *BasePtt
+		r       *BaseRouter
 		args    args
 		want    CodeType
 		want1   *common.Address
@@ -317,8 +190,8 @@ func TestPtt_UnmarshalData(t *testing.T) {
 	}{
 		// TODO: Add test cases.
 		{
-			p:     tDefaultPtt,
-			args:  args{pttData: tDefaultPttData},
+			r:     tDefaultPtt,
+			args:  args{routerData: tDefaultPttData},
 			want:  CodeTypeOp,
 			want1: &tDefaultHash,
 			want2: tDefaultEncData,
@@ -328,8 +201,8 @@ func TestPtt_UnmarshalData(t *testing.T) {
 	// run test
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := tt.p
-			got, got1, got2, err := p.UnmarshalData(tt.args.pttData)
+			r := tt.r
+			got, got1, got2, err := r.UnmarshalData(tt.args.routerData)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Ptt.UnmarshalData() error = %v, wantErr %v", err, tt.wantErr)
 				return

@@ -28,15 +28,15 @@ import (
 /*
 JoinEntity confirmed the invitor from HandleJoinAckChallenge and requests joining the entity (joiner)
 */
-func (p *BasePtt) JoinEntity(joinRequest *JoinRequest, joinAckChallenge *JoinAckChallenge, peer *PttPeer) error {
+func (r *BaseRouter) JoinEntity(joinRequest *JoinRequest, joinAckChallenge *JoinAckChallenge, peer *PttPeer) error {
 
 	joinRequest.ID = joinAckChallenge.ID
 	joinRequest.Name = joinAckChallenge.Name
 	joinRequest.Status = JoinStatusWaitAccepted
 	joinRequest.Master0Hash = joinAckChallenge.Master0Hash
 
-	id := p.myEntity.GetID()
-	name := p.myEntity.Name()
+	id := r.myEntity.GetID()
+	name := r.myEntity.Name()
 
 	joinEntity := &JoinEntity{
 		ID:          id,
@@ -51,12 +51,12 @@ func (p *BasePtt) JoinEntity(joinRequest *JoinRequest, joinAckChallenge *JoinAck
 
 	keyInfo := joinKeyToKeyInfo(joinRequest.Key)
 
-	encData, err := p.EncryptData(JoinEntityMsg, data, keyInfo)
+	encData, err := r.EncryptData(JoinEntityMsg, data, keyInfo)
 	if err != nil {
 		return err
 	}
 
-	pttData, err := p.MarshalData(CodeTypeJoin, joinRequest.Hash, encData)
+	pttData, err := r.MarshalData(CodeTypeJoin, joinRequest.Hash, encData)
 	if err != nil {
 		return err
 	}
@@ -78,7 +78,7 @@ Recevied "join-entity" with revealed ID and Name. (invitor)
         => do approve.
     3. put to confirm-queue.
 */
-func (p *BasePtt) HandleJoinEntity(dataBytes []byte, hash *common.Address, entity Entity, pm ProtocolManager, keyInfo *KeyInfo, peer *PttPeer) error {
+func (r *BaseRouter) HandleJoinEntity(dataBytes []byte, hash *common.Address, entity Entity, pm ProtocolManager, keyInfo *KeyInfo, peer *PttPeer) error {
 	log.Debug("HandleJoinEntity: start")
 	joinEntity := &JoinEntity{}
 	err := json.Unmarshal(dataBytes, joinEntity)
@@ -104,14 +104,14 @@ func (p *BasePtt) HandleJoinEntity(dataBytes []byte, hash *common.Address, entit
 		return err
 	}
 
-	err = p.ToConfirmJoin(confirmKey, entity, joinEntity, keyInfo, peer, joinType)
+	err = r.ToConfirmJoin(confirmKey, entity, joinEntity, keyInfo, peer, joinType)
 	log.Debug("HandleJoinEntity: after ToConfirmJoin", "e", err)
 	if err != nil {
 		return err
 	}
 
 	if entity.PM().IsGoodID(id, nodeID) {
-		return p.ApproveJoin(confirmKey)
+		return r.ApproveJoin(confirmKey)
 	}
 
 	return nil

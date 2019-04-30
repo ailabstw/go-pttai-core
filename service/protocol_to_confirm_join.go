@@ -21,7 +21,7 @@ import "github.com/ailabstw/go-pttai-core/common/types"
 /*
 ToConfirmJoin puts the joinEntity into confirm-join-map and wait for confirming the join. (invitor)
 */
-func (p *BasePtt) ToConfirmJoin(confirmKey []byte, entity Entity, joinEntity *JoinEntity, keyInfo *KeyInfo, peer *PttPeer, joinType JoinType) error {
+func (p *BaseRouter) ToConfirmJoin(confirmKey []byte, entity Entity, joinEntity *JoinEntity, keyInfo *KeyInfo, peer *PttPeer, joinType JoinType) error {
 
 	ts, err := types.GetTimestamp()
 	if err != nil {

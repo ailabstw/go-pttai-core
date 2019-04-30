@@ -116,7 +116,7 @@ func (pm *ProtocolManager) HandleInitMeInfoSync(dataBytes []byte, peer *pkgservi
 	profileData := data.ProfileData
 
 	// migrate origin-me
-	origMe := pm.Ptt().GetMyEntity().(*MyInfo)
+	origMe := pm.Router().GetMyEntity().(*MyInfo)
 	err = origMe.PM().(*ProtocolManager).MigrateMe(myInfo)
 	log.Debug("HandleInitMeInfoSync: after MigrateMe", "e", err)
 	if err != nil {
@@ -164,7 +164,7 @@ func (pm *ProtocolManager) HandleInitMeInfoSync(dataBytes []byte, peer *pkgservi
 	log.Debug("HandleInitMeInfoSync: to restart")
 
 	// restart
-	pm.myPtt.NotifyNodeRestart().PassChan(struct{}{})
+	pm.myRouter.NotifyNodeRestart().PassChan(struct{}{})
 
 	return nil
 }

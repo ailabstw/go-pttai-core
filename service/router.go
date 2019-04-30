@@ -30,9 +30,9 @@ import (
 )
 
 /*
-Ptt is the public-access version of Ptt.
+Router is the public-access version of Router.
 */
-type Ptt interface {
+type Router interface {
 	// event-mux
 
 	ErrChan() *types.Chan
@@ -86,12 +86,34 @@ type Ptt interface {
 	EncryptData(op OpType, data []byte, keyInfo *KeyInfo) ([]byte, error)
 	DecryptData(ciphertext []byte, keyInfo *KeyInfo) (OpType, []byte, error)
 
-	MarshalData(code CodeType, hash *common.Address, encData []byte) (*PttData, error)
-	UnmarshalData(pttData *PttData) (CodeType, *common.Address, []byte, error)
+	MarshalData(code CodeType, hash *common.Address, encData []byte) (*RouterData, error)
+	UnmarshalData(pttData *RouterData) (CodeType, *common.Address, []byte, error)
 }
 
-type MyPtt interface {
-	Ptt
+/*
+NodeRouter is the interface for ptt as the service in the node-level.
+*/
+type NodeRouter interface {
+	// Protocols retrieves the P2P protocols the service wishes to start.
+	Protocols() []p2p.Protocol
+
+	// APIs retrieves the list of RPC descriptors the service provides
+	APIs() []rpc.API
+
+	// Start is called after all services have been constructed and the networking
+	// layer was also initialized to spawn any goroutines required by the service.
+	Start(server *p2p.Server) error
+
+	// Stop terminates all goroutines belonging to the service, blocking until they
+	// are all terminated.
+	Stop() error
+}
+
+/*
+MyRouter is Router interface for me (my_info).
+*/
+type MyRouter interface {
+	Router
 
 	// event-mux
 
@@ -100,7 +122,7 @@ type MyPtt interface {
 
 	// MyEntity
 
-	SetMyEntity(m PttMyEntity) error
+	SetMyEntity(m RouterMyEntity) error
 	MyRaftID() uint64
 	MyNodeType() NodeType
 	MyNodeKey() *ecdsa.PrivateKey
@@ -113,7 +135,7 @@ type MyPtt interface {
 	GetEntities() map[types.PttID]Entity
 }
 
-type BasePtt struct {
+type BaseRouter struct {
 	config *Config
 
 	// event-mux
@@ -177,7 +199,7 @@ type BasePtt struct {
 	networkID uint32
 
 	// me
-	myEntity   PttMyEntity
+	myEntity   RouterMyEntity
 	myNodeID   *discover.NodeID // ptt knows only my-node-id
 	myRaftID   uint64
 	myNodeType NodeType
@@ -185,7 +207,7 @@ type BasePtt struct {
 	myService  Service
 }
 
-func NewPtt(ctx *ServiceContext, cfg *Config, myNodeID *discover.NodeID, myNodeKey *ecdsa.PrivateKey) (*BasePtt, error) {
+func NewRouter(ctx *RouterContext, cfg *Config, myNodeID *discover.NodeID, myNodeKey *ecdsa.PrivateKey) (*BaseRouter, error) {
 	// init-service
 	InitService(cfg.DataDir)
 
@@ -194,7 +216,7 @@ func NewPtt(ctx *ServiceContext, cfg *Config, myNodeID *discover.NodeID, myNodeK
 		return nil, err
 	}
 
-	p := &BasePtt{
+	r := &BaseRouter{
 		config: cfg,
 
 		myNodeID:   myNodeID,
@@ -241,29 +263,29 @@ func NewPtt(ctx *ServiceContext, cfg *Config, myNodeID *discover.NodeID, myNodeK
 		errChan: types.NewChan(1),
 	}
 
-	p.apis = p.PttAPIs()
+	r.apis = r.routerAPIs()
 
-	p.protocols = p.GenerateProtocols()
+	r.protocols = r.generateProtocols()
 
-	return p, nil
+	return r, nil
 }
 
 /**********
- * PttService
+ * NodeRouter
  **********/
 
-func (p *BasePtt) Protocols() []p2p.Protocol {
-	return p.protocols
+func (r *BaseRouter) Protocols() []p2p.Protocol {
+	return r.protocols
 }
 
-func (p *BasePtt) APIs() []rpc.API {
-	return p.apis
+func (r *BaseRouter) APIs() []rpc.API {
+	return r.apis
 }
 
-func (p *BasePtt) Prestart() error {
+func (r *BaseRouter) Prestart() error {
 	var err error
 	errMap := make(map[string]error)
-	for name, service := range p.services {
+	for name, service := range r.services {
 		err = service.Prestart()
 		if err != nil {
 			errMap[name] = err
@@ -278,15 +300,15 @@ func (p *BasePtt) Prestart() error {
 	return nil
 }
 
-func (p *BasePtt) Start(server *p2p.Server) error {
-	p.server = server
+func (r *BaseRouter) Start(server *p2p.Server) error {
+	r.server = server
 
 	// Start services
 	var err error
 	successMap := make(map[string]Service)
 	errMap := make(map[string]error)
 
-	myService := p.myService
+	myService := r.myService
 	if myService != nil {
 		err = myService.Start()
 		if err != nil {
@@ -297,7 +319,7 @@ func (p *BasePtt) Start(server *p2p.Server) error {
 	}
 
 	if err == nil {
-		for name, service := range p.services {
+		for name, service := range r.services {
 			if service == myService {
 				continue
 			}
@@ -326,13 +348,13 @@ func (p *BasePtt) Start(server *p2p.Server) error {
 	return nil
 }
 
-func (p *BasePtt) Stop() error {
-	close(p.quitSync)
-	close(p.noMorePeers)
+func (r *BaseRouter) Stop() error {
+	close(r.quitSync)
+	close(r.noMorePeers)
 
 	// close all service-loop
 	errMap := make(map[string]error)
-	for name, service := range p.services {
+	for name, service := range r.services {
 		err := service.Stop()
 		if err != nil {
 			errMap[name] = err
@@ -341,18 +363,18 @@ func (p *BasePtt) Stop() error {
 
 	log.Debug("Stop: to wait syncWG")
 
-	p.syncWG.Wait()
+	r.syncWG.Wait()
 
 	// close peers
-	p.ClosePeers()
+	r.ClosePeers()
 
 	log.Debug("Stop: to wait peerWG")
 
-	p.peerWG.Wait()
+	r.peerWG.Wait()
 
 	// remove ptt-level chan
 
-	p.eventMux.Stop()
+	r.eventMux.Stop()
 
 	log.Debug("Stop: done")
 
@@ -367,7 +389,7 @@ func (p *BasePtt) Stop() error {
  * RW
  **********/
 
-func (p *BasePtt) RWInit(peer *PttPeer, version uint) {
+func (r *BaseRouter) RWInit(peer *PttPeer, version uint) {
 	if rw, ok := peer.RW().(MeteredMsgReadWriter); ok {
 		rw.Init(version)
 	}
@@ -380,13 +402,13 @@ func (p *BasePtt) RWInit(peer *PttPeer, version uint) {
 /*
 RegisterService registers service into ptt.
 */
-func (p *BasePtt) RegisterService(service Service) error {
+func (r *BaseRouter) RegisterService(service Service) error {
 	log.Info("RegisterService", "name", service.Name())
-	p.apis = append(p.apis, service.APIs()...)
+	r.apis = append(r.apis, service.APIs()...)
 
 	name := service.Name()
 
-	p.services[name] = service
+	r.services[name] = service
 
 	log.Info("RegisterService: done", "name", service.Name())
 
@@ -397,30 +419,30 @@ func (p *BasePtt) RegisterService(service Service) error {
  * Chan
  **********/
 
-func (p *BasePtt) NotifyNodeRestart() *types.Chan {
-	return p.notifyNodeRestart
+func (r *BaseRouter) NotifyNodeRestart() *types.Chan {
+	return r.notifyNodeRestart
 }
 
-func (p *BasePtt) NotifyNodeStop() *types.Chan {
-	return p.notifyNodeStop
+func (r *BaseRouter) NotifyNodeStop() *types.Chan {
+	return r.notifyNodeStop
 }
 
-func (p *BasePtt) ErrChan() *types.Chan {
-	return p.errChan
+func (r *BaseRouter) ErrChan() *types.Chan {
+	return r.errChan
 }
 
 /**********
  * Server
  **********/
 
-func (p *BasePtt) Server() *p2p.Server {
-	return p.server
+func (r *BaseRouter) Server() *p2p.Server {
+	return r.server
 }
 
 /**********
  * Peer
  **********/
 
-func (p *BasePtt) NoMorePeers() chan struct{} {
-	return p.noMorePeers
+func (r *BaseRouter) NoMorePeers() chan struct{} {
+	return r.noMorePeers
 }

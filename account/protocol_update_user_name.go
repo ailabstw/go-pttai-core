@@ -26,7 +26,7 @@ type UpdateUserName struct {
 }
 
 func (pm *ProtocolManager) UpdateUserName(name []byte) (*UserName, error) {
-	myID := pm.Ptt().GetMyEntity().GetID()
+	myID := pm.Router().GetMyEntity().GetID()
 
 	if !pm.IsMaster(myID, false) {
 		return nil, types.ErrInvalidID

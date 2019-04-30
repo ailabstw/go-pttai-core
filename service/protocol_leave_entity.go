@@ -20,7 +20,7 @@ import "github.com/ailabstw/go-pttai-core/log"
 
 func (pm *BaseProtocolManager) LeaveEntity() (bool, error) {
 
-	myID := pm.Ptt().GetMyEntity().GetID()
+	myID := pm.Router().GetMyEntity().GetID()
 
 	log.Debug("LeaveEntity: to DeleteMember", "entity", pm.Entity().IDString())
 

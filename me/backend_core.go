@@ -156,7 +156,7 @@ func (b *Backend) ShowMeURL() (*pkgservice.BackendJoinURL, error) {
 	myInfo := b.SPM().(*ServiceProtocolManager).MyInfo
 	pm := myInfo.PM().(*ProtocolManager)
 	myID := myInfo.ID
-	myNodeID := b.myPtt.MyNodeID()
+	myNodeID := b.myRouter.MyNodeID()
 
 	keyInfo, err := pm.GetJoinKey()
 	if err != nil {
@@ -180,7 +180,7 @@ func (b *Backend) JoinMe(meURL []byte, myKeyBytes []byte) (*pkgservice.BackendJo
 		return nil, err
 	}
 
-	myNodeID := b.myPtt.MyNodeID
+	myNodeID := b.myRouter.MyNodeID
 	log.Debug("JoinMe: after parse", "joinRequest", joinRequest, "myNodeID", myNodeID, "joinNodeID", joinRequest.NodeID)
 	if reflect.DeepEqual(myNodeID, joinRequest.NodeID) {
 		return nil, ErrInvalidNode
@@ -249,7 +249,7 @@ func (b *Backend) ShowURL() (*pkgservice.BackendJoinURL, error) {
 
 	myInfo := b.SPM().(*ServiceProtocolManager).MyInfo
 	pm := myInfo.PM().(*ProtocolManager)
-	myNodeID := b.myPtt.MyNodeID()
+	myNodeID := b.myRouter.MyNodeID()
 	myID := myInfo.ID
 
 	keyInfo, err := pm.GetJoinFriendKey()
@@ -272,7 +272,7 @@ func (b *Backend) JoinFriend(friendURL []byte) (*pkgservice.BackendJoinRequest, 
 		return nil, err
 	}
 
-	myNodeID := b.myPtt.MyNodeID
+	myNodeID := b.myRouter.MyNodeID
 	if reflect.DeepEqual(myNodeID, joinRequest.NodeID) {
 		return nil, ErrInvalidNode
 	}
@@ -327,7 +327,7 @@ func (b *Backend) Get() (*BackendMyInfo, error) {
 
 	myInfo := b.SPM().(*ServiceProtocolManager).MyInfo
 
-	return MarshalBackendMyInfo(myInfo, b.myPtt), nil
+	return MarshalBackendMyInfo(myInfo, b.myRouter), nil
 }
 
 func (b *Backend) GetRawMe(entityIDBytes []byte) (*MyInfo, error) {
@@ -357,7 +357,7 @@ func (b *Backend) GetMeList() ([]*BackendMyInfo, error) {
 	myInfoList := make([]*BackendMyInfo, 0, len(entities))
 	var myInfo *BackendMyInfo
 	for _, entity := range entities {
-		myInfo = MarshalBackendMyInfo(entity.(*MyInfo), b.myPtt)
+		myInfo = MarshalBackendMyInfo(entity.(*MyInfo), b.myRouter)
 		myInfoList = append(myInfoList, myInfo)
 	}
 

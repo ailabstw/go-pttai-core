@@ -45,7 +45,7 @@ func (pm *BaseProtocolManager) SyncOplog(peer *PttPeer, merkle *Merkle, op OpTyp
 		return nil
 	}
 
-	ptt := pm.Ptt()
+	ptt := pm.Router()
 	myInfo := ptt.GetMyEntity()
 	if myInfo.GetStatus() != types.StatusAlive {
 		return nil
@@ -58,7 +58,7 @@ func (pm *BaseProtocolManager) SyncOplog(peer *PttPeer, merkle *Merkle, op OpTyp
 
 	_, err := pm.GetOldestOpKey(false)
 	if err != nil {
-		return pm.Ptt().RequestOpKeyByEntity(entity, peer)
+		return pm.Router().RequestOpKeyByEntity(entity, peer)
 	}
 
 	toSyncTime, err := merkle.ToSyncTime()
@@ -101,7 +101,7 @@ func (pm *BaseProtocolManager) HandleSyncOplog(
 	invalidOplogMsg OpType,
 	syncOplogAckMsg OpType,
 ) error {
-	ptt := pm.Ptt()
+	ptt := pm.Router()
 	myInfo := ptt.GetMyEntity()
 	if myInfo.GetStatus() != types.StatusAlive {
 		return nil

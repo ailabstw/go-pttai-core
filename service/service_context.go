@@ -22,15 +22,15 @@ import (
 	"github.com/ethereum/go-ethereum/event"
 )
 
-type ServiceContext struct {
-	Services map[reflect.Type]PttService
+type RouterContext struct {
+	Routers  map[reflect.Type]NodeRouter
 	EventMux *event.TypeMux
 }
 
 // Service retrieves a currently running service registered of a specific type.
-func (ctx *ServiceContext) Service(service interface{}) error {
+func (ctx *RouterContext) Service(service interface{}) error {
 	element := reflect.ValueOf(service).Elem()
-	if running, ok := ctx.Services[element.Type()]; ok {
+	if running, ok := ctx.Routers[element.Type()]; ok {
 		element.Set(reflect.ValueOf(running))
 		return nil
 	}

@@ -87,7 +87,7 @@ func (pm *BaseProtocolManager) createJoinKey() error {
 		return nil
 	}
 
-	myEntity := pm.Ptt().GetMyEntity()
+	myEntity := pm.Router().GetMyEntity()
 	status = myEntity.GetStatus()
 	statusClass = types.StatusToStatusClass(status)
 	if statusClass >= types.StatusClassDeleted {

@@ -34,7 +34,7 @@ func (pm *BaseProtocolManager) FullBlockDBPrefix(prefix []byte) ([]byte, error) 
 
 func (pm *BaseProtocolManager) SplitContentBlocks(prefix []byte, objID *types.PttID, buf [][]byte, nFirstLineInBlock int) (*types.PttID, [][][]byte, error) {
 
-	myEntity := pm.Ptt().GetMyEntity()
+	myEntity := pm.Router().GetMyEntity()
 
 	blockInfoID, err := types.NewPttID()
 	if err != nil {
@@ -88,7 +88,7 @@ func (pm *BaseProtocolManager) SplitContentBlocks(prefix []byte, objID *types.Pt
 
 func (pm *BaseProtocolManager) SplitMediaBlocks(objID *types.PttID, buf []byte) (*types.PttID, [][][]byte, error) {
 
-	myEntity := pm.Ptt().GetMyEntity()
+	myEntity := pm.Router().GetMyEntity()
 
 	blockInfoID, err := types.NewPttID()
 	if err != nil {

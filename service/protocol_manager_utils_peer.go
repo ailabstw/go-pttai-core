@@ -126,7 +126,7 @@ func (pm *BaseProtocolManager) UnregisterPeer(peer *PttPeer, isForceReset bool, 
 		return nil
 	}
 
-	pm.Ptt().ResetPeerType(peer, isPttLocked, isForceReset)
+	pm.Router().ResetPeerType(peer, isPttLocked, isForceReset)
 
 	return nil
 }
@@ -146,7 +146,7 @@ func (pm *BaseProtocolManager) UnregisterPeerByOtherUserID(id *types.PttID, isRe
 		return nil
 	}
 
-	pm.Ptt().ResetPeerType(peer, isPttLocked, isResetPeerType)
+	pm.Router().ResetPeerType(peer, isPttLocked, isResetPeerType)
 
 	return nil
 }

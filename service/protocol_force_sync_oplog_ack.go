@@ -97,7 +97,7 @@ func (pm *BaseProtocolManager) HandleForceSyncOplogAck(
 	newLogsMsg OpType,
 ) error {
 
-	ptt := pm.Ptt()
+	ptt := pm.Router()
 	myInfo := ptt.GetMyEntity()
 	if myInfo.GetStatus() != types.StatusAlive {
 		return nil

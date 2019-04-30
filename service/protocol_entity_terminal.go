@@ -28,7 +28,7 @@ type EntityDeleted struct {
 	Status    types.Status `json:"S"`
 }
 
-func (p *BasePtt) EntityTerminal(entity Entity, pm ProtocolManager, peer *PttPeer) error {
+func (p *BaseRouter) EntityTerminal(entity Entity, pm ProtocolManager, peer *PttPeer) error {
 
 	entityLog, _ := pm.GetEntityLog()
 
@@ -43,7 +43,7 @@ func (p *BasePtt) EntityTerminal(entity Entity, pm ProtocolManager, peer *PttPee
 	return nil
 }
 
-func (p *BasePtt) HandleEntityTerminal(dataBytes []byte, peer *PttPeer) error {
+func (p *BaseRouter) HandleEntityTerminal(dataBytes []byte, peer *PttPeer) error {
 	if peer.UserID == nil {
 		return types.ErrInvalidID
 	}

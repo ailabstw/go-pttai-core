@@ -36,7 +36,7 @@ type ApproveJoinData interface{}
 /*
 ApproveJoin approves join (invitor)
 */
-func (p *BasePtt) ApproveJoin(confirmKey []byte) error {
+func (p *BaseRouter) ApproveJoin(confirmKey []byte) error {
 	p.lockConfirmJoin.Lock()
 	defer p.lockConfirmJoin.Unlock()
 
@@ -92,7 +92,7 @@ func (p *BasePtt) ApproveJoin(confirmKey []byte) error {
 	return nil
 }
 
-func (p *BasePtt) HandleApproveJoin(dataBytes []byte, hash *common.Address, joinRequest *JoinRequest, peer *PttPeer) error {
+func (p *BaseRouter) HandleApproveJoin(dataBytes []byte, hash *common.Address, joinRequest *JoinRequest, peer *PttPeer) error {
 	if joinRequest.Status != JoinStatusWaitAccepted {
 		return ErrInvalidData
 	}

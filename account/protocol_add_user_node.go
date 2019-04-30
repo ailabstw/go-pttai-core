@@ -27,7 +27,7 @@ import (
 
 func (pm *ProtocolManager) AddUserNode(nodeID *discover.NodeID) error {
 	// 1. validate
-	myID := pm.Ptt().GetMyEntity().GetID()
+	myID := pm.Router().GetMyEntity().GetID()
 	if !pm.IsMaster(myID, false) {
 		log.Error("AddUserNode: not Master", "myID", myID, "entity", pm.Entity().GetID())
 		return types.ErrInvalidID

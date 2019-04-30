@@ -53,7 +53,7 @@ func (pm *BaseProtocolManager) NewMemberOplog(keyID *types.PttID, op OpType, opD
 
 func (pm *BaseProtocolManager) NewMemberOplogWithTS(keyID *types.PttID, ts types.Timestamp, op OpType, opData OpData) (Oplog, error) {
 
-	myID := pm.Ptt().GetMyEntity().GetID()
+	myID := pm.Router().GetMyEntity().GetID()
 	entityID := pm.Entity().GetID()
 
 	oplog, err := NewMemberOplog(keyID, ts, myID, op, opData, pm.DB(), entityID, pm.dbMemberLock)

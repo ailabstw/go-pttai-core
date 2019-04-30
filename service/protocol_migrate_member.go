@@ -23,7 +23,7 @@ import (
 )
 
 func (pm *BaseProtocolManager) MigrateMember(fromID *types.PttID, toID *types.PttID) error {
-	ptt := pm.Ptt()
+	ptt := pm.Router()
 	myID := ptt.GetMyEntity().GetID()
 
 	ownerIDs := pm.Entity().GetOwnerIDs()

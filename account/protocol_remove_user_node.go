@@ -29,7 +29,7 @@ import (
 
 func (pm *ProtocolManager) RemoveUserNode(nodeID *discover.NodeID) error {
 	// 1. validate
-	myID := pm.Ptt().GetMyEntity().GetID()
+	myID := pm.Router().GetMyEntity().GetID()
 	if !pm.IsMaster(myID, false) {
 		return types.ErrInvalidID
 	}

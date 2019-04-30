@@ -25,7 +25,7 @@ type Backend struct {
 	*pkgservice.BaseService
 }
 
-func NewBackend(ctx *pkgservice.ServiceContext, config *Config, ptt pkgservice.Ptt) (*Backend, error) {
+func NewBackend(ctx *pkgservice.RouterContext, config *Config, router pkgservice.Router) (*Backend, error) {
 	// init account
 	err := InitAccount(config.DataDir)
 	if err != nil {
@@ -36,13 +36,13 @@ func NewBackend(ctx *pkgservice.ServiceContext, config *Config, ptt pkgservice.P
 	backend := &Backend{}
 
 	// spm
-	spm, err := NewServiceProtocolManager(ptt, backend)
+	spm, err := NewServiceProtocolManager(router, backend)
 	if err != nil {
 		return nil, err
 	}
 
 	// base-service
-	b, err := pkgservice.NewBaseService(ptt, spm)
+	b, err := pkgservice.NewBaseService(router, spm)
 	if err != nil {
 		return nil, err
 	}

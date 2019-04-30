@@ -47,7 +47,7 @@ type ServiceProtocolManager interface {
 	RegisterEntity(id *types.PttID, e Entity) error
 	UnregisterEntity(id *types.PttID) error
 
-	Ptt() Ptt
+	Router() Router
 	Service() Service
 
 	DBObjLock() *types.LockMap
@@ -67,7 +67,7 @@ type BaseServiceProtocolManager struct {
 
 	noMorePeers chan struct{}
 
-	ptt     Ptt
+	ptt     Router
 	service Service
 
 	// dbLock is the lock for entity.
@@ -81,7 +81,7 @@ type BaseServiceProtocolManager struct {
 	joinRequests    map[common.Address]*JoinRequest
 }
 
-func NewBaseServiceProtocolManager(ptt Ptt, service Service) (*BaseServiceProtocolManager, error) {
+func NewBaseServiceProtocolManager(ptt Router, service Service) (*BaseServiceProtocolManager, error) {
 	dbLock, err := types.NewLockMap(SleepTimeLock)
 	if err != nil {
 		return nil, err
@@ -137,7 +137,7 @@ func (spm *BaseServiceProtocolManager) Stop() error {
 	return spm.StopEntities()
 }
 
-func (spm *BaseServiceProtocolManager) Ptt() Ptt {
+func (spm *BaseServiceProtocolManager) Router() Router {
 	return spm.ptt
 }
 

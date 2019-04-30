@@ -31,7 +31,7 @@ type IdentifyPeerWithMyIDChallengeAck struct {
 /*
 IdentifyPeerWithMyIDChallengeAck acks IdentifyPeerWithMyIDChallenge (requester)
 */
-func (p *BasePtt) IdentifyPeerWithMyIDChallengeAck(data *IdentifyPeer, peer *PttPeer) error {
+func (p *BaseRouter) IdentifyPeerWithMyIDChallengeAck(data *IdentifyPeer, peer *PttPeer) error {
 	if p.myEntity == nil {
 		return ErrInvalidEntity
 	}
@@ -55,7 +55,7 @@ func (p *BasePtt) IdentifyPeerWithMyIDChallengeAck(data *IdentifyPeer, peer *Ptt
 /*
 HandleIdentifyPeerWithMyIDChallengeAck handles IdentifyPeerWithMyIDChallengeAck (acker)
 */
-func (p *BasePtt) HandleIdentifyPeerWithMyIDChallengeAck(dataBytes []byte, peer *PttPeer) error {
+func (p *BaseRouter) HandleIdentifyPeerWithMyIDChallengeAck(dataBytes []byte, peer *PttPeer) error {
 	if p.myEntity == nil {
 		return ErrInvalidEntity
 	}

@@ -29,19 +29,19 @@ type OpCheckMember struct {
 	TheirLog *BaseOplog   `json:"t"`
 }
 
-func (p *BasePtt) OpCheckMember(entityID *types.PttID, peer *PttPeer) error {
+func (r *BaseRouter) OpCheckMember(entityID *types.PttID, peer *PttPeer) error {
 
 	if peer.UserID == nil {
 		return types.ErrInvalidID
 	}
 
-	entity, ok := p.entities[*entityID]
+	entity, ok := r.entities[*entityID]
 	if !ok {
 		return types.ErrInvalidID
 	}
 	pm := entity.PM()
 
-	myID := p.GetMyEntity().GetID()
+	myID := r.GetMyEntity().GetID()
 	myMemberLog, err := pm.GetMemberLogByMemberID(myID, false)
 	if err != nil {
 		return err
@@ -58,10 +58,10 @@ func (p *BasePtt) OpCheckMember(entityID *types.PttID, peer *PttPeer) error {
 		TheirLog: peerMemberLog.BaseOplog,
 	}
 
-	return p.SendDataToPeer(CodeTypeOpCheckMember, data, peer)
+	return r.SendDataToPeer(CodeTypeOpCheckMember, data, peer)
 }
 
-func (p *BasePtt) HandleOpCheckMember(dataBytes []byte, peer *PttPeer) error {
+func (p *BaseRouter) HandleOpCheckMember(dataBytes []byte, peer *PttPeer) error {
 
 	data := &OpCheckMember{}
 	err := json.Unmarshal(dataBytes, data)

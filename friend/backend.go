@@ -29,7 +29,7 @@ type Backend struct {
 	accountBackend *account.Backend
 }
 
-func NewBackend(ctx *pkgservice.ServiceContext, cfg *Config, id *types.PttID, ptt pkgservice.Ptt, accountBackend *account.Backend) (*Backend, error) {
+func NewBackend(ctx *pkgservice.RouterContext, cfg *Config, id *types.PttID, router pkgservice.Router, accountBackend *account.Backend) (*Backend, error) {
 	// init friend
 	err := InitFriend(cfg.DataDir)
 	if err != nil {
@@ -42,13 +42,13 @@ func NewBackend(ctx *pkgservice.ServiceContext, cfg *Config, id *types.PttID, pt
 	}
 
 	// spm
-	spm, err := NewServiceProtocolManager(ptt, backend)
+	spm, err := NewServiceProtocolManager(router, backend)
 	if err != nil {
 		return nil, err
 	}
 
 	// base-ptt-service
-	b, err := pkgservice.NewBaseService(ptt, spm)
+	b, err := pkgservice.NewBaseService(router, spm)
 	if err != nil {
 		return nil, err
 	}

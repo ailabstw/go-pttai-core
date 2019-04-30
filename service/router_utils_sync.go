@@ -16,26 +16,8 @@
 
 package service
 
-import (
-	"github.com/ailabstw/go-pttai-core/p2p"
-	"github.com/ailabstw/go-pttai-core/rpc"
-)
+import "sync"
 
-/*
-PttService is the interface for ptt as the service in the node-level.
-*/
-type PttService interface {
-	// Protocols retrieves the P2P protocols the service wishes to start.
-	Protocols() []p2p.Protocol
-
-	// APIs retrieves the list of RPC descriptors the service provides
-	APIs() []rpc.API
-
-	// Start is called after all services have been constructed and the networking
-	// layer was also initialized to spawn any goroutines required by the service.
-	Start(server *p2p.Server) error
-
-	// Stop terminates all goroutines belonging to the service, blocking until they
-	// are all terminated.
-	Stop() error
+func (r *BaseRouter) SyncWG() *sync.WaitGroup {
+	return &r.syncWG
 }

@@ -128,7 +128,7 @@ func (pm *ProtocolManager) ForceProposeRaftRemoveNode(nodeID *discover.NodeID) e
 }
 
 func (pm *ProtocolManager) ProposeRaftRequestLead() error {
-	myRaftID := pm.myPtt.MyRaftID()
+	myRaftID := pm.myRouter.MyRaftID()
 
 	raftLead := pm.GetRaftLead(false)
 	if myRaftID == raftLead {
@@ -188,7 +188,7 @@ func (pm *ProtocolManager) PublishRaftEntries(ents []pb.Entry) error {
 }
 
 func (pm *ProtocolManager) publishEntriesAddNode(ent *pb.Entry, cc *pb.ConfChange) error {
-	ptt := pm.myPtt
+	router := pm.myRouter
 
 	myInfo := pm.Entity().(*MyInfo)
 
@@ -225,7 +225,7 @@ func (pm *ProtocolManager) publishEntriesAddNode(ent *pb.Entry, cc *pb.ConfChang
 	}
 
 	// create-me-or-add-dial
-	myNodeID := ptt.MyNodeID()
+	myNodeID := router.MyNodeID()
 	if reflect.DeepEqual(nodeID, myNodeID) {
 		// create-me
 		switch myInfo.Status {
@@ -249,7 +249,7 @@ func (pm *ProtocolManager) publishEntriesAddNode(ent *pb.Entry, cc *pb.ConfChang
 			return err
 		}
 		log.Debug("publishEntriesAddNode: to AddDial", "nodeID", nodeID)
-		ptt.AddDial(nodeID, opKey.Hash, pkgservice.PeerTypeMe, true)
+		router.AddDial(nodeID, opKey.Hash, pkgservice.PeerTypeMe, true)
 	}
 
 	// oplog-save
@@ -398,7 +398,7 @@ func (pm *ProtocolManager) publishEntriesRemoveNode(ent *pb.Entry, cc *pb.ConfCh
 		return err
 	}
 
-	myRaftID := pm.myPtt.MyRaftID()
+	myRaftID := pm.myRouter.MyRaftID()
 	if raftID == myRaftID {
 		return pm.HandleRevokeMyNode(oplog, false, true)
 	}

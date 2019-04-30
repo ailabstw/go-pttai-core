@@ -51,9 +51,9 @@ func (pm *BaseProtocolManager) RegisterOpKey(keyInfo *KeyInfo, isLocked bool) er
 		pm.checkOldestOpKeyInfo(keyInfo, expireRenewTS)
 	}
 
-	ptt := pm.Ptt()
+	router := pm.Router()
 	entityID := pm.Entity().GetID()
-	ptt.AddOpKey(keyInfo.Hash, entityID, false)
+	router.AddOpKey(keyInfo.Hash, entityID, false)
 
 	return nil
 }
@@ -345,12 +345,12 @@ func (pm *BaseProtocolManager) RemoveOpKey(
 	}
 
 	// ptt
-	log.Debug("to ptt.RemoveOpKey")
+	log.Debug("to router.RemoveOpKey")
 
 	entityID := pm.Entity().GetID()
-	ptt := pm.Ptt()
+	router := pm.Router()
 	if hash != nil {
-		ptt.RemoveOpKey(hash, entityID, false)
+		router.RemoveOpKey(hash, entityID, false)
 	}
 
 	pm.getNewestOpKeyFullScan(true)

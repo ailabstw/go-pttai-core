@@ -44,7 +44,7 @@ func (pm *BaseProtocolManager) ApproveJoin(
 ) (*KeyInfo, interface{}, error) {
 	log.Debug("ApproveJoin: start", "entity", pm.Entity().IDString(), "peer", peer, "peerType", peer.PeerType)
 
-	myID := pm.Ptt().GetMyEntity().GetID()
+	myID := pm.Router().GetMyEntity().GetID()
 
 	if !pm.IsMaster(myID, false) && peer.PeerType != PeerTypeMe {
 		return nil, nil, types.ErrInvalidID
@@ -110,12 +110,12 @@ func (pm *BaseProtocolManager) ApproveJoin(
 	// register-peer
 	if peer.UserID == nil {
 		peer.UserID = joinEntity.ID
-		pm.Ptt().FinishIdentifyPeer(peer, false, false)
+		pm.Router().FinishIdentifyPeer(peer, false, false)
 	}
 
 	switch {
 	case peer.PeerType < PeerTypeMember:
-		pm.Ptt().ResetPeerType(peer, false, false)
+		pm.Router().ResetPeerType(peer, false, false)
 		pm.RegisterPeer(peer, PeerTypeMember, false)
 	case peer.PeerType == PeerTypeMe:
 		pm.RegisterPeer(peer, PeerTypeMe, false)

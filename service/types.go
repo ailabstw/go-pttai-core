@@ -20,7 +20,7 @@ import "github.com/ailabstw/go-pttai-core/common/types"
 
 // ServiceConstructor is the function signature of the constructors needed to be
 // registered for service instantiation.
-type ServiceConstructor func(ctx *ServiceContext) (PttService, error)
+type ServiceConstructor func(ctx *RouterContext) (NodeRouter, error)
 
 // merkletree
 

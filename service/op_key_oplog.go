@@ -53,7 +53,7 @@ func (pm *BaseProtocolManager) NewOpKeyOplog(keyID *types.PttID, op OpType, opDa
 
 func (pm *BaseProtocolManager) NewOpKeyOplogWithTS(keyID *types.PttID, ts types.Timestamp, op OpType, opData OpData) (Oplog, error) {
 
-	myID := pm.Ptt().GetMyEntity().GetID()
+	myID := pm.Router().GetMyEntity().GetID()
 	entityID := pm.Entity().GetID()
 
 	return NewOpKeyOplog(keyID, ts, myID, op, opData, pm.DBOpKey(), entityID, pm.dbOpKeyLock)

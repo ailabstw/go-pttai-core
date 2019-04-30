@@ -87,7 +87,7 @@ func (pm *ProtocolManager) initMeInfoLoopCore() {
 
 	log.Debug("initMeInfoLoopCore", "peerList", peerList, "me", myInfo.ID)
 
-	myNodeID := pm.myPtt.MyNodeID()
+	myNodeID := pm.myRouter.MyNodeID()
 	for _, peer := range peerList {
 		peerID := peer.GetID()
 		if reflect.DeepEqual(peerID, myNodeID) {

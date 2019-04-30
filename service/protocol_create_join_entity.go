@@ -56,7 +56,7 @@ func (spm *BaseServiceProtocolManager) CreateJoinEntity(
 
 	entity, oplog0, masterLogs, memberLogs, opKey, opKeyLog := approveJoin.Entity, approveJoin.Oplog0, approveJoin.MasterLogs, approveJoin.MemberLogs, approveJoin.OpKey, approveJoin.OpKeyLog
 
-	ptt := spm.Ptt()
+	ptt := spm.Router()
 	service := spm.Service()
 	sspm := service.SPM()
 

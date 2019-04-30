@@ -85,7 +85,7 @@ type Service interface {
 
 	Name() string
 
-	Ptt() Ptt
+	Router() Router
 }
 
 type MyService interface {
@@ -96,12 +96,12 @@ type MyService interface {
 BaseService implements the base-type of Service
 */
 type BaseService struct {
-	spm ServiceProtocolManager
-	ptt Ptt
+	spm    ServiceProtocolManager
+	router Router
 }
 
-func NewBaseService(ptt Ptt, spm ServiceProtocolManager) (*BaseService, error) {
-	return &BaseService{ptt: ptt, spm: spm}, nil
+func NewBaseService(router Router, spm ServiceProtocolManager) (*BaseService, error) {
+	return &BaseService{router: router, spm: spm}, nil
 }
 
 func (svc *BaseService) APIs() []rpc.API {
@@ -124,6 +124,6 @@ func (svc *BaseService) SPM() ServiceProtocolManager {
 	return svc.spm
 }
 
-func (svc *BaseService) Ptt() Ptt {
-	return svc.ptt
+func (svc *BaseService) Router() Router {
+	return svc.router
 }

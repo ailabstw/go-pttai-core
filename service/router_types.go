@@ -21,15 +21,15 @@ import (
 	"github.com/ailabstw/go-pttai-core/p2p/discover"
 )
 
-// PttEventData
-type PttEventData struct {
+// RouterEventData
+type RouterEventData struct {
 	Code    CodeType `json:"C"`
 	Hash    []byte   `json:"H,omitempty"`
 	EncData []byte   `json:"D,omitempty"`
 }
 
-// PttData
-type PttData struct {
+// RouterData
+type RouterData struct {
 	Node       []byte   `json:"N,omitempty"`
 	Code       CodeType `json:"C"`
 	Hash       []byte   `json:"H,omitempty"`
@@ -39,19 +39,19 @@ type PttData struct {
 	Relay uint8 `json:"R"`
 }
 
-func (p *PttData) Clone() *PttData {
-	return &PttData{
-		Node:       p.Node,
-		Code:       p.Code,
-		Hash:       p.Hash,
-		EvWithSalt: p.EvWithSalt,
-		Checksum:   p.Checksum,
-		Relay:      p.Relay,
+func (r *RouterData) Clone() *RouterData {
+	return &RouterData{
+		Node:       r.Node,
+		Code:       r.Code,
+		Hash:       r.Hash,
+		EvWithSalt: r.EvWithSalt,
+		Checksum:   r.Checksum,
+		Relay:      r.Relay,
 	}
 }
 
-// PttStatus
-type PttStatus struct {
+// RouterStatus
+type RouterStatus struct {
 	Version   uint32
 	NetworkID uint32
 }
@@ -63,7 +63,7 @@ type PttPeerInfo struct {
 	PeerType PeerType         `json:"T"`
 }
 
-type PttNodeInfo struct {
+type NodeRouterInfo struct {
 	NodeID *discover.NodeID `json:"N"`
 	UserID *types.PttID     `json:"U"`
 

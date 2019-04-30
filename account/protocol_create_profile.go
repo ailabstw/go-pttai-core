@@ -62,15 +62,15 @@ func (spm *ServiceProtocolManager) CreateProfile() (*Profile, error) {
 	return profile, nil
 }
 
-func (spm *ServiceProtocolManager) NewProfile(data pkgservice.CreateData, ptt pkgservice.Ptt, service pkgservice.Service) (pkgservice.Entity, pkgservice.OpData, error) {
-	myID := spm.Ptt().GetMyEntity().GetID()
+func (spm *ServiceProtocolManager) NewProfile(data pkgservice.CreateData, router pkgservice.Router, service pkgservice.Service) (pkgservice.Entity, pkgservice.OpData, error) {
+	myID := spm.Router().GetMyEntity().GetID()
 
 	ts, err := types.GetTimestamp()
 	if err != nil {
 		return nil, nil, err
 	}
 
-	profile, err := NewProfile(myID, ts, ptt, service, spm, spm.GetDBLock())
+	profile, err := NewProfile(myID, ts, router, service, spm, spm.GetDBLock())
 	if err != nil {
 		return nil, nil, err
 	}

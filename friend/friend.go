@@ -53,9 +53,9 @@ func NewEmptyFriend() *Friend {
 	return &Friend{BaseEntity: &pkgservice.BaseEntity{SyncInfo: &pkgservice.BaseSyncInfo{}}}
 }
 
-func NewFriend(friendID *types.PttID, ptt pkgservice.Ptt, service pkgservice.Service, spm pkgservice.ServiceProtocolManager, dbLock *types.LockMap) (*Friend, error) {
+func NewFriend(friendID *types.PttID, router pkgservice.Router, service pkgservice.Service, spm pkgservice.ServiceProtocolManager, dbLock *types.LockMap) (*Friend, error) {
 
-	myID := ptt.GetMyEntity().GetID()
+	myID := router.GetMyEntity().GetID()
 	id, err := pkgservice.NewPttIDWithMixedIDs([]*types.PttID{myID, friendID})
 	if err != nil {
 		return nil, err
@@ -87,7 +87,7 @@ func NewFriend(friendID *types.PttID, ptt pkgservice.Ptt, service pkgservice.Ser
 		FriendID:  friendID,
 	}
 
-	err = f.Init(ptt, service, spm)
+	err = f.Init(router, service, spm)
 	if err != nil {
 		return nil, err
 	}
@@ -105,13 +105,13 @@ func (f *Friend) SetUpdateTS(ts types.Timestamp) {
 	f.UpdateTS = ts
 }
 
-func (f *Friend) Init(ptt pkgservice.Ptt, service pkgservice.Service, spm pkgservice.ServiceProtocolManager) error {
+func (f *Friend) Init(router pkgservice.Router, service pkgservice.Service, spm pkgservice.ServiceProtocolManager) error {
 
 	f.SetDB(dbFriend, spm.GetDBLock())
 
 	// friend-id
 
-	err := f.InitPM(ptt, service)
+	err := f.InitPM(router, service)
 	if err != nil {
 		return err
 	}
@@ -129,13 +129,13 @@ func (f *Friend) Init(ptt pkgservice.Ptt, service pkgservice.Service, spm pkgser
 	return nil
 }
 
-func (f *Friend) InitPM(ptt pkgservice.Ptt, service pkgservice.Service) error {
-	pm, err := NewProtocolManager(f, ptt, service)
+func (f *Friend) InitPM(router pkgservice.Router, service pkgservice.Service) error {
+	pm, err := NewProtocolManager(f, router, service)
 	if err != nil {
 		return err
 	}
 
-	f.BaseEntity.Init(pm, ptt, service)
+	f.BaseEntity.Init(pm, router, service)
 
 	return nil
 }

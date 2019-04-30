@@ -40,7 +40,7 @@ func (pm *BaseProtocolManager) IdentifyPeer(peer *PttPeer) {
 		return
 	}
 
-	ptt := pm.Ptt()
+	ptt := pm.Router()
 	data, err := ptt.IdentifyPeer(pm.Entity().GetID(), pm.QuitSync(), peer, false)
 	if err != nil {
 		log.Warn("IdentifyPeer: unable to ptt.IdentifyPeer", "e", err, "p", peer, "userID", peer.UserID)
@@ -72,7 +72,7 @@ func (pm *BaseProtocolManager) HandleIdentifyPeer(dataBytes []byte, peer *PttPee
  * Ptt
  **********/
 
-func (p *BasePtt) IdentifyPeer(entityID *types.PttID, quitSync chan struct{}, peer *PttPeer, isForce bool) (*IdentifyPeer, error) {
+func (p *BaseRouter) IdentifyPeer(entityID *types.PttID, quitSync chan struct{}, peer *PttPeer, isForce bool) (*IdentifyPeer, error) {
 
 	// 2. init info in peer
 	salt, err := peer.InitID(entityID, quitSync, isForce)

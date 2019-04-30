@@ -85,7 +85,7 @@ func (pm *ProtocolManager) createJoinFriendKey() error {
 		return nil
 	}
 
-	ptt := pm.Ptt()
+	ptt := pm.Router()
 	myEntity := ptt.GetMyEntity()
 	status = myEntity.GetStatus()
 	statusClass = types.StatusToStatusClass(status)
@@ -141,7 +141,7 @@ func (pm *ProtocolManager) CleanJoinFriendKey() {
 
 	entityID := pm.Entity().GetID()
 
-	ptt := pm.Ptt()
+	ptt := pm.Router()
 	for _, keyInfo := range pm.joinFriendKeyInfos {
 		ptt.RemoveJoinKey(keyInfo.Hash, entityID, false)
 	}

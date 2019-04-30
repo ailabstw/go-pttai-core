@@ -22,9 +22,9 @@ type ServiceProtocolManager struct {
 	*pkgservice.BaseServiceProtocolManager
 }
 
-func NewServiceProtocolManager(ptt pkgservice.Ptt, service pkgservice.Service) (*ServiceProtocolManager, error) {
+func NewServiceProtocolManager(router pkgservice.Router, service pkgservice.Service) (*ServiceProtocolManager, error) {
 
-	b, err := pkgservice.NewBaseServiceProtocolManager(ptt, service)
+	b, err := pkgservice.NewBaseServiceProtocolManager(router, service)
 	if err != nil {
 		return nil, err
 	}
@@ -40,7 +40,7 @@ func NewServiceProtocolManager(ptt pkgservice.Ptt, service pkgservice.Service) (
 	}
 
 	for _, eachProfile := range profiles {
-		err = eachProfile.Init(ptt, service, spm)
+		err = eachProfile.Init(router, service, spm)
 		if err != nil {
 			return nil, err
 		}

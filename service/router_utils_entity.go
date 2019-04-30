@@ -26,7 +26,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 )
 
-func (p *BasePtt) getEntityFromHash(hash *common.Address, lock *sync.RWMutex, hashMap map[common.Address]*types.PttID) (Entity, error) {
+func (r *BaseRouter) getEntityFromHash(hash *common.Address, lock *sync.RWMutex, hashMap map[common.Address]*types.PttID) (Entity, error) {
 	lock.RLock()
 	defer lock.RUnlock()
 
@@ -36,7 +36,7 @@ func (p *BasePtt) getEntityFromHash(hash *common.Address, lock *sync.RWMutex, ha
 		return nil, ErrInvalidData
 	}
 	idVal := *entityID
-	entity, ok := p.entities[idVal]
+	entity, ok := r.entities[idVal]
 	if !ok {
 		return nil, ErrInvalidData
 	}
@@ -44,21 +44,21 @@ func (p *BasePtt) getEntityFromHash(hash *common.Address, lock *sync.RWMutex, ha
 	return entity, nil
 }
 
-func (p *BasePtt) RegisterEntityPeerWithOtherUserID(e Entity, id *types.PttID, peerType PeerType, isLocked bool) error {
+func (r *BaseRouter) RegisterEntityPeerWithOtherUserID(e Entity, id *types.PttID, peerType PeerType, isLocked bool) error {
 
 	if !isLocked {
-		p.peerLock.RLock()
-		defer p.peerLock.RUnlock()
+		r.peerLock.RLock()
+		defer r.peerLock.RUnlock()
 	}
 
-	myID := p.GetMyEntity().GetID()
+	myID := r.GetMyEntity().GetID()
 	if reflect.DeepEqual(myID, id) {
 		return nil
 	}
 
 	log.Debug("RegisterEntityPeerWithOtherUserID: to GetPeerByUserID", "e", e.GetID(), "id", id, "peerType", peerType)
 
-	peer, err := p.GetPeerByUserID(id, true)
+	peer, err := r.GetPeerByUserID(id, true)
 
 	log.Debug("RegisterEntityPeerWithOtherUserID: after GetPeerByUserID", "e", e.GetID(), "id", id, "peer", peer, "e", err)
 
@@ -72,24 +72,24 @@ func (p *BasePtt) RegisterEntityPeerWithOtherUserID(e Entity, id *types.PttID, p
 	return e.PM().RegisterPeer(peer, peerType, false)
 }
 
-func (p *BasePtt) RegisterEntity(e Entity, isLocked bool, isPeerLocked bool) error {
+func (r *BaseRouter) RegisterEntity(e Entity, isLocked bool, isPeerLocked bool) error {
 	if !isLocked {
-		p.entityLock.Lock()
-		defer p.entityLock.Unlock()
+		r.entityLock.Lock()
+		defer r.entityLock.Unlock()
 	}
 
 	id := e.GetID()
-	p.entities[*id] = e
+	r.entities[*id] = e
 
 	log.Debug("RegisterEntity: to registerEntityPeers")
 
-	return p.registerEntityPeers(e, isPeerLocked)
+	return r.registerEntityPeers(e, isPeerLocked)
 }
 
-func (p *BasePtt) registerEntityPeers(e Entity, isLocked bool) error {
+func (r *BaseRouter) registerEntityPeers(e Entity, isLocked bool) error {
 	if !isLocked {
-		p.peerLock.RLock()
-		defer p.peerLock.RUnlock()
+		r.peerLock.RLock()
+		defer r.peerLock.RUnlock()
 	}
 
 	log.Debug("registerEntityPeers: after lock")
@@ -104,13 +104,13 @@ func (p *BasePtt) registerEntityPeers(e Entity, isLocked bool) error {
 	// my-peers: always my-peer and register the entity
 	var peer *PttPeer
 	log.Debug("registerEntityPeers: to myPeers")
-	for _, peer = range p.myPeers {
+	for _, peer = range r.myPeers {
 		pm.RegisterPeer(peer, PeerTypeMe, false)
 	}
 
 	// hub-peers
 	log.Debug("registerEntityPeers: to hubPeers")
-	for _, peer = range p.hubPeers {
+	for _, peer = range r.hubPeers {
 		if pm.IsMyDevice(peer) {
 			pm.RegisterPeer(peer, PeerTypeMe, false)
 		} else if pm.IsImportantPeer(peer) {
@@ -125,7 +125,7 @@ func (p *BasePtt) registerEntityPeers(e Entity, isLocked bool) error {
 	// important-peers
 	toRemovePeers := make([]*discover.NodeID, 0)
 	log.Debug("registerEntityPeers: to importantPeers")
-	for _, peer = range p.importantPeers {
+	for _, peer = range r.importantPeers {
 		if pm.IsMyDevice(peer) {
 			log.Debug("registerEntityPeers: important-to-me", "peer", peer)
 			pm.RegisterPeer(peer, PeerTypeMe, false)
@@ -140,13 +140,13 @@ func (p *BasePtt) registerEntityPeers(e Entity, isLocked bool) error {
 		}
 	}
 	for _, nodeID := range toRemovePeers {
-		delete(p.importantPeers, *nodeID)
+		delete(r.importantPeers, *nodeID)
 	}
 
 	// member-peers
 	toRemovePeers = make([]*discover.NodeID, 0)
 	log.Debug("registerEntityPeers: to memberPeers")
-	for _, peer = range p.memberPeers {
+	for _, peer = range r.memberPeers {
 		if pm.IsMyDevice(peer) {
 			log.Debug("registerEntityPeers: member-to-me", "peer", peer)
 			pm.RegisterPeer(peer, PeerTypeMe, false)
@@ -163,13 +163,13 @@ func (p *BasePtt) registerEntityPeers(e Entity, isLocked bool) error {
 		}
 	}
 	for _, nodeID := range toRemovePeers {
-		delete(p.memberPeers, *nodeID)
+		delete(r.memberPeers, *nodeID)
 	}
 
 	// pending-peers
 	toRemovePeers = make([]*discover.NodeID, 0)
-	log.Debug("registerEntityPeers: to pendingPeers", "pendingPeers", len(p.pendingPeers))
-	for _, peer = range p.pendingPeers {
+	log.Debug("registerEntityPeers: to pendingPeers", "pendingPeers", len(r.pendingPeers))
+	for _, peer = range r.pendingPeers {
 		if pm.IsMyDevice(peer) {
 			pm.RegisterPeer(peer, PeerTypeMe, false)
 			log.Debug("registerEntityPeers: pending-to-me", "peer", peer)
@@ -188,13 +188,13 @@ func (p *BasePtt) registerEntityPeers(e Entity, isLocked bool) error {
 		}
 	}
 	for _, nodeID := range toRemovePeers {
-		delete(p.memberPeers, *nodeID)
+		delete(r.memberPeers, *nodeID)
 	}
 
 	// random-peers
 	toRemovePeers = make([]*discover.NodeID, 0)
-	log.Debug("registerEntityPeers: to randomPeers", "randomPeers", len(p.randomPeers))
-	for _, peer = range p.randomPeers {
+	log.Debug("registerEntityPeers: to randomPeers", "randomPeers", len(r.randomPeers))
+	for _, peer = range r.randomPeers {
 		if pm.IsMyDevice(peer) {
 			log.Debug("registerEntityPeers: random-to-me", "peer", peer)
 			pm.RegisterPeer(peer, PeerTypeMe, false)
@@ -215,14 +215,14 @@ func (p *BasePtt) registerEntityPeers(e Entity, isLocked bool) error {
 		}
 	}
 	for _, nodeID := range toRemovePeers {
-		delete(p.randomPeers, *nodeID)
+		delete(r.randomPeers, *nodeID)
 	}
 
 	// to my-peers
 	log.Debug("registerEntityPeers", "toMyPeers", len(toMyPeers))
 	for _, peer = range toMyPeers {
 		//id := peer.ID()
-		p.SetPeerType(peer, PeerTypeMe, false, true)
+		r.SetPeerType(peer, PeerTypeMe, false, true)
 		// p.myPeers[id] = peer
 	}
 
@@ -230,7 +230,7 @@ func (p *BasePtt) registerEntityPeers(e Entity, isLocked bool) error {
 	log.Debug("registerEntityPeers", "toImportantPeers", len(toImportantPeers))
 	for _, peer = range toImportantPeers {
 		//id := peer.ID()
-		p.SetPeerType(peer, PeerTypeImportant, false, true)
+		r.SetPeerType(peer, PeerTypeImportant, false, true)
 		// p.importantPeers[id] = peer
 	}
 
@@ -238,7 +238,7 @@ func (p *BasePtt) registerEntityPeers(e Entity, isLocked bool) error {
 	log.Debug("registerEntityPeers", "toMemberPeers", len(toMemberPeers))
 	for _, peer = range toMemberPeers {
 		//id := peer.ID()
-		p.SetPeerType(peer, PeerTypeMember, false, true)
+		r.SetPeerType(peer, PeerTypeMember, false, true)
 		//p.memberPeers[id] = peer
 	}
 
@@ -246,7 +246,7 @@ func (p *BasePtt) registerEntityPeers(e Entity, isLocked bool) error {
 	log.Debug("registerEntityPeers", "toPendingPeers", len(toPendingPeers))
 	for _, peer = range toPendingPeers {
 		//id := peer.ID()
-		p.SetPeerType(peer, PeerTypePending, false, true)
+		r.SetPeerType(peer, PeerTypePending, false, true)
 		// p.pendingPeers[id] = peer
 	}
 
@@ -255,21 +255,21 @@ func (p *BasePtt) registerEntityPeers(e Entity, isLocked bool) error {
 	return nil
 }
 
-func (p *BasePtt) UnregisterEntity(e Entity, isLocked bool) error {
+func (r *BaseRouter) UnregisterEntity(e Entity, isLocked bool) error {
 	if !isLocked {
-		p.entityLock.Lock()
-		defer p.entityLock.Unlock()
+		r.entityLock.Lock()
+		defer r.entityLock.Unlock()
 	}
 
 	id := e.GetID()
-	delete(p.entities, *id)
+	delete(r.entities, *id)
 
-	p.peerLock.Lock()
-	defer p.peerLock.Unlock()
+	r.peerLock.Lock()
+	defer r.peerLock.Unlock()
 
 	return nil
 }
 
-func (p *BasePtt) GetEntities() map[types.PttID]Entity {
-	return p.entities
+func (r *BaseRouter) GetEntities() map[types.PttID]Entity {
+	return r.entities
 }

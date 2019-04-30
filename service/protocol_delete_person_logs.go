@@ -263,7 +263,7 @@ func (pm *BaseProtocolManager) HandlePendingDeletePersonLog(
 
 	pm.InternalSign(oplog)
 
-	myID := pm.Ptt().GetMyEntity().GetID()
+	myID := pm.Router().GetMyEntity().GetID()
 	if reflect.DeepEqual(myID, personID) && len(oplog.MasterSigns) == 1 {
 		oplog.SetMasterLogID(pm.GetNewestMasterLogID(), 0)
 	}

@@ -24,7 +24,7 @@ import (
 )
 
 func (pm *BaseProtocolManager) AddMember(id *types.PttID, isForce bool) (*Member, *MemberOplog, error) {
-	ptt := pm.Ptt()
+	ptt := pm.Router()
 	myID := ptt.GetMyEntity().GetID()
 	origMember := NewEmptyMember()
 	pm.SetMemberObjDB(origMember)
@@ -69,7 +69,7 @@ func (pm *BaseProtocolManager) AddMember(id *types.PttID, isForce bool) (*Member
 
 func (pm *BaseProtocolManager) NewMember(id *types.PttID) (Object, OpData, error) {
 	entity := pm.Entity()
-	myEntity := pm.Ptt().GetMyEntity()
+	myEntity := pm.Router().GetMyEntity()
 	myID := myEntity.GetID()
 
 	ts, err := types.GetTimestamp()
@@ -91,7 +91,7 @@ func (pm *BaseProtocolManager) postaddMember(theMember Object, oplog *BaseOplog)
 
 	log.Debug("postaddMember: start", "entity", pm.Entity().GetID(), "member", theMember.GetID(), "oplog", oplog.ID)
 
-	myID := pm.Ptt().GetMyEntity().GetID()
+	myID := pm.Router().GetMyEntity().GetID()
 	if reflect.DeepEqual(myID, member.GetID()) {
 		log.Debug("postaddMember: to myMemberLog", "entity", pm.Entity().GetID(), "member", theMember.GetID(), "myID", myID, "oplog", oplog.ID)
 

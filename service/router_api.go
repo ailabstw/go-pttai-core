@@ -23,27 +23,27 @@ import (
 )
 
 type PrivateAPI struct {
-	p *BasePtt
+	r *BaseRouter
 }
 
-func NewPrivateAPI(p *BasePtt) *PrivateAPI {
-	return &PrivateAPI{p}
+func NewPrivateAPI(r *BaseRouter) *PrivateAPI {
+	return &PrivateAPI{r}
 }
 
 func (api *PrivateAPI) GetVersion() (string, error) {
-	return api.p.GetVersion()
+	return api.r.GetVersion()
 }
 
 func (api *PrivateAPI) GetGitCommit() (string, error) {
-	return api.p.GetGitCommit()
+	return api.r.GetGitCommit()
 }
 
 func (api *PrivateAPI) Shutdown() (bool, error) {
-	return api.p.Shutdown()
+	return api.r.Shutdown()
 }
 
 func (api *PrivateAPI) Restart() (bool, error) {
-	return api.p.Restart()
+	return api.r.Restart()
 }
 
 /**********
@@ -51,11 +51,11 @@ func (api *PrivateAPI) Restart() (bool, error) {
  **********/
 
 func (api *PrivateAPI) CountPeers() (*BackendCountPeers, error) {
-	return api.p.CountPeers()
+	return api.r.CountPeers()
 }
 
 func (api *PrivateAPI) GetPeers() ([]*BackendPeer, error) {
-	return api.p.BEGetPeers()
+	return api.r.BEGetPeers()
 }
 
 /**********
@@ -63,7 +63,7 @@ func (api *PrivateAPI) GetPeers() ([]*BackendPeer, error) {
  **********/
 
 func (api *PrivateAPI) CountEntities() (int, error) {
-	return api.p.CountEntities()
+	return api.r.CountEntities()
 }
 
 /**********
@@ -71,12 +71,12 @@ func (api *PrivateAPI) CountEntities() (int, error) {
  **********/
 
 func (api *PrivateAPI) GetJoins() (map[common.Address]*types.PttID, error) {
-	return api.p.GetJoins(), nil
+	return api.r.GetJoins(), nil
 
 }
 
 func (api *PrivateAPI) GetConfirmJoins() ([]*BackendConfirmJoin, error) {
-	return api.p.GetConfirmJoins()
+	return api.r.GetConfirmJoins()
 }
 
 /**********
@@ -84,7 +84,7 @@ func (api *PrivateAPI) GetConfirmJoins() ([]*BackendConfirmJoin, error) {
  **********/
 
 func (api *PrivateAPI) GetOps() (map[common.Address]*types.PttID, error) {
-	return api.p.GetOps(), nil
+	return api.r.GetOps(), nil
 }
 
 /**********
@@ -92,15 +92,15 @@ func (api *PrivateAPI) GetOps() (map[common.Address]*types.PttID, error) {
  **********/
 
 func (api *PrivateAPI) GetPttOplogList(logID string, limit int, listOrder pttdb.ListOrder) ([]*PttOplog, error) {
-	return api.p.BEGetPttOplogList([]byte(logID), limit, listOrder)
+	return api.r.BEGetPttOplogList([]byte(logID), limit, listOrder)
 }
 
 func (api *PrivateAPI) MarkPttOplogSeen() (types.Timestamp, error) {
-	return api.p.MarkPttOplogSeen()
+	return api.r.MarkPttOplogSeen()
 }
 
 func (api *PrivateAPI) GetPttOplogSeen() (types.Timestamp, error) {
-	return api.p.GetPttOplogSeen()
+	return api.r.GetPttOplogSeen()
 }
 
 /**********
@@ -121,7 +121,7 @@ func (api *PrivateAPI) GetLocale() (Locale, error) {
  **********/
 
 func (api *PrivateAPI) GetLastAnnounceP2PTS() (types.Timestamp, error) {
-	return api.p.GetLastAnnounceP2PTS()
+	return api.r.GetLastAnnounceP2PTS()
 }
 
 /**********

@@ -48,7 +48,7 @@ var genIV = func(iv []byte) error {
 EncryptData encrypts data in ptt-layer.
 Reference: https://gist.github.com/stupidbodo/601b68bfef3449d1b8d9
 */
-func (p *BasePtt) EncryptData(op OpType, data []byte, keyInfo *KeyInfo) ([]byte, error) {
+func (r *BaseRouter) EncryptData(op OpType, data []byte, keyInfo *KeyInfo) ([]byte, error) {
 	keyBytes := keyInfo.KeyBytes
 	marshaled := make([]byte, 4+len(data))
 	binary.BigEndian.PutUint32(marshaled[:4], uint32(op))
@@ -79,7 +79,7 @@ func (p *BasePtt) EncryptData(op OpType, data []byte, keyInfo *KeyInfo) ([]byte,
 DecryptData decrypts data in ptt-layer.
 Reference: https://gist.github.com/stupidbodo/601b68bfef3449d1b8d9
 */
-func (p *BasePtt) DecryptData(ciphertext []byte, keyInfo *KeyInfo) (OpType, []byte, error) {
+func (r *BaseRouter) DecryptData(ciphertext []byte, keyInfo *KeyInfo) (OpType, []byte, error) {
 	keyBytes := keyInfo.KeyBytes
 	block, err := aes.NewCipher(keyBytes)
 	if err != nil {
@@ -148,21 +148,21 @@ MarshalData marshals the encrypted data based on ptt-protocol.
 	enc: encrypted-data
 The purpose is to have checksum to ensure that the data is not randomly-modified (preventing machine-error)
 */
-func (p *BasePtt) MarshalData(code CodeType, hash *common.Address, encData []byte) (*PttData, error) {
+func (r *BaseRouter) MarshalData(code CodeType, hash *common.Address, encData []byte) (*RouterData, error) {
 	// 2. forms pttEvent
-	ev := &PttEventData{
+	ev := &RouterEventData{
 		Code:    code,
 		Hash:    hash[:],
 		EncData: encData,
 	}
 
 	// ptt-event signed
-	evWithSalt, checksum, err := p.checksumPttEventData(ev)
+	evWithSalt, checksum, err := r.checksumPttEventData(ev)
 	if err != nil {
 		return nil, err
 	}
 
-	return &PttData{
+	return &RouterData{
 		Code:       code,
 		Hash:       hash[:],
 		EvWithSalt: evWithSalt,
@@ -177,20 +177,20 @@ MarshalData marshals the encrypted data based on ptt-protocol.
 	enc: encrypted-data
 The purpose is to have checksum to ensure that the data is not randomly-modified (preventing machine-error)
 */
-func (p *BasePtt) MarshalDataWithoutHash(code CodeType, encData []byte) (*PttData, error) {
+func (r *BaseRouter) MarshalDataWithoutHash(code CodeType, encData []byte) (*RouterData, error) {
 	// 2. forms pttEvent
-	ev := &PttEventData{
+	ev := &RouterEventData{
 		Code:    code,
 		EncData: encData,
 	}
 
 	// ptt-event signed
-	evWithSalt, checksum, err := p.checksumPttEventData(ev)
+	evWithSalt, checksum, err := r.checksumPttEventData(ev)
 	if err != nil {
 		return nil, err
 	}
 
-	return &PttData{
+	return &RouterData{
 		Code:       code,
 		Hash:       nil,
 		EvWithSalt: evWithSalt,
@@ -204,13 +204,13 @@ ChecksumPttEventData do checksum on the ev
 
 Return: bytesWithSalt, checksum, error
 */
-func (p *BasePtt) checksumPttEventData(ev *PttEventData) ([]byte, []byte, error) {
+func (r *BaseRouter) checksumPttEventData(ev *RouterEventData) ([]byte, []byte, error) {
 	evBytes, err := json.Marshal(ev)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	return p.checksumData(evBytes)
+	return r.checksumData(evBytes)
 }
 
 /*
@@ -218,7 +218,7 @@ ChecksumData do checksum on the bytes
 
 Return: bytesWithSalt, checksum, error
 */
-func (p *BasePtt) checksumData(bytes []byte) ([]byte, []byte, error) {
+func (r *BaseRouter) checksumData(bytes []byte) ([]byte, []byte, error) {
 	salt, err := types.NewSalt()
 	if err != nil {
 		return nil, nil, err
@@ -236,8 +236,8 @@ func (p *BasePtt) checksumData(bytes []byte) ([]byte, []byte, error) {
 /*
 UnmarshalData unmarshal the pttData to the original data
 */
-func (p *BasePtt) UnmarshalData(pttData *PttData) (CodeType, *common.Address, []byte, error) {
-	ev, err := p.verifyChecksumEventData(pttData)
+func (r *BaseRouter) UnmarshalData(routerData *RouterData) (CodeType, *common.Address, []byte, error) {
+	ev, err := r.verifyChecksumEventData(routerData)
 	if err != nil {
 		return CodeTypeInvalid, nil, nil, err
 	}
@@ -248,16 +248,16 @@ func (p *BasePtt) UnmarshalData(pttData *PttData) (CodeType, *common.Address, []
 	return ev.Code, hashAddr, ev.EncData, nil
 }
 
-func (p *BasePtt) verifyChecksumEventData(pttData *PttData) (*PttEventData, error) {
-	evWithSalt, checksum := pttData.EvWithSalt, pttData.Checksum
-	err := p.verifyChecksumData(evWithSalt, checksum)
+func (r *BaseRouter) verifyChecksumEventData(routerData *RouterData) (*RouterEventData, error) {
+	evWithSalt, checksum := routerData.EvWithSalt, routerData.Checksum
+	err := r.verifyChecksumData(evWithSalt, checksum)
 	if err != nil {
 		return nil, err
 	}
 
 	evBytes := evWithSalt[:len(evWithSalt)-types.SizeSalt]
 
-	ev := &PttEventData{}
+	ev := &RouterEventData{}
 	err = json.Unmarshal(evBytes, ev)
 	if err != nil {
 		return nil, err
@@ -267,7 +267,7 @@ func (p *BasePtt) verifyChecksumEventData(pttData *PttData) (*PttEventData, erro
 
 }
 
-func (p *BasePtt) verifyChecksumData(bytesWithSalt []byte, checksum []byte) error {
+func (r *BaseRouter) verifyChecksumData(bytesWithSalt []byte, checksum []byte) error {
 	hash := crypto.Keccak256(bytesWithSalt)
 
 	isGood := reflect.DeepEqual(hash, checksum)
@@ -277,13 +277,13 @@ func (p *BasePtt) verifyChecksumData(bytesWithSalt []byte, checksum []byte) erro
 	return nil
 }
 
-func (p *BasePtt) SendDataToPeer(code CodeType, data interface{}, peer *PttPeer) error {
+func (r *BaseRouter) SendDataToPeer(code CodeType, data interface{}, peer *PttPeer) error {
 	marshaledData, err := json.Marshal(data)
 	if err != nil {
 		return err
 	}
 
-	pttData, err := p.MarshalDataWithoutHash(code, marshaledData)
+	pttData, err := r.MarshalDataWithoutHash(code, marshaledData)
 	if err != nil {
 		return err
 	}

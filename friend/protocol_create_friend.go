@@ -43,14 +43,14 @@ func (spm *ServiceProtocolManager) CreateFriend(friendID *types.PttID) (*Friend,
 	return f, nil
 }
 
-func (spm *ServiceProtocolManager) NewFriend(theData pkgservice.CreateData, ptt pkgservice.Ptt, service pkgservice.Service) (pkgservice.Entity, pkgservice.OpData, error) {
+func (spm *ServiceProtocolManager) NewFriend(theData pkgservice.CreateData, router pkgservice.Router, service pkgservice.Service) (pkgservice.Entity, pkgservice.OpData, error) {
 
 	data, ok := theData.(*FriendOpCreateFriend)
 	if !ok {
 		return nil, nil, pkgservice.ErrInvalidData
 	}
 
-	f, err := NewFriend(data.FriendID, ptt, service, spm, spm.GetDBLock())
+	f, err := NewFriend(data.FriendID, router, service, spm, spm.GetDBLock())
 	if err != nil {
 		return nil, nil, err
 	}

@@ -136,7 +136,7 @@ func (pm *ProtocolManager) postRegisterPeer(peer *pkgservice.PttPeer) error {
 }
 
 func (pm *ProtocolManager) LoadPeers() error {
-	ptt := pm.myPtt
+	ptt := pm.myRouter
 	opKey, err := pm.GetOldestOpKey(false)
 	if err != nil {
 		return err

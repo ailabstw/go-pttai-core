@@ -55,7 +55,7 @@ func (pm *BaseProtocolManager) TransferPerson(
 	posttransfer func(fromID *types.PttID, toID *types.PttID, person Object, oplog *BaseOplog, opData OpData) error,
 ) error {
 
-	myID := pm.Ptt().GetMyEntity().GetID()
+	myID := pm.Router().GetMyEntity().GetID()
 	entity := pm.Entity()
 
 	masterList, _ := pm.GetMasterListFromCache(false)

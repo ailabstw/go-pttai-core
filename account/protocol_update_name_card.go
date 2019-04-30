@@ -26,7 +26,7 @@ type UpdateNameCard struct {
 }
 
 func (pm *ProtocolManager) UpdateNameCard(card []byte) (*NameCard, error) {
-	myID := pm.Ptt().GetMyEntity().GetID()
+	myID := pm.Router().GetMyEntity().GetID()
 
 	if !pm.IsMaster(myID, false) {
 		return nil, types.ErrInvalidID

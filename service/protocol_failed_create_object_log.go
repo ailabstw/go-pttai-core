@@ -74,7 +74,7 @@ func (pm *BaseProtocolManager) HandleFailedCreateObjectLog(
 	}
 
 	// 5. not my object.
-	myID := pm.Ptt().GetMyEntity().GetID()
+	myID := pm.Router().GetMyEntity().GetID()
 	if !reflect.DeepEqual(myID, obj.GetCreatorID()) {
 		blockInfo := obj.GetBlockInfo()
 		err = pm.removeBlockAndMediaInfoByBlockInfo(blockInfo, nil, oplog, true, nil)

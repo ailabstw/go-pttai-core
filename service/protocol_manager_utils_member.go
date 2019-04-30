@@ -62,14 +62,14 @@ func (pm *BaseProtocolManager) GetMember(id *types.PttID, isLocked bool) (*Membe
 
 func (pm *BaseProtocolManager) RegisterMember(member *Member, isLocked bool) error {
 
-	return pm.Ptt().RegisterEntityPeerWithOtherUserID(pm.Entity(), member.ID, PeerTypeMember, false)
+	return pm.Router().RegisterEntityPeerWithOtherUserID(pm.Entity(), member.ID, PeerTypeMember, false)
 }
 
 /*
 UnregisterMember unregisters member. Possibly already did postdeleteEntity.
 */
 func (pm *BaseProtocolManager) UnregisterMember(member *Member, isLock bool, isPostdeleteEntity bool) error {
-	myID := pm.Ptt().GetMyEntity().GetID()
+	myID := pm.Router().GetMyEntity().GetID()
 
 	if reflect.DeepEqual(myID, member.ID) {
 		if isPostdeleteEntity {
@@ -106,7 +106,7 @@ func (pm *BaseProtocolManager) GetMemberLogByMemberID(id *types.PttID, isLocked 
 }
 
 func (pm *BaseProtocolManager) loadMyMemberLog() error {
-	myID := pm.Ptt().GetMyEntity().GetID()
+	myID := pm.Router().GetMyEntity().GetID()
 	if !pm.Entity().IsOwner(myID) {
 		return nil
 	}
@@ -125,7 +125,7 @@ func (pm *BaseProtocolManager) CleanMember(isRetainMe bool) error {
 		return err
 	}
 
-	myID := pm.Ptt().GetMyEntity().GetID()
+	myID := pm.Router().GetMyEntity().GetID()
 	for _, member := range members {
 		if isRetainMe && reflect.DeepEqual(myID, member.ID) {
 			continue

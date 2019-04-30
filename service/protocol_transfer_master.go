@@ -24,7 +24,7 @@ import (
 )
 
 func (pm *BaseProtocolManager) TransferMaster(id *types.PttID) error {
-	ptt := pm.Ptt()
+	ptt := pm.Router()
 	myID := ptt.GetMyEntity().GetID()
 
 	// 1. validate
@@ -87,7 +87,7 @@ func (pm *BaseProtocolManager) signTransferMasterOplog(oplog *BaseOplog, fromID 
 
 func (pm *BaseProtocolManager) checkTransferMasterSign(oplog *BaseOplog, fromID *types.PttID, toID *types.PttID) error {
 	// do nothing if I am also the toID
-	mySPM := pm.Ptt().GetMyService().SPM()
+	mySPM := pm.Router().GetMyService().SPM()
 	for id, _ := range mySPM.Entities() {
 		log.Debug("signTransferMasterOplog: (in-for-loop)", "id", id, "toID", toID)
 		if reflect.DeepEqual(id[:], toID[:]) {

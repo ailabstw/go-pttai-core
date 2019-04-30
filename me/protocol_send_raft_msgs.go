@@ -32,7 +32,7 @@ type SendRaftMsgs struct {
 
 func (pm *ProtocolManager) SendRaftMsgs(msgs []pb.Message) error {
 	log.Debug("SendRaftMsgs: start", "msgs", msgs)
-	myRaftID := pm.myPtt.MyRaftID()
+	myRaftID := pm.myRouter.MyRaftID()
 	msgByPeers := make(map[uint64][]pb.Message)
 	var origMsgByPeers []pb.Message
 	for _, msg := range msgs {

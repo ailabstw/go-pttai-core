@@ -47,7 +47,7 @@ func (pm *BaseProtocolManager) AddPerson(
 	newOplog func(objID *types.PttID, op OpType, opData OpData) (Oplog, error), // for update
 ) (Object, *BaseOplog, error) {
 
-	myID := pm.Ptt().GetMyEntity().GetID()
+	myID := pm.Router().GetMyEntity().GetID()
 	entity := pm.Entity()
 
 	// 1. validate

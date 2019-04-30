@@ -53,7 +53,7 @@ func NewEmptyMyInfo() *MyInfo {
 	return &MyInfo{BaseEntity: &pkgservice.BaseEntity{SyncInfo: &pkgservice.BaseSyncInfo{}}}
 }
 
-func NewMyInfo(id *types.PttID, myKey *ecdsa.PrivateKey, ptt pkgservice.MyPtt, service pkgservice.Service, spm pkgservice.ServiceProtocolManager, dbLock *types.LockMap) (*MyInfo, error) {
+func NewMyInfo(id *types.PttID, myKey *ecdsa.PrivateKey, router pkgservice.MyRouter, service pkgservice.Service, spm pkgservice.ServiceProtocolManager, dbLock *types.LockMap) (*MyInfo, error) {
 	ts, err := types.GetTimestamp()
 	if err != nil {
 		return nil, err
@@ -68,21 +68,21 @@ func NewMyInfo(id *types.PttID, myKey *ecdsa.PrivateKey, ptt pkgservice.MyPtt, s
 	}
 
 	// new my node
-	myNodeID := ptt.MyNodeID()
+	myNodeID := router.MyNodeID()
 	myNode, err := NewMyNode(ts, id, myNodeID, 1)
 	if err != nil {
 		return nil, err
 	}
 
 	myNode.Status = types.StatusAlive
-	myNode.NodeType = ptt.MyNodeType()
+	myNode.NodeType = router.MyNodeType()
 
 	_, err = myNode.Save()
 	if err != nil {
 		return nil, err
 	}
 
-	err = m.Init(ptt, service, spm)
+	err = m.Init(router, service, spm)
 	if err != nil {
 		return nil, err
 	}
@@ -98,10 +98,10 @@ func (m *MyInfo) SetUpdateTS(ts types.Timestamp) {
 	m.UpdateTS = ts
 }
 
-func (m *MyInfo) Init(thePtt pkgservice.Ptt, service pkgservice.Service, spm pkgservice.ServiceProtocolManager) error {
+func (m *MyInfo) Init(router pkgservice.Router, service pkgservice.Service, spm pkgservice.ServiceProtocolManager) error {
 
 	log.Debug("me.Init: start")
-	ptt, ok := thePtt.(pkgservice.MyPtt)
+	myRouter, ok := router.(pkgservice.MyRouter)
 	if !ok {
 		return pkgservice.ErrInvalidData
 	}
@@ -109,14 +109,14 @@ func (m *MyInfo) Init(thePtt pkgservice.Ptt, service pkgservice.Service, spm pkg
 	MyID := spm.(*ServiceProtocolManager).MyID
 	m.SetDB(dbMe, spm.GetDBLock())
 
-	err := m.InitPM(ptt, service)
+	err := m.InitPM(myRouter, service)
 	if err != nil {
 		return err
 	}
 
 	myID := m.ID
-	nodeKey := ptt.MyNodeKey()
-	nodeID := ptt.MyNodeID()
+	nodeKey := myRouter.MyNodeKey()
+	nodeID := myRouter.MyNodeID()
 	nodeSignID, err := setNodeSignID(nodeID, myID)
 
 	m.nodeKey = nodeKey
@@ -164,7 +164,7 @@ func (m *MyInfo) Init(thePtt pkgservice.Ptt, service pkgservice.Service, spm pkg
 		m.Profile = profile.(*account.Profile)
 	}
 
-	ptt.SetMyEntity(m)
+	myRouter.SetMyEntity(m)
 
 	return nil
 }
@@ -175,14 +175,14 @@ func (m *MyInfo) loadMyKey() (*ecdsa.PrivateKey, error) {
 	return cfg.GetDataPrivateKeyByID(m.ID)
 }
 
-func (m *MyInfo) InitPM(ptt pkgservice.MyPtt, service pkgservice.Service) error {
-	pm, err := NewProtocolManager(m, ptt, service)
+func (m *MyInfo) InitPM(router pkgservice.MyRouter, service pkgservice.Service) error {
+	pm, err := NewProtocolManager(m, router, service)
 	if err != nil {
 		log.Error("InitPM: unable to NewProtocolManager", "e", err)
 		return err
 	}
 
-	m.BaseEntity.Init(pm, ptt, service)
+	m.BaseEntity.Init(pm, router, service)
 
 	return nil
 }

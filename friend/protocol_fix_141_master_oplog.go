@@ -22,7 +22,7 @@ import (
 )
 
 func (pm *ProtocolManager) Fix141MasterOplog() error {
-	myID := pm.Ptt().GetMyEntity().GetID()
+	myID := pm.Router().GetMyEntity().GetID()
 
 	if !pm.IsMaster(myID, false) {
 		return nil

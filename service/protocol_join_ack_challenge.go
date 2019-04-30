@@ -28,7 +28,7 @@ import (
 /*
 JoinAckChallenge acks join-challenge to show that I have the join-key. (invitor)
 */
-func (p *BasePtt) JoinAckChallenge(keyInfo *KeyInfo, join *Join, peer *PttPeer, entity Entity) error {
+func (p *BaseRouter) JoinAckChallenge(keyInfo *KeyInfo, join *Join, peer *PttPeer, entity Entity) error {
 
 	challenge := join.Challenge
 	id := entity.GetID()
@@ -67,7 +67,7 @@ func (p *BasePtt) JoinAckChallenge(keyInfo *KeyInfo, join *Join, peer *PttPeer, 
 /*
 HandleJoinAckChallenge
 */
-func (p *BasePtt) HandleJoinAckChallenge(dataBytes []byte, hash *common.Address, joinRequest *JoinRequest, peer *PttPeer) error {
+func (p *BaseRouter) HandleJoinAckChallenge(dataBytes []byte, hash *common.Address, joinRequest *JoinRequest, peer *PttPeer) error {
 	log.Debug("HandleJoinAckChallenge: start")
 
 	if joinRequest.Status != JoinStatusRequested {

@@ -33,7 +33,7 @@ import (
 type ProtocolManager struct {
 	*pkgservice.BaseProtocolManager
 
-	myPtt pkgservice.MyPtt
+	myRouter pkgservice.MyRouter
 
 	// key-infos for providing join-friend
 	lockJoinFriendKeyInfo sync.RWMutex
@@ -90,7 +90,7 @@ type ProtocolManager struct {
 	lockRaft sync.Mutex
 }
 
-func NewProtocolManager(myInfo *MyInfo, ptt pkgservice.MyPtt, svc pkgservice.Service) (*ProtocolManager, error) {
+func NewProtocolManager(myInfo *MyInfo, router pkgservice.MyRouter, svc pkgservice.Service) (*ProtocolManager, error) {
 
 	dbMeLock, err := types.NewLockMap(SleepTimeMeLock)
 	if err != nil {
@@ -114,7 +114,7 @@ func NewProtocolManager(myInfo *MyInfo, ptt pkgservice.MyPtt, svc pkgservice.Ser
 	log.Debug("NewProtocolManager: start", "myInfo", myInfo.IDString())
 
 	pm := &ProtocolManager{
-		myPtt: ptt,
+		myRouter: router,
 
 		// dblock
 		dbMeLock:     dbMeLock,
@@ -138,7 +138,7 @@ func NewProtocolManager(myInfo *MyInfo, ptt pkgservice.MyPtt, svc pkgservice.Ser
 	}
 
 	b, err := pkgservice.NewBaseProtocolManager(
-		ptt,
+		router,
 
 		RenewOpKeySeconds,
 		ExpireOpKeySeconds,
@@ -200,7 +200,7 @@ func NewProtocolManager(myInfo *MyInfo, ptt pkgservice.MyPtt, svc pkgservice.Ser
 }
 
 func (pm *ProtocolManager) Start() error {
-	ptt := pm.myPtt
+	myRouter := pm.myRouter
 	myInfo := pm.Entity().(*MyInfo)
 
 	// start
@@ -212,7 +212,7 @@ func (pm *ProtocolManager) Start() error {
 	}
 
 	// load my profile
-	allEntities := ptt.GetEntities()
+	allEntities := myRouter.GetEntities()
 	if myInfo.ProfileID != nil {
 		myProfile, ok := allEntities[*myInfo.ProfileID]
 		if !ok {
@@ -229,9 +229,9 @@ func (pm *ProtocolManager) Start() error {
 	pm.LoadPeers()
 
 	log.Debug("Start: to StartRaft", "status", myInfo.Status)
-	myNodeType := ptt.MyNodeType()
-	myNodeID := ptt.MyNodeID()
-	myRaftID := ptt.MyRaftID()
+	myNodeType := myRouter.MyNodeType()
+	myNodeID := myRouter.MyNodeID()
+	myRaftID := myRouter.MyRaftID()
 	switch myInfo.Status {
 	case types.StatusInit:
 	case types.StatusInternalPending:

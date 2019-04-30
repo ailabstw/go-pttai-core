@@ -34,7 +34,7 @@ func (pm *ProtocolManager) StartRaft(peers []raft.Peer, isNew bool) error {
 
 	myID := pm.Entity().GetID()
 
-	myRaftID := pm.myPtt.MyRaftID()
+	myRaftID := pm.myRouter.MyRaftID()
 	c := &raft.Config{
 		ID:                        myRaftID,
 		ElectionTick:              RaftElectionTick,
@@ -126,7 +126,7 @@ func (pm *ProtocolManager) ServeRaftChannels() error {
 
 	go pm.ServeRaftProposal()
 
-	ptt := pm.Ptt()
+	ptt := pm.Router()
 
 loop:
 	for {

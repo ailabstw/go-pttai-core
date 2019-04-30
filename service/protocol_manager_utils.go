@@ -37,7 +37,7 @@ type SendDataToPeerWithCodeEvent struct {
 
 func PrestartPM(pm ProtocolManager) error {
 	// 2. register entity
-	ptt := pm.Ptt()
+	ptt := pm.Router()
 	err := ptt.RegisterEntity(pm.Entity(), false, false)
 	if err != nil {
 		return err
@@ -164,7 +164,7 @@ func (pm *BaseProtocolManager) sendDataToPeers(op OpType, data interface{}, peer
 		return err
 	}
 
-	ptt := pm.Ptt()
+	ptt := pm.Router()
 	encData, err := ptt.EncryptData(op, dataBytes, opKeyInfo)
 	if err != nil {
 		return err
@@ -239,7 +239,7 @@ func (pm *BaseProtocolManager) sendDataToPeerWithCode(code CodeType, op OpType, 
 		return err
 	}
 
-	ptt := pm.Ptt()
+	ptt := pm.Router()
 	encData, err := ptt.EncryptData(op, dataBytes, opKeyInfo)
 	if err != nil {
 		return err

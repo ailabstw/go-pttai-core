@@ -38,7 +38,7 @@ func (pm *BaseProtocolManager) DeleteEntity(
 	postdelete func(opData OpData, isForce bool) error,
 ) error {
 
-	myEntity := pm.Ptt().GetMyEntity()
+	myEntity := pm.Router().GetMyEntity()
 	myID := myEntity.GetID()
 	entity := pm.Entity()
 

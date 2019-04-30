@@ -28,7 +28,7 @@ func PMHandleMessageWrapper(pm ProtocolManager, hash *common.Address, encData []
 		return err
 	}
 
-	op, dataBytes, err := pm.Ptt().DecryptData(encData, opKeyInfo)
+	op, dataBytes, err := pm.Router().DecryptData(encData, opKeyInfo)
 	if err != nil {
 		log.Error("PMHandleMessageWrapper: unable to DecryptData", "e", err, "entity", pm.Entity().IDString(), "peer", peer)
 		return err

@@ -17,55 +17,52 @@
 package service
 
 import (
+	"crypto/ecdsa"
+
 	"github.com/ailabstw/go-pttai-core/common/types"
 	"github.com/ailabstw/go-pttai-core/log"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/crypto"
 )
 
-func (p *BasePtt) AddOpKey(hash *common.Address, entityID *types.PttID, isLocked bool) error {
+func joinKeyToKeyInfo(key *ecdsa.PrivateKey) *KeyInfo {
+	return &KeyInfo{
+		Key:         key,
+		KeyBytes:    crypto.FromECDSA(key),
+		PubKeyBytes: crypto.FromECDSAPub(&key.PublicKey),
+	}
+}
+
+func (r *BaseRouter) AddJoinKey(hash *common.Address, entityID *types.PttID, isLocked bool) error {
 	if !isLocked {
-		p.LockOps()
-		defer p.UnlockOps()
+		r.LockJoins()
+		defer r.UnlockJoins()
 	}
 
-	log.Debug("AddOpkey: to add key", "hash", hash, "entityID", entityID)
+	log.Debug("AddJoinKey: start", "hash", hash, "entityID", entityID)
 
-	p.ops[*hash] = entityID
+	r.joins[*hash] = entityID
 
 	return nil
 }
 
-func (p *BasePtt) RemoveOpKey(hash *common.Address, entityID *types.PttID, isLocked bool) error {
+func (r *BaseRouter) RemoveJoinKey(hash *common.Address, entityID *types.PttID, isLocked bool) error {
 	if !isLocked {
-		p.LockOps()
-		defer p.UnlockOps()
+		r.LockJoins()
+		defer r.UnlockJoins()
 	}
 
-	log.Debug("RemoveOpKey: to remove key", "hash", hash, "entityID", entityID)
+	log.Debug("RemoveJoinKey: start", "hash", hash, "entityID", entityID)
 
-	delete(p.ops, *hash)
+	delete(r.joins, *hash)
 
 	return nil
 }
 
-func (p *BasePtt) LockOps() {
-	p.lockOps.Lock()
+func (r *BaseRouter) LockJoins() {
+	r.lockJoins.Lock()
 }
 
-func (p *BasePtt) UnlockOps() {
-	p.lockOps.Unlock()
-}
-
-func (p *BasePtt) RemoveOpHash(hash *common.Address) error {
-	entityID, ok := p.ops[*hash]
-	if !ok {
-		return nil
-	}
-
-	entity, ok := p.entities[*entityID]
-	if !ok {
-		return p.RemoveOpKey(hash, entityID, false)
-	}
-
-	return entity.PM().RemoveOpKeyFromHash(hash, false, true, true)
+func (r *BaseRouter) UnlockJoins() {
+	r.lockJoins.Unlock()
 }

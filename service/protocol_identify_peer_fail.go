@@ -29,7 +29,7 @@ type IdentifyPeerFail struct {
 /*
 IdentifyPeerFail acks PMIdentifyPeer as failed
 */
-func (p *BasePtt) IdentifyPeerFail(hash *common.Address, peer *PttPeer) error {
+func (p *BaseRouter) IdentifyPeerFail(hash *common.Address, peer *PttPeer) error {
 	data := &IdentifyPeerFail{
 		Hash: hash,
 	}
@@ -37,7 +37,7 @@ func (p *BasePtt) IdentifyPeerFail(hash *common.Address, peer *PttPeer) error {
 	return p.SendDataToPeer(CodeTypeIdentifyPeerFail, data, peer)
 }
 
-func (p *BasePtt) HandleIdentifyPeerFail(dataBytes []byte, peer *PttPeer) error {
+func (p *BaseRouter) HandleIdentifyPeerFail(dataBytes []byte, peer *PttPeer) error {
 	data := &IdentifyPeerFail{}
 	err := json.Unmarshal(dataBytes, data)
 	if err != nil {

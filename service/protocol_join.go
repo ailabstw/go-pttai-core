@@ -33,7 +33,7 @@ TryJoin trys to do join (joiner)
 	2. If the nodeID is my peer: do join.
 	3. Else: do add peer.
 */
-func (p *BasePtt) TryJoin(challenge []byte, hash *common.Address, key *ecdsa.PrivateKey, request *JoinRequest) error {
+func (p *BaseRouter) TryJoin(challenge []byte, hash *common.Address, key *ecdsa.PrivateKey, request *JoinRequest) error {
 	nodeID := request.NodeID
 
 	p.peerLock.RLock()
@@ -110,7 +110,7 @@ func (p *BasePtt) TryJoin(challenge []byte, hash *common.Address, key *ecdsa.Pri
 /*
 Join initiates joining a specific entity with the peer.
 */
-func (p *BasePtt) join(challenge []byte, hash *common.Address, joinKey *ecdsa.PrivateKey, peer *PttPeer) error {
+func (p *BaseRouter) join(challenge []byte, hash *common.Address, joinKey *ecdsa.PrivateKey, peer *PttPeer) error {
 	join := &Join{
 		Hash:      hash[:],
 		Challenge: challenge,
@@ -143,7 +143,7 @@ func (p *BasePtt) join(challenge []byte, hash *common.Address, joinKey *ecdsa.Pr
 	return nil
 }
 
-func (p *BasePtt) HandleJoin(dataBytes []byte, hash *common.Address, entity Entity, pm ProtocolManager, keyInfo *KeyInfo, peer *PttPeer) error {
+func (p *BaseRouter) HandleJoin(dataBytes []byte, hash *common.Address, entity Entity, pm ProtocolManager, keyInfo *KeyInfo, peer *PttPeer) error {
 	join := &Join{}
 	err := json.Unmarshal(dataBytes, join)
 	if err != nil {

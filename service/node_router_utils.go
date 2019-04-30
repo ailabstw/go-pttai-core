@@ -18,13 +18,12 @@ package service
 
 import (
 	"github.com/ailabstw/go-pttai-core/common/types"
-	"github.com/ailabstw/go-pttai-core/log"
 	"github.com/ailabstw/go-pttai-core/p2p"
 	"github.com/ailabstw/go-pttai-core/p2p/discover"
 	"github.com/ailabstw/go-pttai-core/rpc"
 )
 
-func (p *BasePtt) GenerateProtocols() []p2p.Protocol {
+func (r *BaseRouter) generateProtocols() []p2p.Protocol {
 	subProtocols := make([]p2p.Protocol, 0, len(ProtocolVersions))
 
 	for i, version := range ProtocolVersions {
@@ -32,9 +31,9 @@ func (p *BasePtt) GenerateProtocols() []p2p.Protocol {
 			Name:     ProtocolName,
 			Version:  version,
 			Length:   ProtocolLengths[i],
-			Run:      p.GenerateRun(version),
-			NodeInfo: p.GenerateNodeInfo(),
-			PeerInfo: p.GeneratePeerInfo(),
+			Run:      r.generateRun(version),
+			NodeInfo: r.generateNodeInfo(),
+			PeerInfo: r.generatePeerInfo(),
 		}
 
 		subProtocols = append(subProtocols, protocol)
@@ -44,46 +43,44 @@ func (p *BasePtt) GenerateProtocols() []p2p.Protocol {
 }
 
 /*
-GenerateRun generates run in Protocol (PttService)
+generateRun generates run in Protocol (PttService)
 (No need to do sync in the ptt-layer for now, because there is no information needs to sync in the ptt-layer.)
 
     1. set up ptt-peer.
     2. peerWG.
     3. handle-peer.
 */
-func (p *BasePtt) GenerateRun(version uint) func(peer *p2p.Peer, rw p2p.MsgReadWriter) error {
+func (r *BaseRouter) generateRun(version uint) func(peer *p2p.Peer, rw p2p.MsgReadWriter) error {
 	return func(peer *p2p.Peer, rw p2p.MsgReadWriter) error {
 		// 1. pttPeer
-		pttPeer, err := p.NewPeer(version, peer, rw)
-		log.Debug("GenerateRun: get new peer", "peer", pttPeer, "e", err)
+		pttPeer, err := r.NewPeer(version, peer, rw)
 		if err != nil {
 			return err
 		}
 
 		// 2. peerWG
-		p.peerWG.Add(1)
-		defer p.peerWG.Done()
+		r.peerWG.Add(1)
+		defer r.peerWG.Done()
 
 		// 3. handle peer
-		err = p.HandlePeer(pttPeer)
-		log.Debug("GenerateRun: after HandlePeer", "peer", pttPeer, "e", err)
+		err = r.HandlePeer(pttPeer)
 
 		return err
 	}
 }
 
-func (p *BasePtt) GenerateNodeInfo() func() interface{} {
+func (r *BaseRouter) generateNodeInfo() func() interface{} {
 	return func() interface{} {
-		return p.NodeInfo()
+		return r.nodeInfo()
 	}
 }
 
-func (p *BasePtt) GeneratePeerInfo() func(id discover.NodeID) interface{} {
+func (r *BaseRouter) generatePeerInfo() func(id discover.NodeID) interface{} {
 	return func(id discover.NodeID) interface{} {
-		p.peerLock.RLock()
-		defer p.peerLock.RUnlock()
+		r.peerLock.RLock()
+		defer r.peerLock.RUnlock()
 
-		peer := p.GetPeer(&id, true)
+		peer := r.GetPeer(&id, true)
 		if peer == nil {
 			return nil
 		}
@@ -92,30 +89,30 @@ func (p *BasePtt) GeneratePeerInfo() func(id discover.NodeID) interface{} {
 	}
 }
 
-func (p *BasePtt) PttAPIs() []rpc.API {
+func (r *BaseRouter) routerAPIs() []rpc.API {
 	return []rpc.API{
 		{
 			Namespace: "ptt",
 			Version:   "1.0",
-			Service:   NewPrivateAPI(p),
+			Service:   NewPrivateAPI(r),
 
 			Public: IsPrivateAsPublic,
 		},
 	}
 }
 
-func (p *BasePtt) NodeInfo() interface{} {
-	peers := len(p.myPeers) + len(p.importantPeers) + len(p.memberPeers) + len(p.randomPeers)
+func (r *BaseRouter) nodeInfo() interface{} {
+	peers := len(r.myPeers) + len(r.importantPeers) + len(r.memberPeers) + len(r.randomPeers)
 	var userID *types.PttID
-	if p.myEntity != nil {
-		userID = p.myEntity.GetID()
+	if r.myEntity != nil {
+		userID = r.myEntity.GetID()
 	}
 
-	return &PttNodeInfo{
-		NodeID:   p.myNodeID,
+	return &NodeRouterInfo{
+		NodeID:   r.myNodeID,
 		UserID:   userID,
 		Peers:    peers,
-		Entities: len(p.entities),
-		Services: len(p.services),
+		Entities: len(r.entities),
+		Services: len(r.services),
 	}
 }
