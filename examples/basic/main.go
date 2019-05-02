@@ -76,6 +76,13 @@ func gptt(ctx *cli.Context) error {
 
 	log.Info("PTT.ai: Hello world!")
 
+	portArg := os.Args[2]
+	port, err := strconv.Atoi(portArg)
+	if err != nil {
+		panic(err)
+	}
+	dataDir := os.Args[1]
+
 	cfg := Config{
 		Node:    &node.DefaultConfig,
 		Me:      &me.DefaultConfig,
@@ -85,12 +92,31 @@ func gptt(ctx *cli.Context) error {
 		Utils:   &UtilsConfig{},
 	}
 	cfg.Utils.ExternHTTPAddr = "http://localhost:9776"
+	cfg.Node.DataDir = dataDir
 	cfg.Node.HTTPHost = "127.0.0.1"
-	cfg.Node.HTTPPort = 14779
+	cfg.Node.HTTPPort = port
+	cfg.Node.IPCPath = ""
+	cfg.Node.P2P.MaxPeers = 100
+	cfg.Me.DataDir = filepath.Join(cfg.Node.DataDir, "me")
+	cfg.Router.DataDir = filepath.Join(dataDir, "service")
+	cfg.Account.DataDir = filepath.Join(dataDir, "account")
+	cfg.Friend.DataDir = filepath.Join(dataDir, "friend")
+	cfg.Friend.MinSyncRandomSeconds = 5
+	cfg.Friend.MaxSyncRandomSeconds = 7
 
-	cfg.Router.DataDir = filepath.Join(node.DefaultDataDir(), "service")
+	// uncomment the following line if you want to make two node communicate with eachother
+	/*
+		    signalServerURL, err := url.Parse("ws://127.0.0.1:9489/signal")
+			if err != nil {
+				panic(err)
+			}
+			cfg.Node.P2P.SignalServerURL = *signalServerURL
+	*/
 
-	SetMeConfig(cfg.Me, cfg.Node)
+	err = cfg.Me.SetMyKey("", "", "", false)
+	if err != nil {
+		panic(err)
+	}
 
 	// new node
 	n, err := node.New(cfg.Node)
@@ -331,29 +357,6 @@ func SetNodeConfig(ctx *cli.Context, cfg *node.Config) {
 	if ctx.GlobalIsSet(KeyStoreDirFlag.Name) {
 		cfg.KeyStoreDir = ctx.GlobalString(KeyStoreDirFlag.Name)
 	}
-}
-
-// SetMyConfig applies node-related command line flags to the config.
-func SetMeConfig(cfg *me.Config, cfgNode *node.Config) {
-	// data-dir
-	log.Debug("SetMeConfig: to set DataDir", "cfgNode.DataDIR", cfgNode.DataDir)
-	cfg.DataDir = filepath.Join(cfgNode.DataDir, "me")
-
-	// key/id/postfix
-	setMyKey(cfg)
-}
-
-// SetMyKey creates a node key from set command line flags, either loading it
-// from a file or as a specified hex value. If neither flags were provided, this
-// method returns nil and an emphemeral key is to be generated.
-func setMyKey(cfg *me.Config) error {
-
-	err := cfg.SetMyKey("", "", "", false)
-	if err != nil {
-		return err
-	}
-
-	return nil
 }
 
 func setHTTP(ctx *cli.Context, cfg *node.Config) {

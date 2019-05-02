@@ -1,0 +1,37 @@
+baseURL = "/"
+languageCode = "en-us"
+title = "PTT.ai-core - adaptive framework for decentralized application"
+themesDir = "themes"
+theme = "hugo-whisper-theme"
+
+pygmentsCodeFences = true
+pygmentsCodefencesGuessSyntax = true
+pygmentsUseClasses = true
+
+[[menu.main]]
+    name = "Home"
+    url = "/"
+    weight = 1
+
+[[menu.main]]
+    name = "Docs"
+    url = "/docs/"
+    weight = 2
+
+[params]
+  google_analytics_id=""
+  homepage_button_link = '/docs'
+  homepage_button_text = 'Getting Started'
+  homepage_image = '/index.webp'
+
+  [params.homepage_meta_tags]
+    meta_description = "PTT.ai-core - adaptive framework for decentralized application"
+    meta_og_title = "PTT.ai-core"
+    meta_og_type = "website"
+    meta_og_url = "https://ailabstw.github.io/go-pttai-core"
+    meta_og_image = "/icon_logo@2x.png"
+    meta_og_description = "PTT.ai-core - adaptive framework for decentralized application"
+
+  [params.logo]
+      mobile = "icon_logo@2x.png"
+      standard  = "icon_logo@2x.png"
