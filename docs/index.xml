@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Build trusted, decentralized application with ease on PTT.ai-core - adaptive framework for decentralized application</title>
-    <link>/</link>
+    <link>https://ailabstw.github.io/go-pttai-core/</link>
     <description>Recent content in Build trusted, decentralized application with ease on PTT.ai-core - adaptive framework for decentralized application</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 02 May 2019 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://ailabstw.github.io/go-pttai-core/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Install</title>
-      <link>/docs/install/</link>
+      <link>https://ailabstw.github.io/go-pttai-core/docs/install/</link>
       <pubDate>Mon, 11 Feb 2019 19:27:37 +1000</pubDate>
       
-      <guid>/docs/install/</guid>
+      <guid>https://ailabstw.github.io/go-pttai-core/docs/install/</guid>
       <description>To start developing with PTT.ai-core, you need to have Go installed. Currently, only the latest stable version is tested.
 Check Go Version You can check your installed go version with the following command:
 $ go version go version go1.12.4 darwin/amd64 Install PTT.ai-core We recommend go module as your dependency mangagement tool. You can start developing with PTT.ai-core without any setup with go module.</description>
@@ -24,10 +24,10 @@ $ go version go version go1.12.4 darwin/amd64 Install PTT.ai-core We recommend g
     
     <item>
       <title>Example</title>
-      <link>/docs/example/</link>
+      <link>https://ailabstw.github.io/go-pttai-core/docs/example/</link>
       <pubDate>Mon, 11 Feb 2019 19:27:37 +1000</pubDate>
       
-      <guid>/docs/example/</guid>
+      <guid>https://ailabstw.github.io/go-pttai-core/docs/example/</guid>
       <description>Here&amp;rsquo;s a basic example of running a single node. You can check out the full source here.
 Run the example Build the example from source:
 git clone git@github.com:ailabstw/go-pttai-core.git cd examples/basic go build . Run the example:
@@ -37,19 +37,19 @@ Interact with node Now we have a node running. How can we interact with it?</des
     
     <item>
       <title>Signal Server</title>
-      <link>/docs/signal-server/</link>
+      <link>https://ailabstw.github.io/go-pttai-core/docs/signal-server/</link>
       <pubDate>Mon, 11 Feb 2019 19:27:37 +1000</pubDate>
       
-      <guid>/docs/signal-server/</guid>
+      <guid>https://ailabstw.github.io/go-pttai-core/docs/signal-server/</guid>
       <description>WIP.</description>
     </item>
     
     <item>
       <title>Friends</title>
-      <link>/docs/friends/</link>
+      <link>https://ailabstw.github.io/go-pttai-core/docs/friends/</link>
       <pubDate>Mon, 11 Feb 2019 19:30:08 +1000</pubDate>
       
-      <guid>/docs/friends/</guid>
+      <guid>https://ailabstw.github.io/go-pttai-core/docs/friends/</guid>
       <description>WIP.</description>
     </item>
     

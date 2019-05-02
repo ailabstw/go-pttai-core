@@ -1,4 +1,4 @@
-baseURL = "/"
+baseURL = "https://ailabstw.github.io/go-pttai-core/"
 languageCode = "en-us"
 title = "PTT.ai-core - adaptive framework for decentralized application"
 themesDir = "themes"
