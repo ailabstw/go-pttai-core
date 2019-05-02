@@ -16,13 +16,7 @@ import (
 )
 
 func TestMeBasic(t *testing.T) {
-	isDebug := true
 	startSignalServer()
-
-	var nilPttID *types.PttID
-	var bodyString string
-	var marshaledID []byte
-	assert := assert.New(t)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 240*time.Second)
 	err := runNode(ctx, 0, 14779)
@@ -31,6 +25,13 @@ func TestMeBasic(t *testing.T) {
 	}
 	defer cancel()
 	time.Sleep(5 * time.Second)
+
+	isDebug := true
+
+	var nilPttID *types.PttID
+	var bodyString string
+	var marshaledID []byte
+	assert := assert.New(t)
 
 	t0 := baloo.New("http://127.0.0.1:14779")
 
