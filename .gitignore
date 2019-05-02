@@ -5,4 +5,5 @@ test.out
 log.tmp.txt
 .vscode
 tmp
+/bin
 e2e/bin/bin

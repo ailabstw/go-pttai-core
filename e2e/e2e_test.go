@@ -29,7 +29,7 @@ type Config struct {
 	Me      *me.Config
 	Account *account.Config
 	Friend  *friend.Config
-	Ptt     *service.Config
+	Router  *service.Config
 	Utils   *UtilsConfig
 }
 
@@ -49,7 +49,7 @@ func prepareNode(id int, port int) (*node.Node, error) {
 		Me:      &me.DefaultConfig,
 		Account: &account.DefaultConfig,
 		Friend:  &friend.DefaultConfig,
-		Ptt:     &service.DefaultConfig,
+		Router:  &service.DefaultConfig,
 		Utils:   &UtilsConfig{},
 	}
 	cfg.Utils.ExternHTTPAddr = fmt.Sprintf("http://localhost:%d", 9776+id)
@@ -57,7 +57,7 @@ func prepareNode(id int, port int) (*node.Node, error) {
 	cfg.Node.HTTPHost = "127.0.0.1"
 	cfg.Node.HTTPPort = port
 	cfg.Me.DataDir = filepath.Join(cfg.Node.DataDir, "me")
-	cfg.Ptt.DataDir = filepath.Join(fmt.Sprintf("./tmp/test/%d/", id), "service")
+	cfg.Router.DataDir = filepath.Join(fmt.Sprintf("./tmp/test/%d/", id), "service")
 	cfg.Account.DataDir = filepath.Join(fmt.Sprintf("./tmp/test/%d/", id), "account")
 	cfg.Friend.DataDir = filepath.Join(fmt.Sprintf("./tmp/test/%d/", id), "friend")
 	fmt.Printf("me config: %v\n", cfg.Me)
@@ -72,11 +72,11 @@ func prepareNode(id int, port int) (*node.Node, error) {
 		return nil, err
 	}
 
-	n.Register(func(ctx *service.ServiceContext) (service.PttService, error) {
+	n.Register(func(ctx *service.RouterContext) (service.NodeRouter, error) {
 		nodeKey := cfg.Node.NodeKey()
 		nodeID := discover.PubkeyID(&nodeKey.PublicKey)
 
-		ptt, err := service.NewPtt(ctx, cfg.Ptt, &nodeID, nodeKey)
+		ptt, err := service.NewRouter(ctx, cfg.Router, &nodeID, nodeKey)
 		if err != nil {
 			return nil, err
 		}
