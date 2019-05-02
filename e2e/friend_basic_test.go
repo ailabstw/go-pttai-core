@@ -33,12 +33,6 @@ import (
 
 func TestFriendBasic(t *testing.T) {
 	startSignalServer()
-	TimeSleepDefault := 15 * time.Second
-	isDebug := true
-
-	var bodyString string
-	var marshaled []byte
-	assert := assert.New(t)
 
 	// node 1
 	ctx1, cancel1 := context.WithTimeout(context.Background(), 240*time.Second)
@@ -60,6 +54,14 @@ func TestFriendBasic(t *testing.T) {
 	fmt.Println("node ready")
 
 	time.Sleep(5 * time.Second)
+
+	// start
+	TimeSleepDefault := 15 * time.Second
+	isDebug := true
+
+	var bodyString string
+	var marshaled []byte
+	assert := assert.New(t)
 
 	t0 := baloo.New("http://127.0.0.1:14779")
 	t1 := baloo.New("http://127.0.0.1:14780")

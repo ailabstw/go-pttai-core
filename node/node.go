@@ -43,11 +43,12 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/ailabstw/go-pttai-core/api"
 	"github.com/ailabstw/go-pttai-core/log"
 	"github.com/ailabstw/go-pttai-core/p2p"
-	"github.com/ailabstw/go-pttai-core/rpc"
 	pkgservice "github.com/ailabstw/go-pttai-core/service"
 	"github.com/ethereum/go-ethereum/event"
+	"github.com/ethereum/go-ethereum/rpc"
 	"github.com/oklog/oklog/pkg/flock"
 )
 
@@ -483,7 +484,7 @@ func (n *Node) startHTTP(endpoint string, apis []rpc.API, modules []string, cors
 	if endpoint == "" {
 		return nil
 	}
-	listener, handler, httpServer, err := rpc.StartHTTPEndpoint(endpoint, apis, modules, cors, vhosts)
+	listener, handler, httpServer, err := api.StartHTTPEndpoint(endpoint, apis, modules, cors, vhosts, rpc.DefaultHTTPTimeouts)
 	if err != nil {
 		return err
 	}

@@ -19,8 +19,8 @@ package friend
 import (
 	"github.com/ailabstw/go-pttai-core/account"
 	"github.com/ailabstw/go-pttai-core/common/types"
-	"github.com/ailabstw/go-pttai-core/rpc"
 	pkgservice "github.com/ailabstw/go-pttai-core/service"
+	"github.com/ethereum/go-ethereum/rpc"
 )
 
 type Backend struct {

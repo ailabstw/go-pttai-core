@@ -4,7 +4,6 @@ go 1.12
 
 require (
 	github.com/ailabstw/etcd v0.0.0-20190429013441-a60d2af48ecb
-	github.com/ailabstw/go-ethereum v1.8.26
 	github.com/ailabstw/pttai-signal-server v0.0.0-20190422061607-9efe43d3dc2f
 	github.com/btcsuite/btcd v0.0.0-20190213025234-306aecffea32
 	github.com/coreos/bbolt v1.3.2 // indirect

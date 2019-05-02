@@ -17,10 +17,7 @@ import (
 )
 
 func TestAccountBasic(t *testing.T) {
-	isDebug := true
-	assert := assert.New(t)
-	var marshaledID []byte
-	var nilPttID *types.PttID
+	startSignalServer()
 
 	ctx, cancel := context.WithTimeout(context.Background(), 240*time.Second)
 	err := runNode(ctx, 0, 14779)
@@ -29,6 +26,12 @@ func TestAccountBasic(t *testing.T) {
 	}
 	defer cancel()
 	time.Sleep(5 * time.Second)
+
+	isDebug := true
+
+	assert := assert.New(t)
+	var marshaledID []byte
+	var nilPttID *types.PttID
 
 	t0 := baloo.New("http://127.0.0.1:14779")
 	// 1. get

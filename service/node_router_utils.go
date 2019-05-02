@@ -20,7 +20,7 @@ import (
 	"github.com/ailabstw/go-pttai-core/common/types"
 	"github.com/ailabstw/go-pttai-core/p2p"
 	"github.com/ailabstw/go-pttai-core/p2p/discover"
-	"github.com/ailabstw/go-pttai-core/rpc"
+	"github.com/ethereum/go-ethereum/rpc"
 )
 
 func (r *BaseRouter) generateProtocols() []p2p.Protocol {

@@ -17,8 +17,8 @@
 package account
 
 import (
-	"github.com/ailabstw/go-pttai-core/rpc"
 	pkgservice "github.com/ailabstw/go-pttai-core/service"
+	"github.com/ethereum/go-ethereum/rpc"
 )
 
 type Backend struct {
