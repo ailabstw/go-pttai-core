@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Example - PTT.ai-core - adaptive framework for decentralized application</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link rel="icon" href="/favicon.png">
+
+  
+  
+  <link rel="stylesheet" href="/css/style.min.020d604e977275cf093999068602ba80e6eb2f78df409ccca5a76f02778bea56.css">
+  
+
+  
+
+</head>
+
+<body class='page page-default-single'>
+  <div id="main-menu-mobile" class="main-menu-mobile">
+  <ul>
+    
+    
+    <li class="menu-item-home">
+      <a href="/">
+        <span>Home</span>
+      </a>
+    </li>
+    
+    <li class="menu-item-docs">
+      <a href="/docs/">
+        <span>Docs</span>
+      </a>
+    </li>
+    
+  </ul>
+</div>
+  <div class="wrapper">
+    <div class='header'>
+  <div class="container">
+    <div class="logo">
+      <a href="/"><img alt="Logo" src="/icon_logo@2x.png" /></a>
+    </div>
+    <div class="logo-mobile">
+      <a href="/"><img alt="Logo" src="/icon_logo@2x.png" /></a>
+    </div>
+    <div id="main-menu" class="main-menu">
+  <ul>
+    
+    
+    <li class="menu-item-home">
+      <a href="/">
+        <span>Home</span>
+      </a>
+    </li>
+    
+    <li class="menu-item-docs">
+      <a href="/docs/">
+        <span>Docs</span>
+      </a>
+    </li>
+    
+  </ul>
+</div>
+    <button id="toggle-main-menu-mobile" class="hamburger hamburger--slider" type="button">
+  <span class="hamburger-box">
+    <span class="hamburger-inner"></span>
+  </span>
+</button>
+  </div>
+</div>
+
+
+    
+    
+    
+    
+    
+    
+
+    
+    <div class="container pt-2 pt-md-6 pb-3 pb-md-6">
+      <div class="row">
+        <div class="col-12 col-md-3 mb-3">
+          <div class="sidebar">
+            
+<div class="docs-menu">
+  <h4>Docs</h4>
+  <ul>
+    
+    <li class="">
+      <a href="/docs/install/">Install</a>
+    </li>
+    
+    <li class="active ">
+      <a href="/docs/example/">Example</a>
+    </li>
+    
+    <li class="">
+      <a href="/docs/signal-server/">Signal Server</a>
+    </li>
+    
+    <li class="">
+      <a href="/docs/friends/">Friends</a>
+    </li>
+    
+  </ul>
+</div>
+
+          </div>
+        </div>
+        <div class="col-12 col-md-9">
+          
+<h1 class="title">Example</h1>
+<div class="content">
+  
+
+<p>Here&rsquo;s a basic example of running a single node. You can check out the full source <a href="https://github.com/ailabstw/go-pttai-core/tree/master/examples/pttai">here</a>.</p>
+
+<h3 id="run-the-example">Run the example</h3>
+
+<p>Build the example from source:</p>
+<div class="highlight"><pre class="chroma">git clone git@github.com:ailabstw/go-pttai-core.git
+cd examples/basic
+go build .</pre></div>
+<p>Run the example:</p>
+<div class="highlight"><pre class="chroma">./basic ./tmp 14779</pre></div>
+<p>The command above will start a node at port <code>14779</code> and save its data at <code>./tmp</code>.</p>
+
+<h3 id="interact-with-node">Interact with node</h3>
+
+<p>Now we have a node running. How can we interact with it?</p>
+
+<p>By default, <code>PTT.ai-core</code> provides a json rpc API server. We can communicate with it with <code>curl</code>:</p>
+<div class="highlight"><pre class="chroma">$ curl --header &#34;Content-Type: application/json&#34; \
+    --request POST \
+    --data &#39;{&#34;id&#34;: &#34;testCall&#34;, &#34;method&#34;: &#34;me_get&#34;, &#34;params&#34;: []}&#39; \
+    http://localhost:14779</pre></div>
+<p>Here&rsquo;s a sample response:</p>
+<div class="highlight"><pre class="chroma">{
+    &#34;id&#34;: &#34;testCall&#34;,
+    &#34;jsonrpc&#34;: &#34;2.0&#34;,
+    &#34;result&#34;: {
+        &#34;CT&#34;: {
+            &#34;NT&#34;: 458761000,
+            &#34;T&#34;: 1556780390
+        },
+        &#34;ID&#34;: &#34;BXqNU9FBdxA7KKpAvm4fpEn6iCFzd8cZ8cSoDzUNfaj5hkbLUFByBia&#34;,
+        &#34;NodeID&#34;: &#34;ab1852660163659efa14c29135cb95dbf4c4875d534694fbbbf6cd97f7cda4535bff8e72c9885c497036ef3c81f0212e340b149388def5e9c69590900958d9c4&#34;,
+        &#34;RaftID&#34;: 2873960715719249470,
+        &#34;S&#34;: 7,
+        &#34;UT&#34;: {
+            &#34;NT&#34;: 458761000,
+            &#34;T&#34;: 1556780390
+        },
+        &#34;V&#34;: 2
+    }
+}</pre></div>
+</div>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+  </div>
+
+  <div class="sub-footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="sub-footer-inner">
+          <ul>
+            <li class="zerostatic"><a href="https://ptt.ai">ptt.ai</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/scripts.min.bf1e1f7ae8e03db5f012356e825843facdff51c0a559cb0d27fe2bbe1db405c2.js"></script>
+  
+
+  
+  
+  
+    
+  
+
+
+</body>
+
+</html>

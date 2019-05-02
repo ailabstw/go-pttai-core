@@ -26,3 +26,11 @@ $ cd e2e
 $ rm -rf tmp
 $ go test -run TestFriendBasic
 ```
+
+## Example
+
+```
+$ cd examples/basic
+$ go build
+$ ./basic ./tmp 14779
+```
