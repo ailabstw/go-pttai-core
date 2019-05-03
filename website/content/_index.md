@@ -1,5 +1,5 @@
 ---
-title: 'Build trusted, decentralized application with ease'
+title: 'Build trustable, decentralized application with ease'
 date: 2019-05-02
 ---
 
