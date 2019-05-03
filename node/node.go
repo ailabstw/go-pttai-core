@@ -43,12 +43,12 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/ailabstw/go-pttai-core/api"
 	"github.com/ailabstw/go-pttai-core/log"
 	"github.com/ailabstw/go-pttai-core/p2p"
+	"github.com/ailabstw/go-pttai-core/rpc"
 	pkgservice "github.com/ailabstw/go-pttai-core/service"
 	"github.com/ethereum/go-ethereum/event"
-	"github.com/ethereum/go-ethereum/rpc"
+	erpc "github.com/ethereum/go-ethereum/rpc"
 	"github.com/oklog/oklog/pkg/flock"
 )
 
@@ -64,23 +64,23 @@ type Node struct {
 
 	routerFuncs []pkgservice.ServiceConstructor        // Service constructors (in dependency order)
 	routers     map[reflect.Type]pkgservice.NodeRouter // Currently running services
-	rpcAPIs     []rpc.API                              // List of APIs currently provided by the node
+	rpcAPIs     []erpc.API                             // List of APIs currently provided by the node
 
-	inprocHandler *rpc.Server // In-process RPC request handler to process the API requests
+	inprocHandler *erpc.Server // In-process RPC request handler to process the API requests
 
 	ipcEndpoint string       // IPC endpoint to listen at (empty = IPC disabled)
 	ipcListener net.Listener // IPC RPC listener socket to serve API requests
-	ipcHandler  *rpc.Server  // IPC RPC request handler to process the API requests
+	ipcHandler  *erpc.Server // IPC RPC request handler to process the API requests
 
 	httpEndpoint  string       // HTTP endpoint (interface + port) to listen at (empty = HTTP disabled)
 	httpWhitelist []string     // HTTP RPC modules to allow through this endpoint
 	httpListener  net.Listener // HTTP RPC listener socket to server API requests
-	httpHandler   *rpc.Server  // HTTP RPC request handler to process the API requests
+	httpHandler   *erpc.Server // HTTP RPC request handler to process the API requests
 	httpServer    *http.Server
 
 	wsEndpoint string       // Websocket endpoint (interface + port) to listen at (empty = websocket disabled)
 	wsListener net.Listener // Websocket RPC listener socket to server API requests
-	wsHandler  *rpc.Server  // Websocket RPC request handler to process the API requests
+	wsHandler  *erpc.Server // Websocket RPC request handler to process the API requests
 
 	lock     sync.RWMutex
 	StopChan chan error
@@ -334,7 +334,7 @@ func (n *Node) Services() map[reflect.Type]pkgservice.NodeRouter {
 }
 
 // RPCHandler returns the in-process RPC request handler.
-func (n *Node) RPCHandler() (*rpc.Server, error) {
+func (n *Node) RPCHandler() (*erpc.Server, error) {
 	n.lock.RLock()
 	defer n.lock.RUnlock()
 
@@ -424,9 +424,9 @@ func (n *Node) startRPC(services map[reflect.Type]pkgservice.NodeRouter) error {
 }
 
 // startInProc initializes an in-process RPC endpoint.
-func (n *Node) startInProc(apis []rpc.API) error {
+func (n *Node) startInProc(apis []erpc.API) error {
 	// Register all the APIs exposed by the services
-	handler := rpc.NewServer()
+	handler := erpc.NewServer()
 	for _, api := range apis {
 		if err := handler.RegisterName(api.Namespace, api.Service); err != nil {
 			return err
@@ -446,13 +446,13 @@ func (n *Node) stopInProc() {
 }
 
 // startIPC initializes and starts the IPC RPC endpoint.
-func (n *Node) startIPC(apis []rpc.API) error {
+func (n *Node) startIPC(apis []erpc.API) error {
 	if n.ipcEndpoint == "" {
 		return nil // IPC disabled.
 	}
 
 	log.Info("startIPC", "ipcEndpoint", n.ipcEndpoint)
-	listener, handler, err := rpc.StartIPCEndpoint(n.ipcEndpoint, apis)
+	listener, handler, err := erpc.StartIPCEndpoint(n.ipcEndpoint, apis)
 	if err != nil {
 		return err
 	}
@@ -477,14 +477,14 @@ func (n *Node) stopIPC() {
 }
 
 // startHTTP initializes and starts the HTTP RPC endpoint.
-func (n *Node) startHTTP(endpoint string, apis []rpc.API, modules []string, cors []string, vhosts []string) error {
+func (n *Node) startHTTP(endpoint string, apis []erpc.API, modules []string, cors []string, vhosts []string) error {
 	// Short circuit if the HTTP endpoint isn't being exposed
 	n.log.Info("startHTTP", "endpoint", endpoint, "apis", apis)
 
 	if endpoint == "" {
 		return nil
 	}
-	listener, handler, httpServer, err := api.StartHTTPEndpoint(endpoint, apis, modules, cors, vhosts, rpc.DefaultHTTPTimeouts)
+	listener, handler, httpServer, err := rpc.StartHTTPEndpoint(endpoint, apis, modules, cors, vhosts, erpc.DefaultHTTPTimeouts)
 	if err != nil {
 		return err
 	}
@@ -519,12 +519,12 @@ func (n *Node) stopHTTP() {
 }
 
 // startWS initializes and starts the websocket RPC endpoint.
-func (n *Node) startWS(endpoint string, apis []rpc.API, modules []string, wsOrigins []string, exposeAll bool) error {
+func (n *Node) startWS(endpoint string, apis []erpc.API, modules []string, wsOrigins []string, exposeAll bool) error {
 	// Short circuit if the WS endpoint isn't being exposed
 	if endpoint == "" {
 		return nil
 	}
-	listener, handler, err := rpc.StartWSEndpoint(endpoint, apis, modules, wsOrigins, exposeAll)
+	listener, handler, err := erpc.StartWSEndpoint(endpoint, apis, modules, wsOrigins, exposeAll)
 	if err != nil {
 		return err
 	}
@@ -552,8 +552,8 @@ func (n *Node) stopWS() {
 }
 
 // apis returns the collection of RPC descriptors this node offers.
-func (n *Node) apis() []rpc.API {
-	return []rpc.API{
+func (n *Node) apis() []erpc.API {
+	return []erpc.API{
 		{
 			Namespace: "admin",
 			Version:   "1.0",
