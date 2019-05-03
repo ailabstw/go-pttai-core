@@ -125,7 +125,7 @@ var (
 
 	DBUserNodePrefix     = []byte(".undb")
 	DBUserNodeIdxPrefix  = []byte(".unix")
-	DBUserNodeInfoPrefix = []byte(".uidb")
+	DBUserNodeInfoPrefix = []byte(".unif")
 )
 
 // max-masters
