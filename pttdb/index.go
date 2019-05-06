@@ -30,8 +30,8 @@ The 0th key is the key for the record.
 The other keys are the secondary index-keys
 */
 type Index struct {
-	Keys     [][]byte        `json:"K"`
-	UpdateTS types.Timestamp `json:"UT"`
+	Keys     [][]byte
+	UpdateTS types.Timestamp
 }
 
 func IndexGetKey(theBytes []byte) ([]byte, error) {
@@ -63,9 +63,9 @@ func (i *Index) Unmarshal(data []byte) error {
 }
 
 type IndexWithStatus struct {
-	Keys     [][]byte        `json:"K"`
-	UpdateTS types.Timestamp `json:"UT"`
-	Status   types.Status    `json:"S"`
+	Keys     [][]byte
+	UpdateTS types.Timestamp
+	Status   types.Status
 }
 
 func (i *IndexWithStatus) Marshal() ([]byte, error) {

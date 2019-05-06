@@ -28,13 +28,13 @@ import (
 )
 
 type UserNode struct {
-	*pkgservice.BaseObject `json:"b"`
-	UpdateTS               types.Timestamp `json:"UT"`
+	*pkgservice.BaseObject
+	UpdateTS               types.Timestamp
 
-	UserID *types.PttID     `json:"UID"`
-	NodeID *discover.NodeID `json:"NID"`
+	UserID *types.PttID
+	NodeID *discover.NodeID
 
-	SyncInfo *pkgservice.BaseSyncInfo `json:"s"`
+	SyncInfo *pkgservice.BaseSyncInfo
 
 	fullDBIdx2Prefix []byte
 }

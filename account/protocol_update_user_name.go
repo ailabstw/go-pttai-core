@@ -22,7 +22,7 @@ import (
 )
 
 type UpdateUserName struct {
-	Name []byte `json:"n"`
+	Name []byte
 }
 
 func (pm *ProtocolManager) UpdateUserName(name []byte) (*UserName, error) {

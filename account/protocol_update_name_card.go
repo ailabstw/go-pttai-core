@@ -22,7 +22,7 @@ import (
 )
 
 type UpdateNameCard struct {
-	Card []byte `json:"n"`
+	Card []byte
 }
 
 func (pm *ProtocolManager) UpdateNameCard(card []byte) (*NameCard, error) {

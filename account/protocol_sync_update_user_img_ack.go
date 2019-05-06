@@ -26,7 +26,7 @@ import (
 )
 
 type SyncUpdateUserImgAck struct {
-	Objs []*UserImg `json:"o"`
+	Objs []*UserImg
 }
 
 func (pm *ProtocolManager) HandleSyncUpdateUserImgAck(dataBytes []byte, peer *pkgservice.PttPeer) error {

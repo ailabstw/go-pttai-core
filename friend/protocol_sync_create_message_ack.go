@@ -23,7 +23,7 @@ import (
 )
 
 type SyncMessageAck struct {
-	Objs []*Message `json:"o"`
+	Objs []*Message
 }
 
 func (pm *ProtocolManager) HandleSyncCreateMessageAck(dataBytes []byte, peer *pkgservice.PttPeer) error {

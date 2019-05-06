@@ -25,7 +25,7 @@ import (
 )
 
 type SyncUpdateNameCardAck struct {
-	Objs []*NameCard `json:"o"`
+	Objs []*NameCard
 }
 
 func (pm *ProtocolManager) HandleSyncUpdateNameCardAck(dataBytes []byte, peer *pkgservice.PttPeer) error {

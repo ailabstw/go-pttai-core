@@ -23,7 +23,7 @@ import (
 )
 
 type DBable struct {
-	UpdateTS types.Timestamp `json:"UT"`
+	UpdateTS types.Timestamp
 }
 
 func (d *DBable) Unmarshal(data []byte) error {

@@ -25,7 +25,7 @@ import (
 )
 
 type SyncUpdateUserNameAck struct {
-	Objs []*UserName `json:"o"`
+	Objs []*UserName
 }
 
 func (pm *ProtocolManager) HandleSyncUpdateUserNameAck(dataBytes []byte, peer *pkgservice.PttPeer) error {

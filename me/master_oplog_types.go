@@ -30,13 +30,13 @@ const (
 
 type MasterOpAddMaster struct {
 	ID      *discover.NodeID
-	From    *types.PttID               `json:"f"`
-	Masters map[discover.NodeID]uint32 `json:"M"`
-	Weight  uint32                     `json:"W"`
+	From    *types.PttID
+	Masters map[discover.NodeID]uint32
+	Weight  uint32
 }
 
 type MasterOpRevokeMaster struct {
 	ID      *discover.NodeID
-	From    *types.PttID               `json:"f"`
-	Masters map[discover.NodeID]uint32 `json:"M"`
+	From    *types.PttID
+	Masters map[discover.NodeID]uint32
 }

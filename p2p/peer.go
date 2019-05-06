@@ -87,12 +87,12 @@ const (
 // PeerEvent is an event emitted when peers are either added or dropped from
 // a p2p.Server or when a message is sent or received on a peer connection
 type PeerEvent struct {
-	Type     PeerEventType   `json:"type"`
-	Peer     discover.NodeID `json:"peer"`
-	Error    string          `json:"error,omitempty"`
-	Protocol string          `json:"protocol,omitempty"`
-	MsgCode  *uint64         `json:"msg_code,omitempty"`
-	MsgSize  *uint32         `json:"msg_size,omitempty"`
+	Type     PeerEventType
+	Peer     discover.NodeID
+	Error    string
+	Protocol string
+	MsgCode  *uint64
+	MsgSize  *uint32
 }
 
 // Peer represents a connected remote node.
@@ -470,18 +470,18 @@ func (rw *protoRW) ReadMsg() (Msg, error) {
 // peer. Sub-protocol independent fields are contained and initialized here, with
 // protocol specifics delegated to all connected sub-protocols.
 type PeerInfo struct {
-	ID      string   `json:"id"`   // Unique node identifier (also the encryption key)
-	Name    string   `json:"name"` // Name of the node, including client type, version, OS, custom data
-	Caps    []string `json:"caps"` // Sum-protocols advertised by this particular peer
+	ID      string   // Unique node identifier (also the encryption key)
+	Name    string   // Name of the node, including client type, version, OS, custom data
+	Caps    []string // Sum-protocols advertised by this particular peer
 	Network struct {
-		LocalAddress  string `json:"localAddress"`  // Local endpoint of the TCP data connection
-		RemoteAddress string `json:"remoteAddress"` // Remote endpoint of the TCP data connection
-		Inbound       bool   `json:"inbound"`
-		P2P           bool   `json:"p2p"`
-		Trusted       bool   `json:"trusted"`
-		Static        bool   `json:"static"`
-	} `json:"network"`
-	Protocols map[string]interface{} `json:"protocols"` // Sub-protocol specific metadata fields
+		LocalAddress  string // Local endpoint of the TCP data connection
+		RemoteAddress string // Remote endpoint of the TCP data connection
+		Inbound       bool
+		P2P           bool
+		Trusted       bool
+		Static        bool
+	}
+	Protocols map[string]interface{} // Sub-protocol specific metadata fields
 }
 
 // Info gathers and returns a collection of metadata known about a peer.

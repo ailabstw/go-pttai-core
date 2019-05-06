@@ -20,7 +20,7 @@ import "github.com/ailabstw/go-pttai-core/common/types"
 
 type BackendUserName struct {
 	ID   *types.PttID
-	Name []byte `json:"N"`
+	Name []byte
 }
 
 func userNameToBackendUserName(u *UserName) *BackendUserName {
@@ -32,10 +32,10 @@ func userNameToBackendUserName(u *UserName) *BackendUserName {
 
 type BackendUserImg struct {
 	ID     *types.PttID
-	Type   ImgType `json:"T"`
-	Img    string  `json:"I"`
-	Width  uint16  `json:"W"`
-	Height uint16  `json:"H"`
+	Type   ImgType
+	Img    string
+	Width  uint16
+	Height uint16
 }
 
 func userImgToBackendUserImg(u *UserImg) *BackendUserImg {
@@ -50,7 +50,7 @@ func userImgToBackendUserImg(u *UserImg) *BackendUserImg {
 
 type BackendNameCard struct {
 	ID   *types.PttID
-	Card []byte `json:"C"`
+	Card []byte
 }
 
 func userNameToBackendNameCard(u *NameCard) *BackendNameCard {

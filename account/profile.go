@@ -25,10 +25,10 @@ import (
 )
 
 type Profile struct {
-	*pkgservice.BaseEntity `json:"e"`
-	UpdateTS               types.Timestamp `json:"UT"`
+	*pkgservice.BaseEntity
+	UpdateTS               types.Timestamp
 
-	MyID *types.PttID `json:"m"`
+	MyID *types.PttID
 }
 
 func NewEmptyProfile() *Profile {

@@ -29,10 +29,10 @@ import (
 )
 
 type InitMeInfoSync struct {
-	KeyBytes     []byte                     `json:"K"`
-	PostfixBytes []byte                     `json:"P"`
-	Oplog0       *pkgservice.BaseOplog      `json:"O"`
-	ProfileData  *account.ApproveJoinEntity `json:"p"`
+	KeyBytes     []byte
+	PostfixBytes []byte
+	Oplog0       *pkgservice.BaseOplog
+	ProfileData  *account.ApproveJoinEntity
 }
 
 func (pm *ProtocolManager) InitMeInfoSync(peer *pkgservice.PttPeer) error {

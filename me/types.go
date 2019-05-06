@@ -28,10 +28,10 @@ type JoinMeRequest struct {
 
 type RaftStatus struct {
 	Lead          uint64
-	LastIndex     uint64       `json:"LI"`
-	SnapshotIndex uint64       `json:"SI"`
-	AppliedInex   uint64       `json:"AI"`
-	ConfState     pb.ConfState `json:"CS"`
-	HardState     pb.HardState `json:"HS"`
-	RSLastIndex   uint64       `json:"li"`
+	LastIndex     uint64
+	SnapshotIndex uint64
+	AppliedInex   uint64
+	ConfState     pb.ConfState
+	HardState     pb.HardState
+	RSLastIndex   uint64
 }

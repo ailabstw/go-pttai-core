@@ -32,10 +32,10 @@ func NewEmptyApproveJoinProfile() *ApproveJoinEntity {
 }
 
 type ApproveJoinEntity struct {
-	*pkgservice.ApproveJoinEntity `json:"b"`
-	UserName                      *UserName `json:"n"`
-	UserImg                       *UserImg  `json:"i"`
-	NameCard                      *NameCard `json:"c"`
+	*pkgservice.ApproveJoinEntity
+	UserName                      *UserName
+	UserImg                       *UserImg
+	NameCard                      *NameCard
 }
 
 func (pm *ProtocolManager) ApproveJoin(

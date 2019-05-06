@@ -27,7 +27,7 @@ import (
 )
 
 type ApproveJoinFriend struct {
-	FriendData *friend.ApproveJoin `json:"F"`
+	FriendData *friend.ApproveJoin
 }
 
 func (pm *ProtocolManager) ApproveJoinFriend(joinEntity *pkgservice.JoinEntity, keyInfo *pkgservice.KeyInfo, peer *pkgservice.PttPeer) (*pkgservice.KeyInfo, interface{}, error) {

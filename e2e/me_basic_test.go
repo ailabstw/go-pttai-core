@@ -93,7 +93,7 @@ func TestMeBasic(t *testing.T) {
 	bodyString = `{"id": "testID", "method": "me_getJoinKeyInfos", "params": [""]}`
 
 	dataJoinKeyInfos0_6 := &struct {
-		Result []*service.KeyInfo `json:"result"`
+		Result []*service.KeyInfo
 	}{}
 	testListCore(t0, bodyString, dataJoinKeyInfos0_6, t, isDebug)
 	assert.NotEqual(0, len(dataJoinKeyInfos0_6.Result))
@@ -113,7 +113,7 @@ func TestMeBasic(t *testing.T) {
 	bodyString = `{"id": "testID", "method": "me_getOpKeyInfos", "params": [""]}`
 
 	dataOpKeyInfos0_8 := &struct {
-		Result []*service.KeyInfo `json:"result"`
+		Result []*service.KeyInfo
 	}{}
 	testListCore(t0, bodyString, dataOpKeyInfos0_8, t, isDebug)
 	assert.Equal(1, len(dataOpKeyInfos0_8.Result))
@@ -123,7 +123,7 @@ func TestMeBasic(t *testing.T) {
 	bodyString = `{"id": "testID", "method": "ptt_getOps", "params": []}`
 
 	dataOpKeyInfo0_8_1 := &struct {
-		Result map[common.Address]*types.PttID `json:"result"`
+		Result map[common.Address]*types.PttID
 	}{}
 	testListCore(t0, bodyString, dataOpKeyInfo0_8_1, t, isDebug)
 
@@ -137,7 +137,7 @@ func TestMeBasic(t *testing.T) {
 	bodyString = `{"id": "testID", "method": "me_getMyMasterOplogList", "params": ["", "", 0, 2]}`
 
 	dataMasterOplogs0_9 := &struct {
-		Result []*me.MasterOplog `json:"result"`
+		Result []*me.MasterOplog
 	}{}
 	testListCore(t0, bodyString, dataMasterOplogs0_9, t, isDebug)
 	assert.Equal(1, len(dataMasterOplogs0_9.Result))
@@ -153,7 +153,7 @@ func TestMeBasic(t *testing.T) {
 	bodyString = fmt.Sprintf(`{"id": "testID", "method": "me_getOpKeyOplogList", "params": ["%v", "", 0, 2]}`, string(marshaledID))
 
 	dataOpKeyOplogs0_9_1 := &struct {
-		Result []*service.OpKeyOplog `json:"result"`
+		Result []*service.OpKeyOplog
 	}{}
 	testListCore(t0, bodyString, dataOpKeyOplogs0_9_1, t, isDebug)
 	assert.Equal(1, len(dataOpKeyOplogs0_9_1.Result))
@@ -173,7 +173,7 @@ func TestMeBasic(t *testing.T) {
 	bodyString = `{"id": "testID", "method": "me_getMeOplogList", "params": ["", 0, 2]}`
 
 	dataMeOplogs0_9_2 := &struct {
-		Result []*me.MeOplog `json:"result"`
+		Result []*me.MeOplog
 	}{}
 	testListCore(t0, bodyString, dataMeOplogs0_9_2, t, isDebug)
 	assert.Equal(1, len(dataMeOplogs0_9_2.Result))

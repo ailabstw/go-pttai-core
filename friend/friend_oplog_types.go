@@ -43,15 +43,15 @@ type FriendOpDeleteFriend struct {
 }
 
 type FriendOpCreateMessage struct {
-	BlockInfoID *types.PttID `json:"BID"`
-	Hashs       [][][]byte   `json:"H"`
-	NBlock      int          `json:"NB"`
+	BlockInfoID *types.PttID
+	Hashs       [][][]byte
+	NBlock      int
 
-	MediaIDs []*types.PttID `json:"ms,omitempty"`
+	MediaIDs []*types.PttID
 }
 
 type FriendOpCreateMedia struct {
-	BlockInfoID *types.PttID `json:"BID"` // resized content-block-id
-	Hashs       [][][]byte   `json:"H"`
-	NBlock      int          `json:"NB"`
+	BlockInfoID *types.PttID  // resized content-block-id
+	Hashs       [][][]byte
+	NBlock      int
 }

@@ -31,22 +31,22 @@ import (
 )
 
 type Friend struct {
-	*pkgservice.BaseEntity `json:"e"`
+	*pkgservice.BaseEntity
 
-	UpdateTS types.Timestamp `json:"UT"`
+	UpdateTS types.Timestamp
 
-	Friend0ID *types.PttID `json:"f0"`
-	Friend1ID *types.PttID `json:"f1"`
-	FriendID  *types.PttID `json:"f"`
+	Friend0ID *types.PttID
+	Friend1ID *types.PttID
+	FriendID  *types.PttID
 
-	BoardID *types.PttID `json:"BID,omitempty"`
+	BoardID *types.PttID
 
-	ProfileID *types.PttID     `json:"PID,omitempty"`
-	Profile   *account.Profile `json:"-"`
+	ProfileID *types.PttID
+	Profile   *account.Profile
 
 	// get from other dbs
-	LastSeen        types.Timestamp `json:"-"`
-	MessageCreateTS types.Timestamp `json:"-"`
+	LastSeen        types.Timestamp
+	MessageCreateTS types.Timestamp
 }
 
 func NewEmptyFriend() *Friend {

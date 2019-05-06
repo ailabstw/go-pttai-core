@@ -23,18 +23,18 @@ import (
 type TestBase struct {
 	V         types.Version
 	ID        *types.PttID
-	CreateTS  types.Timestamp `json:"CT"`
-	CreatorID *types.PttID    `json:"CID"`
-	UpdaterID *types.PttID    `json:"UID"`
-	EntityID  *types.PttID    `json:"e,omitempty"`
+	CreateTS  types.Timestamp
+	CreatorID *types.PttID
+	UpdaterID *types.PttID
+	EntityID  *types.PttID
 
-	LogID       *types.PttID `json:"l,omitempty"`
-	UpdateLogID *types.PttID `json:"u,omitempty"`
+	LogID       *types.PttID
+	UpdateLogID *types.PttID
 
-	Status types.Status `json:"S"`
+	Status types.Status
 }
 
 type TestTemp struct {
-	BaseObj  *TestBase       `json:"b"`
-	UpdateTS types.Timestamp `json:"UT"`
+	BaseObj  *TestBase
+	UpdateTS types.Timestamp
 }

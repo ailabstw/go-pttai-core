@@ -41,24 +41,24 @@ const (
 )
 
 type MeOpCreateMe struct {
-	NodeID   *discover.NodeID    `json:"NID"`
-	NodeType pkgservice.NodeType `json:"NT"`
-	NodeName []byte              `json:"n"`
+	NodeID   *discover.NodeID
+	NodeType pkgservice.NodeType
+	NodeName []byte
 }
 
 type MeOpSetNodeName struct {
-	NodeID *discover.NodeID `json:"NID"`
-	Name   []byte           `json:"n"`
+	NodeID *discover.NodeID
+	Name   []byte
 }
 
 /*
 type MeOpCreateEntity struct {
-	LogID *types.PttID `json:"l"`
+	LogID *types.PttID
 }
 */
 
 type MeOpEntity struct {
-	LogID *types.PttID `json:"l"`
+	LogID *types.PttID
 }
 
 type MeOpMigrateMe struct {

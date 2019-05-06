@@ -24,8 +24,8 @@ import (
 
 type UserNodeInfo struct {
 	ID         *types.PttID
-	UserNodeID *types.PttID `json:"nid"`
-	NUserNode  int          `json:"n"`
+	UserNodeID *types.PttID
+	NUserNode  int
 }
 
 func NewUserNodeInfo(

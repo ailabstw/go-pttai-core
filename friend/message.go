@@ -27,11 +27,11 @@ import (
 )
 
 type Message struct {
-	*pkgservice.BaseObject `json:"b"`
+	*pkgservice.BaseObject
 
-	UpdateTS types.Timestamp `json:"UT"`
+	UpdateTS types.Timestamp
 
-	SyncInfo *pkgservice.BaseSyncInfo `json:"s,omitempty"`
+	SyncInfo *pkgservice.BaseSyncInfo
 }
 
 func NewMessage(

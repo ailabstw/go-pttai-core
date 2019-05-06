@@ -21,7 +21,7 @@ import (
 )
 
 type SyncUserNodeAck struct {
-	Objs []*UserNode `json:"o"`
+	Objs []*UserNode
 }
 
 func (pm *ProtocolManager) HandleSyncAddUserNodeAck(objs []*UserNode, peer *pkgservice.PttPeer) error {

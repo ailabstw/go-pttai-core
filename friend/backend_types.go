@@ -27,13 +27,13 @@ BackendGetFriend provides just UserName and nothing else for saving the bandwidt
 */
 type BackendGetFriend struct {
 	ID       *types.PttID
-	FriendID *types.PttID `json:"FID"`
-	Name     []byte       `json:"N"`
+	FriendID *types.PttID
+	Name     []byte
 
-	BoardID         *types.PttID    `json:"BID"`
-	Status          types.Status    `json:"S"`
-	ArticleCreateTS types.Timestamp //`json:"ACT"`
-	LastSeen        types.Timestamp `json:"LT"`
+	BoardID         *types.PttID
+	Status          types.Status
+	ArticleCreateTS types.Timestamp //
+	LastSeen        types.Timestamp
 }
 
 func friendToBackendGetFriend(f *Friend, userName *account.UserName) *BackendGetFriend {
@@ -59,10 +59,10 @@ func friendToBackendGetFriend(f *Friend, userName *account.UserName) *BackendGet
 }
 
 type BackendCreateMessage struct {
-	FriendID  *types.PttID `json:"FID"`
-	MessageID *types.PttID `json:"AID"`
-	BlockID   *types.PttID `json:"cID"`
-	NBlock    int          `json:"NB"`
+	FriendID  *types.PttID
+	MessageID *types.PttID
+	BlockID   *types.PttID
+	NBlock    int
 }
 
 func messageToBackendCreateMessage(m *Message) *BackendCreateMessage {
@@ -77,13 +77,13 @@ func messageToBackendCreateMessage(m *Message) *BackendCreateMessage {
 
 type BackendGetMessage struct {
 	ID        *types.PttID
-	CreateTS  types.Timestamp //`json:"CT"`
-	UpdateTS  types.Timestamp //`json:"UT"`
-	CreatorID *types.PttID    //`json:"CID"`
-	FriendID  *types.PttID    //`json:"FID"`
-	BlockID   *types.PttID    //`json:"cID"`
-	NBlock    int             //`json:"N"`
-	Status    types.Status    `json:"S"`
+	CreateTS  types.Timestamp //
+	UpdateTS  types.Timestamp //
+	CreatorID *types.PttID    //
+	FriendID  *types.PttID    //
+	BlockID   *types.PttID    //
+	NBlock    int             //
+	Status    types.Status
 }
 
 func messageToBackendGetMessage(m *Message) *BackendGetMessage {
@@ -103,19 +103,19 @@ func messageToBackendGetMessage(m *Message) *BackendGetMessage {
 type BackendMessageBlock struct {
 	V         types.Version
 	ID        *types.PttID
-	MessageID *types.PttID `json:"AID"`
-	ObjID     *types.PttID `json:"RID"`
-	BlockID   uint32       `json:"BID"`
+	MessageID *types.PttID
+	ObjID     *types.PttID
+	BlockID   uint32
 
-	Status types.Status `json:"S"`
+	Status types.Status
 
-	CreateTS types.Timestamp `json:"CT"`
-	UpdateTS types.Timestamp `json:"UT"`
+	CreateTS types.Timestamp
+	UpdateTS types.Timestamp
 
-	CreatorID *types.PttID `json:"CID"`
-	UpdaterID *types.PttID `json:"UID"`
+	CreatorID *types.PttID
+	UpdaterID *types.PttID
 
-	Buf [][]byte `json:"B"`
+	Buf [][]byte
 }
 
 func contentBlockToBackendMessageBlock(msg *Message, blockInfoID *types.PttID, contentBlock *pkgservice.ContentBlock) *BackendMessageBlock {

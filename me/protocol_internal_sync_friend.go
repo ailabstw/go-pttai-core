@@ -28,9 +28,9 @@ import (
 )
 
 type InternalSyncFriendAck struct {
-	LogID *types.PttID `json:"l"`
+	LogID *types.PttID
 
-	InitFriendInfoAck *friend.InitFriendInfoAck `json:"i"`
+	InitFriendInfoAck *friend.InitFriendInfoAck
 }
 
 func (pm *ProtocolManager) InternalSyncFriend(

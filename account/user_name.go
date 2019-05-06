@@ -26,9 +26,9 @@ import (
 )
 
 type SyncUserNameInfo struct {
-	*pkgservice.BaseSyncInfo `json:"b"`
+	*pkgservice.BaseSyncInfo
 
-	Name []byte `json:"N,omitempty"`
+	Name []byte
 }
 
 func NewEmptySyncUserNameInfo() *SyncUserNameInfo {
@@ -49,11 +49,11 @@ func (s *SyncUserNameInfo) ToObject(theObj pkgservice.Object) error {
 }
 
 type UserName struct {
-	*pkgservice.BaseObject `json:"b"`
-	UpdateTS               types.Timestamp   `json:"UT"`
-	SyncInfo               *SyncUserNameInfo `json:"s,omitempty"`
+	*pkgservice.BaseObject
+	UpdateTS               types.Timestamp
+	SyncInfo               *SyncUserNameInfo
 
-	Name []byte `json:"N,omitempty"`
+	Name []byte
 }
 
 func NewUserName(

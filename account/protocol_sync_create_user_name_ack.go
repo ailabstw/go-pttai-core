@@ -23,7 +23,7 @@ import (
 )
 
 type SyncUserNameAck struct {
-	Objs []*UserName `json:"o"`
+	Objs []*UserName
 }
 
 func (pm *ProtocolManager) HandleSyncCreateUserNameAck(dataBytes []byte, peer *pkgservice.PttPeer) error {

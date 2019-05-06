@@ -31,17 +31,17 @@ import (
 )
 
 type MyInfo struct {
-	*pkgservice.BaseEntity `json:"e"`
+	*pkgservice.BaseEntity
 
-	UpdateTS types.Timestamp `json:"UT"`
+	UpdateTS types.Timestamp
 
-	ProfileID *types.PttID     `json:"PID"`
-	Profile   *account.Profile `json:"-"`
+	ProfileID *types.PttID
+	Profile   *account.Profile
 
 	signKeyInfo     *pkgservice.KeyInfo
 	nodeSignKeyInfo *pkgservice.KeyInfo
 
-	NodeSignID *types.PttID `json:"-"`
+	NodeSignID *types.PttID
 
 	myKey   *ecdsa.PrivateKey
 	nodeKey *ecdsa.PrivateKey

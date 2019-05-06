@@ -26,12 +26,12 @@ import (
 )
 
 type SyncUserImgInfo struct {
-	*pkgservice.BaseSyncInfo `json:"b"`
+	*pkgservice.BaseSyncInfo
 
-	ImgType ImgType `json:"T"`
-	Width   uint16  `json:"W"`
-	Height  uint16  `json:"H"`
-	Str     string  `json:"I"`
+	ImgType ImgType
+	Width   uint16
+	Height  uint16
+	Str     string
 }
 
 func NewEmptySyncUserImgInfo() *SyncUserImgInfo {
@@ -55,15 +55,15 @@ func (s *SyncUserImgInfo) ToObject(theObj pkgservice.Object) error {
 }
 
 type UserImg struct {
-	*pkgservice.BaseObject `json:"b"`
-	UpdateTS               types.Timestamp `json:"UT"`
+	*pkgservice.BaseObject
+	UpdateTS               types.Timestamp
 
-	SyncInfo *SyncUserImgInfo `json:"si,omitempty"`
+	SyncInfo *SyncUserImgInfo
 
-	ImgType ImgType `json:"T"`
-	Width   uint16  `json:"W"`
-	Height  uint16  `json:"H"`
-	Str     string  `json:"I"`
+	ImgType ImgType
+	Width   uint16
+	Height  uint16
+	Str     string
 }
 
 func NewUserImg(

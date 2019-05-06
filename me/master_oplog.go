@@ -25,7 +25,7 @@ import (
 // Requiring per-entity-level oplog, not unique MeOplog / MasterOplog / PttOplog in ptt-layer
 
 type MasterOplog struct {
-	*pkgservice.BaseOplog `json:"O"`
+	*pkgservice.BaseOplog
 }
 
 func NewMasterOplog(id *types.PttID, ts types.Timestamp, doerID *types.PttID, op pkgservice.OpType, data interface{}, dbLock *types.LockMap) (*MasterOplog, error) {

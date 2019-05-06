@@ -23,7 +23,7 @@ import (
 )
 
 type FriendOplog struct {
-	*pkgservice.BaseOplog `json:"O"`
+	*pkgservice.BaseOplog
 }
 
 func (o *FriendOplog) GetBaseOplog() *pkgservice.BaseOplog {

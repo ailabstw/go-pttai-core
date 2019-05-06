@@ -7,3 +7,4 @@ log.tmp.txt
 tmp
 /bin
 e2e/bin/bin
+vendor

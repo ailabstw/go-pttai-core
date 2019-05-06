@@ -430,7 +430,7 @@ func TestLDBDatabase_TryPutGetDelete(t *testing.T) {
 		updateTS types.Timestamp
 	}
 	type dbvalue struct {
-		UpdateTS types.Timestamp `json:"UT"`
+		UpdateTS types.Timestamp
 		Value    []byte
 	}
 

@@ -25,10 +25,10 @@ import (
 )
 
 type UpdateUserImg struct {
-	ImgType ImgType `json:"T"`
-	Width   uint16  `json:"W"`
-	Height  uint16  `json:"H"`
-	Str     string  `json:"I"`
+	ImgType ImgType
+	Width   uint16
+	Height  uint16
+	Str     string
 }
 
 func (pm *ProtocolManager) UpdateUserImg(imgStr string) (*UserImg, error) {

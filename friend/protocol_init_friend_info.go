@@ -27,7 +27,7 @@ import (
 )
 
 type InitFriendInfo struct {
-	ProfileData *account.ApproveJoinEntity `json:"P"`
+	ProfileData *account.ApproveJoinEntity
 }
 
 func (pm *ProtocolManager) InitFriendInfo(peer *pkgservice.PttPeer) error {

@@ -25,10 +25,10 @@ import (
 type BackendMyInfo struct {
 	V        types.Version
 	ID       *types.PttID
-	CreateTS types.Timestamp `json:"CT"`
-	UpdateTS types.Timestamp `json:"UT"`
+	CreateTS types.Timestamp
+	UpdateTS types.Timestamp
 
-	Status types.Status `json:"S"`
+	Status types.Status
 
 	RaftID uint64
 	NodeID *discover.NodeID

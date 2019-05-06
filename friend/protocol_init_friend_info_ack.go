@@ -31,8 +31,8 @@ func NewEmptyApproveJoinFriend() *pkgservice.ApproveJoinEntity {
 }
 
 type InitFriendInfoAck struct {
-	FriendData  *pkgservice.ApproveJoinEntity `json:"F"`
-	ProfileData *account.ApproveJoinEntity    `json:"P"`
+	FriendData  *pkgservice.ApproveJoinEntity
+	ProfileData *account.ApproveJoinEntity
 }
 
 func (pm *ProtocolManager) InitFriendInfoAck(peer *pkgservice.PttPeer) error {

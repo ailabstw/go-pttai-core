@@ -24,13 +24,13 @@ import (
 )
 
 type ApproveJoin struct {
-	Friend *Friend `json:"f"`
+	Friend *Friend
 
-	Oplog0     *pkgservice.BaseOplog   `json:"0"`
-	MasterLogs []*pkgservice.BaseOplog `json:"M"`
-	MemberLogs []*pkgservice.BaseOplog `json:"m"`
-	OpKey      *pkgservice.KeyInfo     `json:"O"`
-	OpKeyLog   *pkgservice.BaseOplog   `json:"o"`
+	Oplog0     *pkgservice.BaseOplog
+	MasterLogs []*pkgservice.BaseOplog
+	MemberLogs []*pkgservice.BaseOplog
+	OpKey      *pkgservice.KeyInfo
+	OpKeyLog   *pkgservice.BaseOplog
 }
 
 func (pm *ProtocolManager) ApproveJoinFriend(joinEntity *pkgservice.JoinEntity, keyInfo *pkgservice.KeyInfo, peer *pkgservice.PttPeer) (*pkgservice.KeyInfo, interface{}, error) {

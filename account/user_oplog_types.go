@@ -50,34 +50,34 @@ type UserOpDeleteProfile struct {
 }
 
 type UserOpTransferProfile struct {
-	ToID *types.PttID `json:"t"`
+	ToID *types.PttID
 }
 
 type UserOpAddUserNode struct {
-	NodeID *discover.NodeID `json:"n"`
+	NodeID *discover.NodeID
 }
 
 type UserOpRemoveUserNode struct {
-	NodeID *discover.NodeID `json:"n"`
+	NodeID *discover.NodeID
 }
 
 type UserOpCreateUserName struct {
 }
 
 type UserOpUpdateUserName struct {
-	Hash []byte `json:"H"`
+	Hash []byte
 }
 
 type UserOpCreateUserImg struct {
 }
 
 type UserOpUpdateUserImg struct {
-	Hash []byte `json:"H"`
+	Hash []byte
 }
 
 type UserOpCreateNameCard struct {
 }
 
 type UserOpUpdateNameCard struct {
-	Hash []byte `json:"H"`
+	Hash []byte
 }

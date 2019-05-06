@@ -25,9 +25,9 @@ import (
 )
 
 type ApproveJoinMe struct {
-	MyInfo *MyInfo `json:"M"`
+	MyInfo *MyInfo
 
-	OpKeyInfo *pkgservice.KeyInfo `json:"O"`
+	OpKeyInfo *pkgservice.KeyInfo
 }
 
 /*

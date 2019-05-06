@@ -22,7 +22,7 @@ import (
 )
 
 type MeOplog struct {
-	*pkgservice.BaseOplog `json:"O"`
+	*pkgservice.BaseOplog
 }
 
 func (o *MeOplog) GetBaseOplog() *pkgservice.BaseOplog {

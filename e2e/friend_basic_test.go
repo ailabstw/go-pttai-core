@@ -123,7 +123,7 @@ func TestFriendBasic(t *testing.T) {
 	bodyString = fmt.Sprintf(`{"id": "testID", "method": "friend_getFriendList", "params": ["", 0]}`)
 
 	dataGetFriendList0_8 := &struct {
-		Result []*friend.BackendGetFriend `json:"result"`
+		Result []*friend.BackendGetFriend
 	}{}
 	testListCore(t0, bodyString, dataGetFriendList0_8, t, isDebug)
 	assert.Equal(1, len(dataGetFriendList0_8.Result))
@@ -132,7 +132,7 @@ func TestFriendBasic(t *testing.T) {
 	assert.Equal(me1_1.ID, friend0_8.FriendID)
 
 	dataGetFriendList1_8 := &struct {
-		Result []*friend.BackendGetFriend `json:"result"`
+		Result []*friend.BackendGetFriend
 	}{}
 	testListCore(t1, bodyString, dataGetFriendList1_8, t, isDebug)
 	assert.Equal(1, len(dataGetFriendList1_8.Result))
@@ -192,7 +192,7 @@ func TestFriendBasic(t *testing.T) {
 	bodyString = fmt.Sprintf(`{"id": "testID", "method": "friend_getMasterOplogList", "params": ["%v", "", 0, 2]}`, string(marshaled))
 
 	dataMasterOplogList0_10 := &struct {
-		Result []*service.MasterOplog `json:"result"`
+		Result []*service.MasterOplog
 	}{}
 	testListCore(t0, bodyString, dataMasterOplogList0_10, t, isDebug)
 	assert.Equal(2, len(dataMasterOplogList0_10.Result))
@@ -204,7 +204,7 @@ func TestFriendBasic(t *testing.T) {
 	assert.Equal(masterOplog0_10_1.ObjID, me0_1.ID)
 
 	dataMasterOplogList1_10 := &struct {
-		Result []*service.MasterOplog `json:"result"`
+		Result []*service.MasterOplog
 	}{}
 	testListCore(t1, bodyString, dataMasterOplogList1_10, t, isDebug)
 	assert.Equal(2, len(dataMasterOplogList1_10.Result))
@@ -225,13 +225,13 @@ func TestFriendBasic(t *testing.T) {
 	bodyString = fmt.Sprintf(`{"id": "testID", "method": "friend_getMasterListFromCache", "params": ["%v"]}`, string(marshaled))
 
 	dataMasterList0_11 := &struct {
-		Result []*service.Master `json:"result"`
+		Result []*service.Master
 	}{}
 	testListCore(t0, bodyString, dataMasterList0_11, t, isDebug)
 	assert.Equal(2, len(dataMasterList0_11.Result))
 
 	dataMasterList1_11 := &struct {
-		Result []*service.Master `json:"result"`
+		Result []*service.Master
 	}{}
 	testListCore(t1, bodyString, dataMasterList1_11, t, isDebug)
 	assert.Equal(2, len(dataMasterList1_11.Result))
@@ -240,13 +240,13 @@ func TestFriendBasic(t *testing.T) {
 	bodyString = fmt.Sprintf(`{"id": "testID", "method": "friend_getMasterList", "params": ["%v", "", 0, 2]}`, string(marshaled))
 
 	dataMasterList0_11_1 := &struct {
-		Result []*service.Master `json:"result"`
+		Result []*service.Master
 	}{}
 	testListCore(t0, bodyString, dataMasterList0_11_1, t, isDebug)
 	assert.Equal(2, len(dataMasterList0_11_1.Result))
 
 	dataMasterList1_11_1 := &struct {
-		Result []*service.Master `json:"result"`
+		Result []*service.Master
 	}{}
 	testListCore(t1, bodyString, dataMasterList1_11_1, t, isDebug)
 	assert.Equal(2, len(dataMasterList1_11_1.Result))
@@ -257,7 +257,7 @@ func TestFriendBasic(t *testing.T) {
 	bodyString = fmt.Sprintf(`{"id": "testID", "method": "friend_getMemberOplogList", "params": ["%v", "", 0, 2]}`, string(marshaled))
 
 	dataMemberOplogList0_12 := &struct {
-		Result []*service.MemberOplog `json:"result"`
+		Result []*service.MemberOplog
 	}{}
 	testListCore(t0, bodyString, dataMemberOplogList0_12, t, isDebug)
 	assert.Equal(2, len(dataMemberOplogList0_12.Result))
@@ -269,7 +269,7 @@ func TestFriendBasic(t *testing.T) {
 	assert.Equal(memberOplog0_12_1.ObjID, me0_1.ID)
 
 	dataMemberOplogList1_12 := &struct {
-		Result []*service.MemberOplog `json:"result"`
+		Result []*service.MemberOplog
 	}{}
 	testListCore(t1, bodyString, dataMemberOplogList1_12, t, isDebug)
 	assert.Equal(2, len(dataMemberOplogList1_12.Result))
@@ -290,13 +290,13 @@ func TestFriendBasic(t *testing.T) {
 	bodyString = fmt.Sprintf(`{"id": "testID", "method": "friend_getMemberList", "params": ["%v", "", 0, 2]}`, string(marshaled))
 
 	dataMemberList0_12_1 := &struct {
-		Result []*service.Member `json:"result"`
+		Result []*service.Member
 	}{}
 	testListCore(t0, bodyString, dataMemberList0_12_1, t, isDebug)
 	assert.Equal(2, len(dataMemberList0_12_1.Result))
 
 	dataMemberList1_12_1 := &struct {
-		Result []*service.Member `json:"result"`
+		Result []*service.Member
 	}{}
 	testListCore(t1, bodyString, dataMemberList1_12_1, t, isDebug)
 	assert.Equal(2, len(dataMemberList1_12_1.Result))

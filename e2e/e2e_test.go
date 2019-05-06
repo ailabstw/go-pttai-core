@@ -163,13 +163,13 @@ type rBody struct {
 }
 
 type dataWrapper struct {
-	Result interface{} `json:"result"`
-	Error  *myError    `json:"error"`
+	Result interface{}
+	Error  *myError
 }
 
 type myError struct {
-	Code int    `json:"code"`
-	Msg  string `json:"message"`
+	Code int
+	Msg  string
 }
 
 func getResponseBody(r *rBody, t *testing.T) func(res *http.Response, req *http.Request) error {

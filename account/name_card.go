@@ -26,9 +26,9 @@ import (
 )
 
 type SyncNameCardInfo struct {
-	*pkgservice.BaseSyncInfo `json:"b"`
+	*pkgservice.BaseSyncInfo
 
-	Card []byte `json:"C,omitempty"`
+	Card []byte
 }
 
 func NewEmptySyncNameCardInfo() *SyncNameCardInfo {
@@ -49,11 +49,11 @@ func (s *SyncNameCardInfo) ToObject(theObj pkgservice.Object) error {
 }
 
 type NameCard struct {
-	*pkgservice.BaseObject `json:"b"`
-	UpdateTS               types.Timestamp   `json:"UT"`
-	SyncInfo               *SyncNameCardInfo `json:"s,omitempty"`
+	*pkgservice.BaseObject
+	UpdateTS               types.Timestamp
+	SyncInfo               *SyncNameCardInfo
 
-	Card []byte `json:"C,omitempty"`
+	Card []byte
 }
 
 func NewNameCard(

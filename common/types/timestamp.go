@@ -24,8 +24,8 @@ import (
 )
 
 type Timestamp struct {
-	Ts     int64  `json:"T"` // uint64 is only for
-	NanoTs uint32 `json:"NT"`
+	Ts     int64 // uint64 is only for
+	NanoTs uint32
 }
 
 var GetTimestamp = func() (Timestamp, error) {

@@ -29,36 +29,36 @@ import (
 )
 
 type SyncNodeNameInfo struct {
-	LogID    *types.PttID    `json:"pl,omitempty"`
-	NodeName []byte          `json:"N,omitempty"`
-	UpdateTS types.Timestamp `json:"UT"`
-	Status   types.Status    `json:"S"`
+	LogID    *types.PttID
+	NodeName []byte
+	UpdateTS types.Timestamp
+	Status   types.Status
 }
 
 type MyNode struct {
 	V        types.Version
 	ID       *types.PttID
-	CreateTS types.Timestamp `json:"CT"`
-	UpdateTS types.Timestamp `json:"UT"`
+	CreateTS types.Timestamp
+	UpdateTS types.Timestamp
 
-	Status types.Status `json:"S"`
+	Status types.Status
 
-	LastSeen types.Timestamp `json:"L"`
+	LastSeen types.Timestamp
 
-	NodeName         []byte            `json:"N,omitempty"`
-	NodeNameLogID    *types.PttID      `json:"nl,omitempty"`
-	SyncNodeNameInfo *SyncNodeNameInfo `json:"sn,omitempty"`
+	NodeName         []byte
+	NodeNameLogID    *types.PttID
+	SyncNodeNameInfo *SyncNodeNameInfo
 
-	NodeID *discover.NodeID `json:"NID"`
+	NodeID *discover.NodeID
 
-	NodeType pkgservice.NodeType `json:"NT"`
-	Weight   uint32              `json:"W"`
+	NodeType pkgservice.NodeType
+	Weight   uint32
 
-	LogID *types.PttID `json:"pl,omitempty"`
+	LogID *types.PttID
 
-	RaftID uint64 `json:"R"`
+	RaftID uint64
 
-	Peer *pkgservice.PttPeer `json:"-"`
+	Peer *pkgservice.PttPeer
 }
 
 func NewMyNode(ts types.Timestamp, myID *types.PttID, nodeID *discover.NodeID, weight uint32) (*MyNode, error) {

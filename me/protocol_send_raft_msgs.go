@@ -27,7 +27,7 @@ import (
 )
 
 type SendRaftMsgs struct {
-	Msgs []pb.Message `json:"M"`
+	Msgs []pb.Message
 }
 
 func (pm *ProtocolManager) SendRaftMsgs(msgs []pb.Message) error {

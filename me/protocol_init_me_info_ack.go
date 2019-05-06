@@ -25,7 +25,7 @@ import (
 )
 
 type InitMeInfoAck struct {
-	Status types.Status `json:"S"`
+	Status types.Status
 }
 
 func (pm *ProtocolManager) InitMeInfoAck(data *InitMeInfo, peer *pkgservice.PttPeer) error {
