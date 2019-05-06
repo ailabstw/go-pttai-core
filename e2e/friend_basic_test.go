@@ -56,7 +56,7 @@ func TestFriendBasic(t *testing.T) {
 	time.Sleep(5 * time.Second)
 
 	// start
-	TimeSleepDefault := 15 * time.Second
+	TimeSleepDefault := 30 * time.Second
 	isDebug := true
 
 	var bodyString string
