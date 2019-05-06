@@ -23,6 +23,7 @@ $ go build
 
 ```
 $ cd e2e
+$ cd bin && go build && cd ..
 $ rm -rf tmp
 $ go test -run TestFriendBasic
 ```
