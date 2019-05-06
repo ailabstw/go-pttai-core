@@ -48,68 +48,51 @@ func main() {
 	}
 }
 
-type Config struct {
-	Node    *node.Config
-	Me      *me.Config
-	Account *account.Config
-	Friend  *friend.Config
-	Router  *service.Config
-	Utils   *UtilsConfig
-}
-
-type UtilsConfig struct {
-	HTTPDir        string
-	HTTPAddr       string
-	ExternHTTPAddr string
-}
-
 func prepareNode(id int, port int) (*node.Node, error) {
-	cfg := Config{
-		Node:    &node.DefaultConfig,
-		Me:      &me.DefaultConfig,
-		Account: &account.DefaultConfig,
-		Friend:  &friend.DefaultConfig,
-		Router:  &service.DefaultConfig,
-		Utils:   &UtilsConfig{},
-	}
-	cfg.Utils.ExternHTTPAddr = fmt.Sprintf("http://localhost:%d", 9776+id)
-	cfg.Node.DataDir = fmt.Sprintf("./tmp/test/%d/", id)
-	cfg.Node.HTTPHost = "127.0.0.1"
-	cfg.Node.HTTPPort = port
-	cfg.Node.IPCPath = ""
-	cfg.Node.P2P.MaxPeers = 100
+	nodeCfg := &node.DefaultConfig
+	nodeCfg.DataDir = fmt.Sprintf("./tmp/test/%d/", id)
+	nodeCfg.HTTPHost = "127.0.0.1"
+	nodeCfg.HTTPPort = port
+	nodeCfg.IPCPath = ""
+	nodeCfg.P2P.MaxPeers = 100
 	signalServerURL, err := url.Parse("ws://127.0.0.1:9489/signal")
 	if err != nil {
 		return nil, err
 	}
-	cfg.Node.P2P.SignalServerURL = *signalServerURL
-	cfg.Me.DataDir = filepath.Join(cfg.Node.DataDir, "me")
-	cfg.Router.DataDir = filepath.Join(fmt.Sprintf("./tmp/test/%d/", id), "service")
-	cfg.Account.DataDir = filepath.Join(fmt.Sprintf("./tmp/test/%d/", id), "account")
-	cfg.Friend.DataDir = filepath.Join(fmt.Sprintf("./tmp/test/%d/", id), "friend")
-	cfg.Friend.MinSyncRandomSeconds = 5
-	cfg.Friend.MaxSyncRandomSeconds = 7
-	fmt.Printf("me config: %v\n", cfg.Me)
+	nodeCfg.P2P.SignalServerURL = *signalServerURL
 
-	err = cfg.Me.SetMyKey("", "", "", false)
+	meConfig := &me.DefaultConfig
+	meConfig.DataDir = filepath.Join(nodeCfg.DataDir, "me")
+	err = meConfig.SetMyKey("", "", "", false)
 	if err != nil {
 		return nil, err
 	}
 
-	n, err := node.New(cfg.Node)
+	routerConfig := &service.DefaultConfig
+	routerConfig.DataDir = filepath.Join(fmt.Sprintf("./tmp/test/%d/", id), "service")
+
+	accountConfig := &account.DefaultConfig
+	accountConfig.DataDir = filepath.Join(fmt.Sprintf("./tmp/test/%d/", id), "account")
+
+	friendConfig := &friend.DefaultConfig
+	friendConfig.DataDir = filepath.Join(fmt.Sprintf("./tmp/test/%d/", id), "friend")
+	friendConfig.MinSyncRandomSeconds = 5
+	friendConfig.MaxSyncRandomSeconds = 7
+
+	n, err := node.New(nodeCfg)
 	if err != nil {
 		return nil, err
 	}
 
 	n.Register(func(ctx *service.RouterContext) (service.NodeRouter, error) {
-		nodeKey := cfg.Node.NodeKey()
+		nodeKey := nodeCfg.NodeKey()
 		nodeID := discover.PubkeyID(&nodeKey.PublicKey)
 
-		ptt, err := service.NewRouter(ctx, cfg.Router, &nodeID, nodeKey)
+		ptt, err := service.NewRouter(ctx, routerConfig, &nodeID, nodeKey)
 		if err != nil {
 			return nil, err
 		}
-		accountBackend, err := account.NewBackend(ctx, cfg.Account, ptt)
+		accountBackend, err := account.NewBackend(ctx, accountConfig, ptt)
 		if err != nil {
 			return nil, err
 		}
@@ -119,7 +102,7 @@ func prepareNode(id int, port int) (*node.Node, error) {
 		}
 
 		// friend
-		friendBackend, err := friend.NewBackend(ctx, cfg.Friend, cfg.Me.ID, ptt, accountBackend)
+		friendBackend, err := friend.NewBackend(ctx, friendConfig, meConfig.ID, ptt, accountBackend)
 		if err != nil {
 			return nil, err
 		}
@@ -129,7 +112,7 @@ func prepareNode(id int, port int) (*node.Node, error) {
 		}
 
 		// me
-		meBackend, err := me.NewBackend(ctx, cfg.Me, ptt, accountBackend, friendBackend)
+		meBackend, err := me.NewBackend(ctx, meConfig, ptt, accountBackend, friendBackend)
 		if err != nil {
 			return nil, err
 		}
